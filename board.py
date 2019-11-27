@@ -1,4 +1,5 @@
 class Mat64():
+
 	def __init__(self):
 		pass
 
@@ -28,6 +29,7 @@ class Mat64():
 		return new_board
 
 class Mat8():
+
 	def __init__():
 		pass
 
