@@ -29,15 +29,15 @@ class Pion:
         Destination = []
 
         if self.color == 'noir':
-            Destination.append((self.position[0], self.position[1] + 1 * 8))
+            Destination.append((self.position[0], self.position[1] + 1))
             if self.firstMove:
-                Destination.append((self.position[0], self.position[1] + 2 * 8))
+                Destination.append((self.position[0], self.position[1] + 2))
                 self.firstMoveOver()
 
         else:
-            Destination.append((self.position[0], self.position[1]  1 * 8))
+            Destination.append((self.position[0], self.position[1]  1))
             if self.firstMove:
-                Destination.append((self.position[0], self.position[1] - 2 * 8))
+                Destination.append((self.position[0], self.position[1] - 2))
                 self.firstMoveOver()
 
         return Destination
