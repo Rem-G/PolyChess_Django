@@ -99,7 +99,7 @@ def game():
 
 			configuration.deplacement_piece(decision[0], decision[1], True)
 
-		if joueur == -1:
+		elif joueur == -1:
 			print("Au tour du joueur noir :")
 			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"))
 
@@ -111,7 +111,6 @@ def game():
 			for msg in configuration.msg_error:
 				print(msg)
 
-		else:
-			joueur = -joueur
+		joueur = -joueur
 
 game()

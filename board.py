@@ -43,6 +43,7 @@ class Mat64():
 
 		if piece_pos[0] in colonnes_matrice.keys() and piece_pos[1] in lignes_matrice.keys():
 			return [lignes_matrice[piece_pos[1]], colonnes_matrice[piece_pos[0]]]
+		return [0,0]
 
 
 	def position_piece_mat(self, piece_pos):

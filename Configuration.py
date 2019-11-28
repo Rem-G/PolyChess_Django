@@ -40,17 +40,21 @@ class GeneralConf():
 
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
 		"""
+		Ajouter verification par rapport à matrice jeu
+		SI position voulue différente de -1
 		"""		
 		pos_depart[1] = str(pos_depart[1]) #Conversion coordonée int en str
 		pos_arrivee[1] = str(pos_arrivee[1])
 
+		mat_jeu = Mat64().matrice_jeu()
 
 		pos_depart = Mat64().position_piece(pos_depart)
+		pos_arrivee_convert = Mat64().position_piece(pos_arrivee)
 
-		for piece in self.pieces:
-			piece_x, piece_y = Mat64().position_piece(piece.get_piece_position())[0], Mat64().position_piece(piece.get_piece_position())[1]
+		if mat_jeu[pos_depart[0]][pos_depart[1]] != -1 and mat_jeu[pos_arrivee_convert[0]][pos_arrivee_convert[1]] != -1:
+			for piece in self.pieces:
+				piece_x, piece_y = Mat64().position_piece(piece.get_piece_position())[0], Mat64().position_piece(piece.get_piece_position())[1]
 
-			try:
 				if piece_x == pos_depart[0] and piece_y == pos_depart[1]:
 					if upper is True:
 						#Tour du joueur blanc
@@ -69,8 +73,7 @@ class GeneralConf():
 
 						else:
 							self.msg_error.append("Cette pièce appartient à l'adversaire !")
-			except:
-				self.msg_error.append("Aucune pièce ne correspond à ces coordonnées")
-				break
+		else:
+			self.msg_error.append("Aucune pièce ne correspond à ces coordonnées")
 
 
