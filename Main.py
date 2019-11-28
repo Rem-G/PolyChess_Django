@@ -12,6 +12,8 @@ from Configuration import *
 
 def init_pieces(configuration):
 	"""
+	Initialisation des pièces de jeu
+	Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
 	"""
 	#Pieces blanches
 	configuration.add_piece(Pion("P", ['a', '2']))
@@ -62,6 +64,9 @@ def init_pieces(configuration):
 
 def affichage_plateau(matrice_affichage):
 	"""
+	Mise en forme de la matrice d'affichage pour l'affichage utilisateur
+	Ajout repère
+	Composition des lignes du plateau
 	"""
 	ligne_valeurs = '   a b c d e f g h'
 	colonne_valeurs = ['8', '7', '6', '5', '4', '3', '2', '1']
@@ -77,6 +82,10 @@ def affichage_plateau(matrice_affichage):
 
 
 def decision_joueur(decision):
+	"""
+	:param decision: Choix de jeu du joueur en str
+	:return list: Choix de jeu du joueur en list
+	"""
 	pos_depart = decision.split(" ")[0].split(",")
 	pos_arrivee = decision.split(" ")[1].split(",")
 

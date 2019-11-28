@@ -32,8 +32,9 @@ class Mat64():
 		return new_board
 
 
-	def position_piece(self, piece_pos):
+	def position_piece_mat(self, piece_pos):
 		"""
+		Passe du référentiel joueur ex : a,2 au référentiel matriciel du plateau de jeu ex : 4,7
 		:return list: Renvoie la position de la pièce dans le référentiel de la matrice de l'échéquier
 		"""
 		lignes_matrice = {'8' : 2, '7' : 3, '6' : 4, '5' : 5, '4': 6, '3' : 7, '2' : 8, '1' : 9}
@@ -46,8 +47,10 @@ class Mat64():
 		return [0,0]
 
 
-	def position_piece_mat(self, piece_pos):
+	def valeur_position_piece_mat(self, piece_pos):
 		"""
+		:param piece_pos: Position de l'élément à retourner
+		:return int: Renvoie d'une case de la matrice de jeu définie par rapport à sa position
 		"""
 		matrice = self.matrice_jeu()
 		return matrice[piece_pos[0]][piece_pos[1]]
