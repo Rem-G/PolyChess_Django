@@ -12,6 +12,7 @@ from Configuration import *
 
 def init_pieces(configuration):
 	"""
+	@RG
 	Initialisation des pièces de jeu
 	Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
 	"""
@@ -64,6 +65,7 @@ def init_pieces(configuration):
 
 def affichage_plateau(matrice_affichage):
 	"""
+	@RG
 	Mise en forme de la matrice d'affichage pour l'affichage utilisateur
 	Ajout repère
 	Composition des lignes du plateau
@@ -83,6 +85,7 @@ def affichage_plateau(matrice_affichage):
 
 def decision_joueur(decision):
 	"""
+	@RG
 	:param decision: Choix de jeu du joueur en str
 	:return list: Choix de jeu du joueur en list
 	"""
@@ -93,8 +96,10 @@ def decision_joueur(decision):
 
 def game():
 	"""
+	@RG
 	"""
 	configuration = GeneralConf()
+
 	init_pieces(configuration)
 
 	affichage_plateau(configuration.matrice_affichage())

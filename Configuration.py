@@ -10,14 +10,20 @@ class GeneralConf():
 
 	def add_piece(self, piece):
 		"""
+		@RG
 		Ajoute une nouvelle pièce à la liste de pièces existantes
 		"""
 		piece.set_piece_id(len(self.pieces))
 		self.pieces.append(piece)
 
+	def test(self):
+		for piece in self.pieces:
+			print(piece.nom)
+
 
 	def matrice_affichage(self):
 		"""
+		@RG
 		Génère la matrice d'interface utilisateur en supprimant les lignes de -1 et affichant le nom de chaque pièce en fonction de leur emplacement
 		sur l'échiquier 
 		:return matrice_screen: Matrice 8*8 avec le nom des pièces affiché sur leur position, les -1 de la matrice initiale sont convertis en '.'
@@ -47,6 +53,7 @@ class GeneralConf():
 
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
 		"""
+		@RG
 		Change de position une pièce selon la décision du joueur
 
 		:param pos_depart: Position initiale de la pièce à bouger
