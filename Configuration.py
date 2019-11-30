@@ -16,11 +16,6 @@ class GeneralConf():
 		piece.set_piece_id(len(self.pieces))
 		self.pieces.append(piece)
 
-	def test(self):
-		for piece in self.pieces:
-			print(piece.nom)
-
-
 	def matrice_affichage(self):
 		"""
 		@RG
@@ -33,7 +28,8 @@ class GeneralConf():
 		matrice = self.board.matrice_init()
 
 		for piece in pieces:
-			pos = self.board.position_piece_mat([piece.get_piece_position()[0], piece.get_piece_position()[1]])
+			pos = piece.get_piece_position()
+			#pos = self.board.position_piece_mat([piece.get_piece_position()[0], piece.get_piece_position()[1]])
 			matrice[pos[0]][pos[1]] = piece.nom + ' '
 
 		for index_i, i in enumerate(matrice):
@@ -51,6 +47,27 @@ class GeneralConf():
 		return matrice_screen
 
 
+	def verification_deplacement(self, moves, pos_arrivee):
+		"""
+		@RG
+		A rajouter : First move ? Fonctionnement ?
+		bug noté : Si le joueur demande à déplacer un emplacement vide, doit renvoyer un message d'erreur
+		"""
+		possible_moves = moves[0]
+		possible_eat = moves[1]
+
+		emplacements_pieces = list()
+		[emplacements_pieces.append(piece.position) for piece in self.pieces]
+
+		for piece in self.pieces:
+			if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
+				if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+					return True
+		return False
+
+
+
+
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
 		"""
 		@RG
@@ -59,26 +76,24 @@ class GeneralConf():
 		:param pos_depart: Position initiale de la pièce à bouger
 		:param pos_depart: Position de destination de la pièce à bouger
 		:param upper: Vérification du joueur faisant la requête : upper == True -> joueur blanc
-		"""		
-		pos_depart[1] = str(pos_depart[1]) #Conversion coordonée int en str
-		pos_arrivee[1] = str(pos_arrivee[1])
-
-		pos_depart_convert = self.board.position_piece_mat(pos_depart) #Conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
-		pos_arrivee_convert = self.board.position_piece_mat(pos_arrivee)
-
+		"""	
 		#Vérification que la valeur de la position de départ dans la matrice de jeu est différente de 1
-		if self.board.valeur_position_piece_mat(pos_depart_convert) != -1 and self.board.valeur_position_piece_mat(pos_arrivee_convert) != -1:
+		if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(pos_arrivee) != -1:
 			for piece in self.pieces:
 				#Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
-				piece_x, piece_y = self.board.position_piece_mat(piece.get_piece_position())[0], self.board.position_piece_mat(piece.get_piece_position())[1]
+				piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
 
-				if piece_x == pos_depart_convert[0] and piece_y == pos_depart_convert[1]:
+				if piece_x == pos_depart[0] and piece_y == pos_depart[1]:
 					#Vérification de la position actuelle de la pièce et de la position de départ demandée par l'utilisateur
 					if upper is True:
 						#Tour du joueur blanc
 						if piece.nom.isupper():
-							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)
-							piece.set_piece_position(pos_arrivee)
+							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)#Coordonnées matricielles ..
+
+							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
+								piece.set_piece_position(pos_arrivee)
+							else:
+								self.msg_error.append("Déplacement interdit")
 
 						else:
 							self.msg_error.append("Cette pièce appartient à l'adversaire !")
@@ -87,7 +102,11 @@ class GeneralConf():
 						#Tour du joueur noir
 						if piece.nom.islower():
 							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)
-							piece.set_piece_position(pos_arrivee)
+
+							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
+								piece.set_piece_position(pos_arrivee)
+							else:
+								self.msg_error.append("Déplacement interdit")
 
 						else:
 							self.msg_error.append("Cette pièce appartient à l'adversaire !")

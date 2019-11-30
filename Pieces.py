@@ -4,7 +4,6 @@ class Pion():
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.position_convert = Mat64().position_piece_mat(pos_initiale)
 		self.id = 0
 		self.firstMove = True
 
@@ -45,23 +44,23 @@ class Pion():
 		moves, capture = [], []
 
 		if self.nom == 'p':
-			moves.append((self.position_convert[0] + 1, self.position_convert[1]))
+			moves.append([self.position[0] + 1, self.position[1]])
 
 			if self.firstMove:
-				moves.append((self.position_convert[0] + 2, self.position_convert[1]))
+				moves.append([self.position[0] + 2, self.position[1]])
 				self.firstMoveOver()
 
-			capture.append((self.position_convert[0] + 1, self.position_convert[1] - 1))
-			capture.append((self.position_convert[0] + 1, self.position_convert[1] + 1))
+			capture.append([self.position[0] + 1, self.position[1] - 1])
+			capture.append([self.position[0] + 1, self.position[1] + 1])
 
 		if self.nom == 'P':
-			moves.append((self.position_convert[0] - 1, self.position_convert[1]))
+			moves.append([self.position[0] - 1, self.position[1]])
 			if self.firstMove:
-				moves.append((self.position_convert[0] - 2, self.position_convert[1]))
+				moves.append([self.position[0] - 2, self.position[1]])
 				self.firstMoveOver()
 
-			capture.append((self.position_convert[0] - 1, self.position_convert[1] - 1))
-			capture.append((self.position_convert[0] - 1, self.position_convert[1] + 1))
+			capture.append([self.position[0] - 1, self.position[1] - 1])
+			capture.append([self.position[0] - 1, self.position[1] + 1])
 
 		Destination = [moves, capture]
 

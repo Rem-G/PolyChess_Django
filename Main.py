@@ -17,51 +17,51 @@ def init_pieces(configuration):
 	Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
 	"""
 	#Pieces blanches
-	configuration.add_piece(Pion("P", ['a', '2']))
-	configuration.add_piece(Pion("P", ['b', '2']))
-	configuration.add_piece(Pion("P", ['c', '2']))
-	configuration.add_piece(Pion("P", ['d', '2']))
-	configuration.add_piece(Pion("P", ['e', '2']))
-	configuration.add_piece(Pion("P", ['f', '2']))
-	configuration.add_piece(Pion("P", ['g', '2']))
-	configuration.add_piece(Pion("P", ['h', '2']))
+	configuration.add_piece(Pion("P", [8, 1]))
+	configuration.add_piece(Pion("P", [8, 2]))
+	configuration.add_piece(Pion("P", [8, 3]))
+	configuration.add_piece(Pion("P", [8, 4]))
+	configuration.add_piece(Pion("P", [8, 5]))
+	configuration.add_piece(Pion("P", [8, 6]))
+	configuration.add_piece(Pion("P", [8, 7]))
+	configuration.add_piece(Pion("P", [8, 8]))
 
-	configuration.add_piece(Tour("T", ['a', '1']))
-	configuration.add_piece(Tour("T", ['h', '1']))
+	configuration.add_piece(Tour("T", [9, 1]))
+	configuration.add_piece(Tour("T", [9, 8]))
 
-	configuration.add_piece(Cavalier("C", ['b', '1']))
-	configuration.add_piece(Cavalier("C", ['g', '1']))
+	configuration.add_piece(Cavalier("C", [9, 2]))
+	configuration.add_piece(Cavalier("C", [9, 7]))
 
-	configuration.add_piece(Fou("F", ['c', '1']))
-	configuration.add_piece(Fou("F", ['f', '1']))
+	configuration.add_piece(Fou("F", [9, 3]))
+	configuration.add_piece(Fou("F", [9, 6]))
 
-	configuration.add_piece(Dame("D", ['d', '1']))
+	configuration.add_piece(Dame("D", [9, 4]))
 
-	configuration.add_piece(Roi("R", ['e', '1']))
+	configuration.add_piece(Roi("R", [9, 5]))
 
 
 	#Pieces noires
-	configuration.add_piece(Pion("p", ['a', '7']))
-	configuration.add_piece(Pion("p", ['b', '7']))
-	configuration.add_piece(Pion("p", ['c', '7']))
-	configuration.add_piece(Pion("p", ['d', '7']))
-	configuration.add_piece(Pion("p", ['e', '7']))
-	configuration.add_piece(Pion("p", ['f', '7']))
-	configuration.add_piece(Pion("p", ['g', '7']))
-	configuration.add_piece(Pion("p", ['h', '7']))
+	configuration.add_piece(Pion("p", [3, 1]))
+	configuration.add_piece(Pion("p", [3, 2]))
+	configuration.add_piece(Pion("p", [3, 3]))
+	configuration.add_piece(Pion("p", [3, 4]))
+	configuration.add_piece(Pion("p", [3, 5]))
+	configuration.add_piece(Pion("p", [3, 6]))
+	configuration.add_piece(Pion("p", [3, 7]))
+	configuration.add_piece(Pion("p", [3, 8]))
 
-	configuration.add_piece(Tour("t", ['a', '8']))
-	configuration.add_piece(Tour("t", ['h', '8']))
+	configuration.add_piece(Tour("t", [2, 1]))
+	configuration.add_piece(Tour("t", [2, 8]))
 
-	configuration.add_piece(Cavalier("c", ['b', '8']))
-	configuration.add_piece(Cavalier("c", ['g', '8']))
+	configuration.add_piece(Cavalier("c", [2, 2]))
+	configuration.add_piece(Cavalier("c", [2, 7]))
 
-	configuration.add_piece(Fou("f", ['c', '8']))
-	configuration.add_piece(Fou("f", ['f', '8']))
+	configuration.add_piece(Fou("f", [2, 3]))
+	configuration.add_piece(Fou("f", [2, 6]))
 
-	configuration.add_piece(Dame("d", ['d', '8']))
+	configuration.add_piece(Dame("d", [2, 4]))
 
-	configuration.add_piece(Roi("r", ['e', '8']))
+	configuration.add_piece(Roi("r", [2, 5]))
 
 def affichage_plateau(matrice_affichage):
 	"""
@@ -83,14 +83,18 @@ def affichage_plateau(matrice_affichage):
 	print('\n'+ligne_valeurs)
 
 
-def decision_joueur(decision):
+def decision_joueur(decision, configuration):
 	"""
 	@RG
 	:param decision: Choix de jeu du joueur en str
 	:return list: Choix de jeu du joueur en list
 	"""
-	pos_depart = decision.split(" ")[0].split(",")
-	pos_arrivee = decision.split(" ")[1].split(",")
+
+	pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
+	pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
+
+	pos_depart = [int(pos) for pos in pos_depart]
+	pos_arrivee = [int(pos) for pos in pos_arrivee]
 
 	return [pos_depart, pos_arrivee]
 
@@ -109,13 +113,13 @@ def game():
 	while True:
 		if joueur == 1:
 			print("Au tour du joueur blanc :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"))
+			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
 
 			configuration.deplacement_piece(decision[0], decision[1], True)
 
 		elif joueur == -1:
 			print("Au tour du joueur noir :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"))
+			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
 
 			configuration.deplacement_piece(decision[0], decision[1], False)
 
