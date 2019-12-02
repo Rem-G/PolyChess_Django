@@ -1,7 +1,4 @@
-import self as self
-
-from Board import Mat64
-
+import self as self # ?
 
 ###########################################################################################################
 ###### ATTENTION : il faudrait faire de l'heritage avec une classe piece comme classe mere cf.Trello ######
