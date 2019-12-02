@@ -115,24 +115,16 @@ def game():
 			print("Au tour du joueur blanc :")
 			input_value = input("Entrer x1,y1 x2,y2 :")
 
-			if input_value != '^C8': #^C8 -> ctrl+c
-				try:
-					decision = decision_joueur(input_value, configuration)
-					configuration.deplacement_piece(decision[0], decision[1], True)
-				except:
-					configuration.add_msg_error("Cordonnées incorrectes")
+			decision = decision_joueur(input_value, configuration)
+			configuration.deplacement_piece(decision[0], decision[1], True)
 
 
 		elif joueur == -1:
 			print("Au tour du joueur noir :")
 			input_value = input("Entrer x1,y1 x2,y2 :")
 
-			if input_value != '^C8': #^C8 -> ctrl+c
-				try:
-					decision = decision_joueur(input_value, configuration)
-					configuration.deplacement_piece(decision[0], decision[1], False)
-				except:
-					configuration.add_msg_error("Cordonnées incorrectes")
+			decision = decision_joueur(input_value, configuration)
+			configuration.deplacement_piece(decision[0], decision[1], False)
 
 		affichage_plateau(configuration.matrice_affichage())
 
