@@ -14,7 +14,7 @@ class Mat64():
 		"""
 		@RG
 		-1 représente une zone non accessible par une pièce de jeu
-		:return new_board: Echequier de taille 12*10 pour une surface de jeu de 8*8 permettant de gêrer les débordements
+		:return new_board: Echequier de taille 12*10 pour une surface de jeu de 8*8 permettant de gêrer les débordements. Les emplacements jouables sont représentés par un entier différent de -1
 		"""
 		board = self.matrice_init()
 		new_board = list()
