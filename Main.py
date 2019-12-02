@@ -101,16 +101,18 @@ def game_pvp():
 	"""
 	configuration = GeneralConf()
 
+	#Crée les pièces de jeu
 	init_pieces(configuration)
 
+	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
 
 	joueur = 1
-	print(configuration.pieces[15].nom)
-	print(configuration.pieces[15].get_piece_position())
-	print(configuration.pieces[15].pawnPossibleMoves())
+	#print(configuration.pieces[15].nom)
+	#print(configuration.pieces[15].get_piece_position())
+	#print(configuration.pieces[15].pawnPossibleMoves())
 
-	while True:
+	while True #Rajouter option echec et mat:
 		if joueur == 1:
 			print("\nAu tour du joueur blanc :")
 			input_value = input("Entrer x1,y1 x2,y2 :")

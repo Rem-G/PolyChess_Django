@@ -70,6 +70,11 @@ class GeneralConf():
 	def verification_deplacement(self, moves, pos_arrivee):
 		"""
 		@RG
+		Vérifie si pour les mouvements d'une pièce donnée, sa position d'arrivée est autorisée
+		Prend en compte les déplacements classiques ainsi que les déplacements pour manger une pièce adverse
+		:param moves: Déplacements autorisés de la pièce
+		:param pos_arrivee: Destination voulue par le joueur pour la pièce
+		:return bool: Renvoie vrai si le déplacement est autorisé, faux sinon
 		"""
 		possible_moves = moves[0]
 		possible_eat = moves[1]
@@ -78,9 +83,12 @@ class GeneralConf():
 		[emplacements_pieces.append(piece.position) for piece in self.pieces]
 
 		if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
+			#Vérification si la position d'arrivee correspond à un mouvement autorisé et qu'elle n'est pas à l'emplacement d'une pièce existante
+			#Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
 			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+				#Vérification si la position d'arrivée voulue est sur le plateau de jeu
 				if pos_arrivee in possible_eat:
-					#Supprime une pièce adverse
+					#Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
 					for piece in self.pieces:
 						if pos_arrivee == piece.position:
 							self.del_piece(piece)
@@ -91,6 +99,9 @@ class GeneralConf():
 	def tour_joueur(self, piece, pos_arrivee):
 		"""
 		@RG
+		Si le déplacement est autorisé, la position de la pièce change sinon affiche une erreur
+		:param piece: Piece à vérifier
+		:param pos_arrivee: Position d'arrivée désirée par le joueur pour la pièce
 		"""
 		if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
 			piece.set_piece_position(pos_arrivee)
@@ -121,7 +132,7 @@ class GeneralConf():
 					if upper is True:
 						#Tour du joueur blanc
 						if piece.nom.isupper():
-							#Vérification nom piece
+							#Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
 							self.tour_joueur(piece, pos_arrivee)
 
 						else:
@@ -130,12 +141,14 @@ class GeneralConf():
 					else:
 						#Tour du joueur noir
 						if piece.nom.islower():
+							#Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
 							self.tour_joueur(piece, pos_arrivee)
 
 						else:
 							self.add_msg_error("Cette pièce appartient à l'adversaire !")
 
 			if pos_depart not in coordonnees_pieces:
+				#Vérifie si la position de départ entrée par le joueur correspond à l'emplacement d'une pièce
 				self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
 
 
