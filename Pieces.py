@@ -121,16 +121,14 @@ class Tour:
         self.position = pos_initiale
         self.id = 0
 
-<<<<<<< HEAD
 class Cavalier():
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
 		self.id = 0
-=======
+
     def set_piece_id(self, pieceId):
         self.id = pieceId
->>>>>>> 3e7abaa95e26c8387c3486e8007614125dbd57cf
 
     def get_piece_position(self):
         return self.position
