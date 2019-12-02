@@ -10,7 +10,7 @@ Le jeu se joue dans un terminal de commandes.
 
 ----------
 
-##Pré-requis :
+## Pré-requis :
 Python 3.x
 
 ----------
