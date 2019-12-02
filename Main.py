@@ -98,7 +98,7 @@ def decision_joueur(decision, configuration):
 
 	return [pos_depart, pos_arrivee]
 
-def game():
+def game_pvp():
 	"""
 	@RG
 	"""
@@ -116,14 +116,17 @@ def game():
 	while True:
 		if joueur == 1:
 			print("Au tour du joueur blanc :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
+			input_value = input("Entrer x1,y1 x2,y2 :")
 
+			decision = decision_joueur(input_value, configuration)
 			configuration.deplacement_piece(decision[0], decision[1], True)
+
 
 		elif joueur == -1:
 			print("Au tour du joueur noir :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
+			input_value = input("Entrer x1,y1 x2,y2 :")
 
+			decision = decision_joueur(input_value, configuration)
 			configuration.deplacement_piece(decision[0], decision[1], False)
 
 		affichage_plateau(configuration.matrice_affichage())
@@ -132,6 +135,9 @@ def game():
 			for msg in configuration.msg_error:
 				print(msg)
 
-		joueur = -joueur
+		if not len(configuration.msg_error):
+			joueur = -joueur
 
-game()
+		configuration.msg_error = list()
+
+game_pvp()

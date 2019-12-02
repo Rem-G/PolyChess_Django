@@ -16,6 +16,21 @@ class GeneralConf():
 		piece.set_piece_id(len(self.pieces))
 		self.pieces.append(piece)
 
+
+	def del_piece(self, piece):
+		"""
+		@RG
+		"""
+		self.pieces.pop(self.pieces.index(piece))
+
+	def add_msg_error(self, msg):
+		"""
+		@RG
+		"""
+		if msg not in self.msg_error:
+			self.msg_error.append(msg)
+
+
 	def matrice_affichage(self):
 		"""
 		@RG
@@ -50,8 +65,6 @@ class GeneralConf():
 	def verification_deplacement(self, moves, pos_arrivee):
 		"""
 		@RG
-		A rajouter : First move ? Fonctionnement ?
-		bug noté : Si le joueur demande à déplacer un emplacement vide, doit renvoyer un message d'erreur
 		"""
 		possible_moves = moves[0]
 		possible_eat = moves[1]
@@ -62,10 +75,23 @@ class GeneralConf():
 		for piece in self.pieces:
 			if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
 				if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+					if pos_arrivee in possible_eat:
+						for p in self.pieces:
+							if pos_arrivee == p.position:
+								self.del_piece(p)
 					return True
 		return False
 
 
+	def tour_joueur(self, piece, pos_arrivee):
+		"""
+		@RG
+		"""
+		if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
+			piece.set_piece_position(pos_arrivee)
+
+		else:
+			self.add_msg_error("Déplacement interdit")
 
 
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
@@ -77,40 +103,34 @@ class GeneralConf():
 		:param pos_depart: Position de destination de la pièce à bouger
 		:param upper: Vérification du joueur faisant la requête : upper == True -> joueur blanc
 		"""	
+		coordonnees_pieces = list()
 		#Vérification que la valeur de la position de départ dans la matrice de jeu est différente de 1
 		if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(pos_arrivee) != -1:
 			for piece in self.pieces:
 				#Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
 				piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
+				coordonnees_pieces.append([piece_x, piece_y])
 
 				if piece_x == pos_depart[0] and piece_y == pos_depart[1]:
 					#Vérification de la position actuelle de la pièce et de la position de départ demandée par l'utilisateur
 					if upper is True:
 						#Tour du joueur blanc
 						if piece.nom.isupper():
-							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)#Coordonnées matricielles ..
-
-							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
-								piece.set_piece_position(pos_arrivee)
-							else:
-								self.msg_error.append("Déplacement interdit")
+							#Vérification nom piece
+							self.tour_joueur(piece, pos_arrivee)
 
 						else:
-							self.msg_error.append("Cette pièce appartient à l'adversaire !")
+							self.add_msg_error("Cette pièce appartient à l'adversaire !")
 
 					else:
 						#Tour du joueur noir
 						if piece.nom.islower():
-							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)
-
-							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
-								piece.set_piece_position(pos_arrivee)
-							else:
-								self.msg_error.append("Déplacement interdit")
+							self.tour_joueur(piece, pos_arrivee)
 
 						else:
-							self.msg_error.append("Cette pièce appartient à l'adversaire !")
-		else:
-			self.msg_error.append("Aucune pièce ne correspond à ces coordonnées")
+							self.add_msg_error("Cette pièce appartient à l'adversaire !")
+
+			if pos_depart not in coordonnees_pieces:
+				self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
 
 
