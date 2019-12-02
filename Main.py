@@ -5,9 +5,6 @@ CENCI Thomas
 RAZAFINDRABE Noah
 GOSSELIN Rémi
 '''
-
-from Board import Mat64
-from Pieces import Pion
 from Configuration import *
 
 def init_pieces(configuration):
@@ -112,16 +109,18 @@ def game_pvp():
 
 	while True:
 		if joueur == 1:
-			print("Au tour du joueur blanc :")
+			print("\nAu tour du joueur blanc :")
 			input_value = input("Entrer x1,y1 x2,y2 :")
+			print("\n")
 
 			decision = decision_joueur(input_value, configuration)
 			configuration.deplacement_piece(decision[0], decision[1], True)
 
 
 		elif joueur == -1:
-			print("Au tour du joueur noir :")
+			print("\nAu tour du joueur noir :")
 			input_value = input("Entrer x1,y1 x2,y2 :")
+			print("\n")
 
 			decision = decision_joueur(input_value, configuration)
 			configuration.deplacement_piece(decision[0], decision[1], False)

@@ -1,5 +1,6 @@
 from Board import *
 from Pieces import *
+from Bot import *
 
 
 class GeneralConf():
@@ -30,6 +31,13 @@ class GeneralConf():
 		if msg not in self.msg_error:
 			self.msg_error.append(msg)
 
+	def infos_pieces(self):
+		"""
+		@RG
+		Intérêt ?
+		"""
+		return [{'nom' : p.nom, 'id': p.id, 'position' : p.position} for p in self.pieces]
+
 
 	def matrice_affichage(self):
 		"""
@@ -38,13 +46,10 @@ class GeneralConf():
 		sur l'échiquier 
 		:return matrice_screen: Matrice 8*8 avec le nom des pièces affiché sur leur position, les -1 de la matrice initiale sont convertis en '.'
 		"""
-		pieces = self.pieces
-
 		matrice = self.board.matrice_init()
 
-		for piece in pieces:
+		for piece in self.pieces:
 			pos = piece.get_piece_position()
-			#pos = self.board.position_piece_mat([piece.get_piece_position()[0], piece.get_piece_position()[1]])
 			matrice[pos[0]][pos[1]] = piece.nom + ' '
 
 		for index_i, i in enumerate(matrice):
@@ -72,14 +77,14 @@ class GeneralConf():
 		emplacements_pieces = list()
 		[emplacements_pieces.append(piece.position) for piece in self.pieces]
 
-		for piece in self.pieces:
-			if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
-				if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
-					if pos_arrivee in possible_eat:
-						for p in self.pieces:
-							if pos_arrivee == p.position:
-								self.del_piece(p)
-					return True
+		if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
+			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+				if pos_arrivee in possible_eat:
+					#Supprime une pièce adverse
+					for piece in self.pieces:
+						if pos_arrivee == piece.position:
+							self.del_piece(piece)
+				return True
 		return False
 
 

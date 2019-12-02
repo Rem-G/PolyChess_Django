@@ -87,7 +87,6 @@ class Cavalier():
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.position_convert = Mat64().position_piece_mat(pos_initiale)
 		self.id = 0
 
 	def set_piece_id(self, pieceId):

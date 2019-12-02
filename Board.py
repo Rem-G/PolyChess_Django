@@ -18,6 +18,7 @@ class Mat64():
 		"""
 		board = self.matrice_init()
 		new_board = list()
+		#Ajout 2 premières lignes de -1
 		[new_board.append([-1]*10) for k in range(2)]
 		pos = 0
 		for i in board[2:len(board)-2]:
@@ -28,6 +29,7 @@ class Mat64():
 			k.append(-1)
 			new_board.append(k)
 
+		#Ajout 2 dernières lignes de -1
 		[new_board.append([-1]*10) for k in range(2)]
 		return new_board
 
@@ -40,8 +42,6 @@ class Mat64():
 		"""
 		lignes_matrice = {'8' : 2, '7' : 3, '6' : 4, '5' : 5, '4': 6, '3' : 7, '2' : 8, '1' : 9}
 		colonnes_matrice = {'a' : 1, 'b' : 2, 'c' : 3, 'd' : 4, 'e' : 5, 'f' : 6, 'g' : 7, 'h' : 8 }
-
-		board = self.matrice_jeu()
 
 		if piece_pos[0] in colonnes_matrice.keys() and piece_pos[1] in lignes_matrice.keys():
 			return [lignes_matrice[piece_pos[1]], colonnes_matrice[piece_pos[0]]]
