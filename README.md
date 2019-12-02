@@ -8,12 +8,12 @@ Razafindrabe Noah, Vieu Loïc, Gosselin Rémi, Cenci Thomas
 Ce projet a pour but la création d'un jeu d'échecs en python. Celui-ci proposera deux modes de jeu : joueur contre joueur et joueur contre machine.
 Le jeu se joue dans un terminal de commandes.
 
-----------
+## Fonctionnalités:
+[A venir]
 
 ## Pré-requis :
 Python 3.x
 
-----------
 ## Lancement du jeu
 Pour lancer le jeu, placez-vous dans le répertoire Polychess et lancez Main.py.
 Tour à tour les joueurs communiquent leurs intentions de jeu selon le format suivant : x1,y1 x2,y2
