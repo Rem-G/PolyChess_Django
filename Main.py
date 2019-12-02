@@ -109,6 +109,9 @@ def game():
 	affichage_plateau(configuration.matrice_affichage())
 
 	joueur = 1
+	print(configuration.pieces[15].nom)
+	print(configuration.pieces[15].get_piece_position())
+	print(configuration.pieces[15].pawnPossibleMoves())
 
 	while True:
 		if joueur == 1:
