@@ -16,6 +16,31 @@ class GeneralConf():
 		piece.set_piece_id(len(self.pieces))
 		self.pieces.append(piece)
 
+
+	def del_piece(self, piece):
+		"""
+		@RG
+		"""
+		if piece is self.pieces[0]:
+			self.pieces = self.pieces[1:]
+
+		elif piece is self.pieces[len(self.pieces)-1]:
+			self.pieces = self.pieces[len(self.pieces)-2]
+
+		else:
+			left = self.pieces[:self.pieces.index(piece)-1]
+			right = self.pieces[self.pieces.index(piece)+1:]
+
+			self.pieces = left+right
+
+	def add_msg_error(self, msg):
+		"""
+		@RG
+		"""
+		if msg not in self.msg_error:
+			self.msg_error.append(msg)
+
+
 	def matrice_affichage(self):
 		"""
 		@RG
@@ -62,6 +87,11 @@ class GeneralConf():
 		for piece in self.pieces:
 			if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
 				if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+					if pos_arrivee in possible_eat:
+						for p in self.pieces:
+							if pos_arrivee == p.position:
+								self.del_piece(p)
+								print(p.nom)
 					return True
 		return False
 
@@ -93,10 +123,10 @@ class GeneralConf():
 							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
 								piece.set_piece_position(pos_arrivee)
 							else:
-								self.msg_error.append("Déplacement interdit")
+								self.add_msg_error("Déplacement interdit")
 
 						else:
-							self.msg_error.append("Cette pièce appartient à l'adversaire !")
+							self.add_msg_error("Cette pièce appartient à l'adversaire !")
 
 					else:
 						#Tour du joueur noir
@@ -106,11 +136,11 @@ class GeneralConf():
 							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
 								piece.set_piece_position(pos_arrivee)
 							else:
-								self.msg_error.append("Déplacement interdit")
+								self.add_msg_error("Déplacement interdit")
 
 						else:
-							self.msg_error.append("Cette pièce appartient à l'adversaire !")
-		else:
-			self.msg_error.append("Aucune pièce ne correspond à ces coordonnées")
+							self.add_msg_error("Cette pièce appartient à l'adversaire !")
+				else:
+					self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
 
 

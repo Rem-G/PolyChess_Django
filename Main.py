@@ -113,15 +113,26 @@ def game():
 	while True:
 		if joueur == 1:
 			print("Au tour du joueur blanc :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
+			input_value = input("Entrer x1,y1 x2,y2 :")
 
-			configuration.deplacement_piece(decision[0], decision[1], True)
+			if input_value != '^C8': #^C8 -> ctrl+c
+				try:
+					decision = decision_joueur(input_value, configuration)
+					configuration.deplacement_piece(decision[0], decision[1], True)
+				except:
+					configuration.add_msg_error("Cordonnées incorrectes")
+
 
 		elif joueur == -1:
 			print("Au tour du joueur noir :")
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 :"), configuration)
+			input_value = input("Entrer x1,y1 x2,y2 :")
 
-			configuration.deplacement_piece(decision[0], decision[1], False)
+			if input_value != '^C8': #^C8 -> ctrl+c
+				try:
+					decision = decision_joueur(input_value, configuration)
+					configuration.deplacement_piece(decision[0], decision[1], False)
+				except:
+					configuration.add_msg_error("Cordonnées incorrectes")
 
 		affichage_plateau(configuration.matrice_affichage())
 
@@ -129,6 +140,9 @@ def game():
 			for msg in configuration.msg_error:
 				print(msg)
 
-		joueur = -joueur
+		if not len(configuration.msg_error):
+			joueur = -joueur
+
+		configuration.msg_error = list()
 
 game()
