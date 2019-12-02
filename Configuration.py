@@ -65,8 +65,6 @@ class GeneralConf():
 	def verification_deplacement(self, moves, pos_arrivee):
 		"""
 		@RG
-		A rajouter : First move ? Fonctionnement ?
-		bug noté : Si le joueur demande à déplacer un emplacement vide, doit renvoyer un message d'erreur
 		"""
 		possible_moves = moves[0]
 		possible_eat = moves[1]
@@ -81,11 +79,19 @@ class GeneralConf():
 						for p in self.pieces:
 							if pos_arrivee == p.position:
 								self.del_piece(p)
-								print(p.nom)
 					return True
 		return False
 
 
+	def tour_joueur(self, piece, pos_arrivee):
+		"""
+		@RG
+		"""
+		if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
+			piece.set_piece_position(pos_arrivee)
+
+		else:
+			self.add_msg_error("Déplacement interdit")
 
 
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
@@ -110,12 +116,8 @@ class GeneralConf():
 					if upper is True:
 						#Tour du joueur blanc
 						if piece.nom.isupper():
-							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)#Coordonnées matricielles ..
-
-							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
-								piece.set_piece_position(pos_arrivee)
-							else:
-								self.add_msg_error("Déplacement interdit")
+							#Vérification nom piece
+							self.tour_joueur(piece, pos_arrivee)
 
 						else:
 							self.add_msg_error("Cette pièce appartient à l'adversaire !")
@@ -123,15 +125,11 @@ class GeneralConf():
 					else:
 						#Tour du joueur noir
 						if piece.nom.islower():
-							print('Pièce jouée :', piece.nom, piece.position, '->', pos_arrivee)
-
-							if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
-								piece.set_piece_position(pos_arrivee)
-							else:
-								self.add_msg_error("Déplacement interdit")
+							self.tour_joueur(piece, pos_arrivee)
 
 						else:
 							self.add_msg_error("Cette pièce appartient à l'adversaire !")
+
 			if pos_depart not in coordonnees_pieces:
 				self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
 

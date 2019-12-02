@@ -98,7 +98,7 @@ def decision_joueur(decision, configuration):
 
 	return [pos_depart, pos_arrivee]
 
-def game():
+def game_pvp():
 	"""
 	@RG
 	"""
@@ -137,4 +137,4 @@ def game():
 
 		configuration.msg_error = list()
 
-game()
+game_pvp()
