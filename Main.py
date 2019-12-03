@@ -6,6 +6,8 @@ RAZAFINDRABE Noah
 GOSSELIN Rémi
 '''
 from Configuration import *
+#test commit
+
 
 def init_pieces(configuration):
 	"""
