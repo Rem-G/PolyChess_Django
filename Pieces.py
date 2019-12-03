@@ -74,6 +74,9 @@ class Roi(Piece):
 		"""
 		super().__init__(nom, pos_initiale)
 		self.firstMove = True
+		self.check = False
+		self.checkMate = False
+
 
 	def firstMoveOver(self):
 		"""

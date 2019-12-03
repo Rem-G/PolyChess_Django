@@ -107,7 +107,7 @@ def game_pvp():
 
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
-
+ 
 	joueur = 1
 	#print(configuration.pieces[15].nom)
 	#print(configuration.pieces[15].get_piece_position())
@@ -115,19 +115,17 @@ def game_pvp():
 
 	while True :#Rajouter option echec et mat
 		if joueur == 1:
-			print("\nAu tour du joueur blanc :")
-			input_value = input("Entrer x1,y1 x2,y2 :")
-			print("\n")
+			print("\nAu tour du joueur blanc")
 
-			decision = decision_joueur(input_value, configuration)
+			decision = decision_joueur(input("Entrer x1,y1 x2,y2 : "), configuration)
+			print('\n')
 			configuration.deplacement_piece(decision[0], decision[1], True)
 
 		elif joueur == -1:
-			print("\nAu tour du joueur noir :")
-			input_value = input("Entrer x1,y1 x2,y2 :")
-			print("\n")
+			print("\nAu tour du joueur noir")
 
-			decision = decision_joueur(input_value, configuration)
+			decision = decision_joueur(input("Entrer x1,y1 x2,y2 : "), configuration)
+			print('\n')
 			configuration.deplacement_piece(decision[0], decision[1], False)
 
 		affichage_plateau(configuration.matrice_affichage())
