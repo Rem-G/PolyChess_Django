@@ -6,16 +6,7 @@ class Pion:
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.id = 0
 		self.firstMove = True
-
-	def set_piece_id(self, identifier):
-		"""
-		:param pieceId type int: Identifiant du pion
-		Set l'identifiant du pion
-		@TC
-		"""
-		self.id = identifier
 
 	def get_piece_position(self):
 		"""
@@ -45,6 +36,7 @@ class Pion:
 		"""
 		moves, capture = [], []
 
+		#is self.nom.islower()
 		if self.nom == 'p':
 			moves.append([self.position[0] + 1, self.position[1]])
 
@@ -77,11 +69,6 @@ class Roi:
 		"""
 		self.nom = nom
 		self.position = pos_initiale
-		self.id = 0
-
-	def set_piece_id(self, pieceId):
-		""" set l'indentifiant du roi @NR """
-		self.id = pieceId
 
 	def get_piece_position(self):
 		""" return la position du roi @NR"""
@@ -114,10 +101,6 @@ class Tour:
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.id = 0
-		
-	def set_piece_id(self, pieceId):
-		self.id = pieceId
 
 	def get_piece_position(self):
 		return self.position
@@ -145,10 +128,6 @@ class Fou:
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.id = 0
-
-	def set_piece_id(self, pieceId):
-		self.id = pieceId
 
 	def get_piece_position(self):
 		return self.position
@@ -161,10 +140,6 @@ class Dame:
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.id = 0
-
-	def set_piece_id(self, pieceId):
-		self.id = pieceId
 
 	def get_piece_position(self):
 		return self.position

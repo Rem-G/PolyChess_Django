@@ -87,6 +87,7 @@ def decision_joueur(decision, configuration):
 	:return list: Choix de jeu du joueur en list
 	"""
 
+	#Conversion des coordonnées utilisateur en coordonnées matricielles
 	pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
 	pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
 
@@ -112,7 +113,7 @@ def game_pvp():
 	#print(configuration.pieces[15].get_piece_position())
 	#print(configuration.pieces[15].pawnPossibleMoves())
 
-	while True #Rajouter option echec et mat:
+	while True :#Rajouter option echec et mat
 		if joueur == 1:
 			print("\nAu tour du joueur blanc :")
 			input_value = input("Entrer x1,y1 x2,y2 :")
@@ -120,7 +121,6 @@ def game_pvp():
 
 			decision = decision_joueur(input_value, configuration)
 			configuration.deplacement_piece(decision[0], decision[1], True)
-
 
 		elif joueur == -1:
 			print("\nAu tour du joueur noir :")

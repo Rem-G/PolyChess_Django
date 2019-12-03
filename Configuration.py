@@ -14,7 +14,6 @@ class GeneralConf():
 		@RG
 		Ajoute une nouvelle pièce à la liste de pièces existantes
 		"""
-		piece.set_piece_id(len(self.pieces))
 		self.pieces.append(piece)
 
 
