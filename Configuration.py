@@ -35,7 +35,7 @@ class GeneralConf():
 		@RG
 		Intérêt ?
 		"""
-		return [{'nom' : p.nom, 'id': p.id, 'position' : p.position} for p in self.pieces]
+		return [{'nom' : p.nom, 'position' : p.position, 'joueur_blanc' : p.nom.isupper()} for p in self.pieces]
 
 
 	def matrice_affichage(self):
@@ -149,5 +149,9 @@ class GeneralConf():
 			if pos_depart not in coordonnees_pieces:
 				#Vérifie si la position de départ entrée par le joueur correspond à l'emplacement d'une pièce
 				self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
+
+		else:
+			#Si le joueur entre des coordonnées en dehor du plateau de jeu
+			self.add_msg_error("Merci de jouer sur le plateau")
 
 

@@ -31,6 +31,7 @@ class Mat64():
 
 		#Ajout 2 dernières lignes de -1
 		[new_board.append([-1]*10) for k in range(2)]
+
 		return new_board
 
 
