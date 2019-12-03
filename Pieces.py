@@ -109,6 +109,7 @@ class Roi(Piece):
                     moves.append([x + i,y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
         return [moves,moves]
 
+
 ###########################################################################################################
 ###########################################################################################################
 
@@ -154,6 +155,10 @@ class Tour(Piece):
 class Cavalier(Piece):
     def __init__(self, nom, pos_initiale):
         super().__init__(nom, pos_initiale)
+
+    def PossibleMoves(self):
+
+        return [[self.position],[self.position]] # test pour @NR
 
 ###########################################################################################################
 ###########################################################################################################

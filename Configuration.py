@@ -8,6 +8,8 @@ class GeneralConf():
 		self.pieces = list()
 		self.msg_error = list()
 		self.board = Mat64()
+		self.pieces_joueurB = list()
+		self.pieces_joueurN = list()
 
 	def add_piece(self, piece):
 		"""
@@ -15,7 +17,6 @@ class GeneralConf():
 		Ajoute une nouvelle pièce à la liste de pièces existantes
 		"""
 		self.pieces.append(piece)
-
 
 	def del_piece(self, piece):
 		"""
@@ -35,7 +36,19 @@ class GeneralConf():
 		@RG
 		Intérêt ?
 		"""
-		return [{'nom' : p.nom, 'position' : p.position, 'joueur_blanc' : p.nom.isupper()} for p in self.pieces]
+		return [{'nom': p.nom, 'position': p.position, 'joueur_blanc': p.nom.isupper()} for p in self.pieces]
+
+	def pieces_joueurs(self):
+		"""
+		@NR
+		Ajoute chaque piece a la liste des piece de chaque equipe
+		"""
+
+		for piece in self.pieces :
+			if piece.nom.isupper():
+				self.pieces_joueurB.append(piece)
+			else:
+				self.pieces_joueurN.append(piece)
 
 
 	def matrice_affichage(self):
@@ -52,19 +65,19 @@ class GeneralConf():
 			matrice[pos[0]][pos[1]] = piece.nom + ' '
 
 		for index_i, i in enumerate(matrice):
-			matrice[index_i] = i[1:len(i)-1] #Suppression du premier et dernier élément de la ligne -> suppression des -1
+			matrice[index_i] = i[1:len(
+				i) - 1]  # Suppression du premier et dernier élément de la ligne -> suppression des -1
 			for index_j, j in enumerate(i):
-				try: #Chaque ligne de la matrice étant redéfinie au dessus en supprimant la première et la dernière valeur
+				try:  # Chaque ligne de la matrice étant redéfinie au dessus en supprimant la première et la dernière valeur
 					# le maximum d'index_i est plus élevé que la taille de la nouvelle ligne
 					if matrice[index_i][index_j] == -1:
 						matrice[index_i][index_j] = '. '
 				except:
 					pass
 
-		matrice_screen = matrice[2:len(matrice)-2]
+		matrice_screen = matrice[2:len(matrice) - 2]
 
 		return matrice_screen
-
 
 	def verification_deplacement(self, moves, pos_arrivee):
 		"""
@@ -82,12 +95,12 @@ class GeneralConf():
 		[emplacements_pieces.append(piece.position) for piece in self.pieces]
 
 		if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
-			#Vérification si la position d'arrivee correspond à un mouvement autorisé et qu'elle n'est pas à l'emplacement d'une pièce existante
-			#Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
+			# Vérification si la position d'arrivee correspond à un mouvement autorisé et qu'elle n'est pas à l'emplacement d'une pièce existante
+			# Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
 			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
-				#Vérification si la position d'arrivée voulue est sur le plateau de jeu
+				# Vérification si la position d'arrivée voulue est sur le plateau de jeu
 				if pos_arrivee in possible_eat:
-					#Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+					# Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
 					for piece in self.pieces:
 						if pos_arrivee == piece.position:
 							self.del_piece(piece)
@@ -95,19 +108,75 @@ class GeneralConf():
 		return False
 
 
+	def sameTeam(self, piece1, piece2):
+		""" @NR
+		verifie si piece 1 et piece 2 sont dans le meme equipe
+		:param piece1 : une piece
+		:param piece2 : une piece
+		:return bool : renvoie vrai si piece 1 et piece 2 sont dans la meme equipe
+		"""
+		if (piece1 in self.pieces_joueurB and piece2 in self.pieces_joueurB) or (piece1 in self.pieces_joueurN and piece2 in self.pieces_joueurN):
+			return True
+		return False
+
+
+	def verification_deplacement_roi(self, roi, moves, pos_arrivee):
+		""" @NR
+		Verifie si le deplacement du roi est possible, sans l'emmener en echec
+		:param roi: le roi
+		:param moves: deplacements autorisés du roi
+		:param pos_arrivee: Destination voulue par le joueur pour le roi
+		:return bool : renvoie vrai si le deplacement est possible et faux sinon
+		"""
+
+		possible_moves = moves[0]
+		possible_eat = moves[1]
+
+		emplacements_pieces = list()
+		[emplacements_pieces.append(piece.position) for piece in self.pieces]
+
+		emplacements_reachable_by_opponent = list()
+		for piece in self.pieces:
+			if not (self.sameTeam(piece,roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
+				for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
+					if erbo not in emplacements_reachable_by_opponent:  # Pour ne pas avoir de doublon
+						emplacements_reachable_by_opponent.append(erbo)  # on ajoute les emplacements de capture de chaque piece
+
+		if ((pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces) or (pos_arrivee in possible_eat)) and pos_arrivee not in emplacements_reachable_by_opponent:
+			# verification si la position d'arrivee est dans les moves possibles et qu'il n'y pas de piece à cette emplacement ou que on peut manger une piece a cet emplacement
+			# et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
+			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+				# Vérification si la position d'arrivée voulue est sur le plateau de jeu
+				if pos_arrivee in possible_eat:
+					# Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+					for piece in self.pieces:
+						if pos_arrivee == piece.position:
+							self.del_piece(piece)
+				return True
+		return False
+
 	def tour_joueur(self, piece, pos_arrivee):
 		"""
-		@RG
+		@RG @NR
 		Si le déplacement est autorisé, la position de la pièce change sinon affiche une erreur
 		:param piece: Piece à vérifier
 		:param pos_arrivee: Position d'arrivée désirée par le joueur pour la pièce
 		"""
-		if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
-			piece.set_piece_position(pos_arrivee)
+
+		if piece.__class__ is Roi :  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
+			if self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
+				piece.set_piece_position(pos_arrivee)
+
+			else:
+				self.add_msg_error("déplacement interdit ou mise en échec du roi")
 
 		else:
-			self.add_msg_error("Déplacement interdit")
 
+			if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
+				piece.set_piece_position(pos_arrivee)
+
+			else:
+				self.add_msg_error("Déplacement interdit")
 
 	def deplacement_piece(self, pos_depart, pos_arrivee, upper):
 		"""
@@ -117,41 +186,40 @@ class GeneralConf():
 		:param pos_depart: Position initiale de la pièce à bouger
 		:param pos_depart: Position de destination de la pièce à bouger
 		:param upper: Vérification du joueur faisant la requête : upper == True -> joueur blanc
-		"""	
+		"""
 		coordonnees_pieces = list()
-		#Vérification que la valeur de la position de départ dans la matrice de jeu est différente de 1
-		if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(pos_arrivee) != -1:
+		# Vérification que la valeur de la position de départ dans la matrice de jeu est différente de 1
+		if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(
+				pos_arrivee) != -1:
 			for piece in self.pieces:
-				#Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
+				# Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
 				piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
 				coordonnees_pieces.append([piece_x, piece_y])
 
 				if piece_x == pos_depart[0] and piece_y == pos_depart[1]:
-					#Vérification de la position actuelle de la pièce et de la position de départ demandée par l'utilisateur
+					# Vérification de la position actuelle de la pièce et de la position de départ demandée par l'utilisateur
 					if upper is True:
-						#Tour du joueur blanc
+						# Tour du joueur blanc
 						if piece.nom.isupper():
-							#Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
+							# Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
 							self.tour_joueur(piece, pos_arrivee)
 
 						else:
 							self.add_msg_error("Cette pièce appartient à l'adversaire !")
 
 					else:
-						#Tour du joueur noir
+						# Tour du joueur noir
 						if piece.nom.islower():
-							#Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
+							# Vérification nom piece, affiche un message d'erreur si ce déplacement est interdit
 							self.tour_joueur(piece, pos_arrivee)
 
 						else:
 							self.add_msg_error("Cette pièce appartient à l'adversaire !")
 
 			if pos_depart not in coordonnees_pieces:
-				#Vérifie si la position de départ entrée par le joueur correspond à l'emplacement d'une pièce
+				# Vérifie si la position de départ entrée par le joueur correspond à l'emplacement d'une pièce
 				self.add_msg_error("Aucune pièce ne correspond à ces coordonnées")
 
 		else:
-			#Si le joueur entre des coordonnées en dehor du plateau de jeu
+			# Si le joueur entre des coordonnées en dehor du plateau de jeu
 			self.add_msg_error("Merci de jouer sur le plateau")
-
-

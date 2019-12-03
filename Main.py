@@ -11,7 +11,7 @@ from Configuration import *
 
 def init_pieces(configuration):
 	"""
-	@RG
+	@RG @RN
 	Initialisation des pièces de jeu
 	Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
 	"""
@@ -61,6 +61,9 @@ def init_pieces(configuration):
 	configuration.add_piece(Dame("d", [2, 4]))
 
 	configuration.add_piece(Roi("r", [2, 5]))
+
+	# Equipes
+	configuration.pieces_joueurs()
 
 def affichage_plateau(matrice_affichage):
 	"""
