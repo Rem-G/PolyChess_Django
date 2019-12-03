@@ -1,66 +1,66 @@
 class Piece():#Classe mère
-	def __init__(self, nom, pos_initiale):
-		self.nom = nom
-		self.position = pos_initiale
+    def __init__(self, nom, pos_initiale):
+        self.nom = nom
+        self.position = pos_initiale
 
-	def get_piece_position(self):
-		"""
-		@TC
-		"""
-		return self.position
+    def get_piece_position(self):
+        """
+        @TC
+        """
+        return self.position
 
-	def set_piece_position(self, position):
-		"""
-		:param position type (int, int): Coordonnees de la destination
-		Met à jour la position du pion
-		@TC
-		"""
-		self.position = position
+    def set_piece_position(self, position):
+        """
+        :param position type (int, int): Coordonnees de la destination
+        Met à jour la position du pion
+        @TC
+        """
+        self.position = position
 
 ###########################################################################################################
 ###########################################################################################################
 
 class Pion(Piece):
-	def __init__(self, nom, pos_initiale):
-		super().__init__(nom, pos_initiale)
-		self.firstMove = True
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
+        self.firstMove = True
 
-	def firstMoveOver(self):
-		"""
-		Permet de mettre à jour l'etat du 1er tour du pion
-		@TC
-		"""
-		self.firstMove = False
+    def firstMoveOver(self):
+        """
+        Permet de mettre à jour l'etat du 1er tour du pion
+        @TC
+        """
+        self.firstMove = False
 
-	def PossibleMoves(self):
-		"""
-		:return type list: Liste des moves possibles pour le pion
-		@TC
-		"""
-		moves, capture = [], []
+    def PossibleMoves(self):
+        """
+        :return type list: Liste des moves possibles pour le pion
+        @TC
+        """
+        moves, capture = [], []
 
-		if self.nom == 'p':
-			moves.append([self.position[0] + 1, self.position[1]])
+        if self.nom == 'p':
+            moves.append([self.position[0] + 1, self.position[1]])
 
-			if self.firstMove:
-				moves.append([self.position[0] + 2, self.position[1]])
-				self.firstMoveOver()
+            if self.firstMove:
+                moves.append([self.position[0] + 2, self.position[1]])
+                self.firstMoveOver()
 
-			capture.append([self.position[0] + 1, self.position[1] - 1])
-			capture.append([self.position[0] + 1, self.position[1] + 1])
+            capture.append([self.position[0] + 1, self.position[1] - 1])
+            capture.append([self.position[0] + 1, self.position[1] + 1])
 
-		if self.nom == 'P':
-			moves.append([self.position[0] - 1, self.position[1]])
-			if self.firstMove:
-				moves.append([self.position[0] - 2, self.position[1]])
-				self.firstMoveOver()
+        if self.nom == 'P':
+            moves.append([self.position[0] - 1, self.position[1]])
+            if self.firstMove:
+                moves.append([self.position[0] - 2, self.position[1]])
+                self.firstMoveOver()
 
-			capture.append([self.position[0] - 1, self.position[1] - 1])
-			capture.append([self.position[0] - 1, self.position[1] + 1])
+            capture.append([self.position[0] - 1, self.position[1] - 1])
+            capture.append([self.position[0] - 1, self.position[1] + 1])
 
-		destination = [moves, capture]
+        destination = [moves, capture]
 
-		return destination
+        return destination
 
 ###########################################################################################################
 ###########################################################################################################
@@ -68,6 +68,7 @@ class Pion(Piece):
 
 class Roi(Piece):
 
+<<<<<<< HEAD
 	def __init__(self, nom, pos_initiale):
 		"""@NR
 		:type nom: string
@@ -77,66 +78,89 @@ class Roi(Piece):
 		self.check = False
 		self.checkMate = False
 
+=======
+    def __init__(self, nom, pos_initiale):
+        """@NR
+        :type nom: string
+        """
+        super().__init__(nom, pos_initiale)
+        self.firstMove = True
+>>>>>>> 1bf9eab3e5ee47084ae8f4dd0247bd6a799f1a09
 
-	def firstMoveOver(self):
-		"""
-		Permet de mettre à jour l'etat du 1er tour du pion
-		@TC
-		"""
-		self.firstMove = False
+    def firstMoveOver(self):
+        """
+        Permet de mettre à jour l'etat du 1er tour du pion
+        @TC
+        """
+        self.firstMove = False
 
 
-	def PossibleMoves(self):
-		""" return une liste des moves possibles pour le roi @NR"""
-		# je teste avec les coordonnees carstesiennes pas avec les coordonnes de l'echiquer
+    def PossibleMoves(self):
+        """ return une liste des moves possibles pour le roi @NR"""
+        # je teste avec les coordonnees carstesiennes pas avec les coordonnes de l'echiquer
 
-		x = self.position[0]
-		y = self.position[1]
+        x = self.position[0]
+        y = self.position[1]
 
-		# pour moi move et capture sont les meme
+        # pour moi move et capture sont les meme
 
-		moves = []  # list de move qui sont aussi des listes
-		for i in range(-1, 2):
-			for j in range(-1, 2):
-				if i != 0 or j != 0:
-					moves.append([x + i,y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
-		return [moves,moves]
+        moves = []  # list de move qui sont aussi des listes
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                if i != 0 or j != 0:
+                    moves.append([x + i,y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
+        return [moves,moves]
 
 ###########################################################################################################
 ###########################################################################################################
 
 class Tour(Piece):
-	def __init__(self, nom, pos_initiale):
-		super().__init__(nom, pos_initiale)
-		self.firstMove = True
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
+        self.firstMove = True
 
-	def firstMoveOver(self):
-		"""
-		Permet de mettre à jour l'etat du 1er tour du pion
-		@TC
-		"""
-		self.firstMove = False
-
+    def firstMoveOver(self):
+        """
+        Permet de mettre à jour l'etat du 1er tour du pion
+        """
+        self.firstMove = False
+    def PossibleMoves(self):
+        '''
+        Retourne la liste possible pour un tour
+        '''
+        x = self.position[0]
+        y = self.position[1]
+        listC = []
+        #Boucle pour que la pi�ce ce deplace vers le haut
+        for i in range(x):
+            listC.append([(x-1)-i,y])
+        for i in range(8-x):
+            listC.append([(x+1)+i,y])
+        for i in range(y):
+            listC.append([x,(y-1)-i])
+        for i in range(8-y):
+            listC.append([x,(y+1)+i])
+            
 ###########################################################################################################
 ###########################################################################################################
 
 class Cavalier(Piece):
-	def __init__(self, nom, pos_initiale):
-		super().__init__(nom, pos_initiale)
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
 
 ###########################################################################################################
 ###########################################################################################################
 
 
 class Fou(Piece):
-	def __init__(self, nom, pos_initiale):
-		super().__init__(nom, pos_initiale)
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
 
 ###########################################################################################################
 ###########################################################################################################
 
 
 class Dame(Piece):
-	def __init__(self, nom, pos_initiale):
-		super().__init__(nom, pos_initiale)
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
 
