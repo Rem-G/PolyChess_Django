@@ -1,12 +1,7 @@
-###########################################################################################################
-###### ATTENTION : il faudrait faire de l'heritage avec une classe piece comme classe mere cf.Trello ######
-###########################################################################################################
-
-class Pion:
+class Piece():#Classe mère
 	def __init__(self, nom, pos_initiale):
 		self.nom = nom
 		self.position = pos_initiale
-		self.firstMove = True
 
 	def get_piece_position(self):
 		"""
@@ -22,6 +17,14 @@ class Pion:
 		"""
 		self.position = position
 
+###########################################################################################################
+###########################################################################################################
+
+class Pion(Piece):
+	def __init__(self, nom, pos_initiale):
+		super().__init__(nom, pos_initiale)
+		self.firstMove = True
+
 	def firstMoveOver(self):
 		"""
 		Permet de mettre à jour l'etat du 1er tour du pion
@@ -29,14 +32,13 @@ class Pion:
 		"""
 		self.firstMove = False
 
-	def pawnPossibleMoves(self):
+	def PossibleMoves(self):
 		"""
 		:return type list: Liste des moves possibles pour le pion
 		@TC
 		"""
 		moves, capture = [], []
 
-		#is self.nom.islower()
 		if self.nom == 'p':
 			moves.append([self.position[0] + 1, self.position[1]])
 
@@ -60,28 +62,29 @@ class Pion:
 
 		return destination
 
+###########################################################################################################
+###########################################################################################################
 
-class Roi:
+
+class Roi(Piece):
 
 	def __init__(self, nom, pos_initiale):
 		"""@NR
 		:type nom: string
 		"""
-		self.nom = nom
-		self.position = pos_initiale
+		super().__init__(nom, pos_initiale)
+		self.firstMove = True
 
-	def get_piece_position(self):
-		""" return la position du roi @NR"""
-		return self.position
-
-	def set_piece_position(self, position):
+	def firstMoveOver(self):
 		"""
-		position : (int,int) coordonnees de la destination
-		set la position du roi @NR"""
-		self.position = position
+		Permet de mettre à jour l'etat du 1er tour du pion
+		@TC
+		"""
+		self.firstMove = False
 
-	def pawnPossibleMoves(self):
-		""" return une liste des moves possibles pour le pion @NR"""
+
+	def PossibleMoves(self):
+		""" return une liste des moves possibles pour le roi @NR"""
 		# je teste avec les coordonnees carstesiennes pas avec les coordonnes de l'echiquer
 
 		x = self.position[0]
@@ -96,53 +99,41 @@ class Roi:
 					moves.append([x + i,y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
 		return [moves,moves]
 
+###########################################################################################################
+###########################################################################################################
 
-class Tour:
+class Tour(Piece):
 	def __init__(self, nom, pos_initiale):
-		self.nom = nom
-		self.position = pos_initiale
+		super().__init__(nom, pos_initiale)
+		self.firstMove = True
 
-	def get_piece_position(self):
-		return self.position
+	def firstMoveOver(self):
+		"""
+		Permet de mettre à jour l'etat du 1er tour du pion
+		@TC
+		"""
+		self.firstMove = False
 
-	def set_piece_position(self, position):
-		self.position = position
+###########################################################################################################
+###########################################################################################################
 
-class Cavalier():
+class Cavalier(Piece):
 	def __init__(self, nom, pos_initiale):
-		self.nom = nom
-		self.position = pos_initiale
-		self.id = 0
+		super().__init__(nom, pos_initiale)
 
-	def set_piece_id(self, pieceId):
-		self.id = pieceId
-
-	def get_piece_position(self):
-		return self.position
-
-	def set_piece_position(self, position):
-		self.position = position
+###########################################################################################################
+###########################################################################################################
 
 
-class Fou:
+class Fou(Piece):
 	def __init__(self, nom, pos_initiale):
-		self.nom = nom
-		self.position = pos_initiale
+		super().__init__(nom, pos_initiale)
 
-	def get_piece_position(self):
-		return self.position
-
-	def set_piece_position(self, position):
-		self.position = position
+###########################################################################################################
+###########################################################################################################
 
 
-class Dame:
+class Dame(Piece):
 	def __init__(self, nom, pos_initiale):
-		self.nom = nom
-		self.position = pos_initiale
+		super().__init__(nom, pos_initiale)
 
-	def get_piece_position(self):
-		return self.position
-
-	def set_piece_position(self, position):
-		self.position = position

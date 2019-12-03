@@ -102,7 +102,7 @@ class GeneralConf():
 		:param piece: Piece à vérifier
 		:param pos_arrivee: Position d'arrivée désirée par le joueur pour la pièce
 		"""
-		if self.verification_deplacement(piece.pawnPossibleMoves(), pos_arrivee):
+		if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
 			piece.set_piece_position(pos_arrivee)
 
 		else:
