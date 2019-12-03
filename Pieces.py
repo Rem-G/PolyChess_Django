@@ -115,20 +115,29 @@ class Tour(Piece):
     def PossibleMoves(self):
         '''
         Retourne la liste possible pour un tour
+        @LV
         '''
         x = self.position[0]
         y = self.position[1]
         listC = []
-        #Boucle pour que la pièce ce deplace vers le haut
+        
+        #Bas
         for i in range(x):
             listC.append([(x-1)-i,y])
+            
+        #Haur
         for i in range(8-x):
             listC.append([(x+1)+i,y])
+            
+        #Gauche
         for i in range(y):
             listC.append([x,(y-1)-i])
+        
+        #Droit
         for i in range(8-y):
             listC.append([x,(y+1)+i])
-            
+        
+        return listC
 ###########################################################################################################
 ###########################################################################################################
 
@@ -143,7 +152,33 @@ class Cavalier(Piece):
 class Fou(Piece):
     def __init__(self, nom, pos_initiale):
         super().__init__(nom, pos_initiale)
-
+    def PossibleMoves(self):
+        '''
+        Retourne la liste des mouvements d'un fou en connaissant  sa position initial
+        @LV
+        '''
+        x = self.position[0]
+        y = self.position[1]
+        listC = []
+        if x<y:
+            y2 = 8-y
+        #Haut - droit
+        for i in range(min(x,y2)):
+            listC.append([(x-1)-i,(y+1)+i])
+            
+        #Bas - droit
+        for i in range(max(x,y2)):
+            listC.append([(x+1)+i,(y+1)+i])
+        
+        #Haut - gauche
+        for i in range(min(y,x)):
+            listC.append([(x-1)-i,(y-1)-i])
+            
+        #Bas - gauche
+        for i in range(max(y,x)):
+            listC.append([(x+1)+i,(y-1)-i])
+            
+        return listC
 ###########################################################################################################
 ###########################################################################################################
 
