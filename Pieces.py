@@ -88,7 +88,7 @@ class Roi(Piece):
     def firstMoveOver(self):
         """
         Permet de mettre à jour l'etat du 1er tour du pion
-        @TC
+        @NR
         """
         self.firstMove = False
 

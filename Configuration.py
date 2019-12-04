@@ -164,11 +164,17 @@ class GeneralConf():
 		"""
 
 		if piece.__class__ is Roi :  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
-			if self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
+			roc_roi_fait = False
+			if piece.firstMove == True : # roi n'a pas encore joue son premier tour
+				#on essaie le roc
+				roc_roi_fait = self.rocRoi(piece, pos_arrivee)
+
+			if not (roc_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
 				piece.set_piece_position(pos_arrivee)
 
 			else:
-				self.add_msg_error("déplacement interdit ou mise en échec du roi")
+				if not (roc_roi_fait):
+					self.add_msg_error("déplacement interdit ou mise en échec du roi")
 
 		else:
 
@@ -223,3 +229,57 @@ class GeneralConf():
 		else:
 			# Si le joueur entre des coordonnées en dehor du plateau de jeu
 			self.add_msg_error("Merci de jouer sur le plateau")
+
+
+	def rocRoi (self, roi, pos_arrivee):
+		"""
+		@NR
+		applique le roc depuis le roi vers la tour
+		:param roi : une piece roi
+		:param pos_arrivee : la position d'arrivee, sur cette emplacement doit etre un roi ou une tour
+		:return bool: true si le roc reussi, false sinon
+		"""
+
+		tour_allie = list()  # tour_allie : list des tours de tour allie
+		for piece1 in self.pieces:
+			if piece1.__class__ is Tour and self.sameTeam(roi, piece1):
+				tour_allie.append(piece1)
+		for tour in tour_allie:
+			if tour.position == pos_arrivee:
+				if tour.firstMove:
+					print("roi y: ",roi.get_piece_position()[1], "tour y :",tour.get_piece_position()[1])
+					for posCol in range (roi.get_piece_position()[1],tour.get_piece_position()[1]):  #on parcours l'echiquier sur l'horizontale entre les 2 pieces
+						if posCol != roi.get_piece_position()[1] and self.case_occupe(roi.position[0],posCol): #on ne peut pas faire le roc, car il y a des piece entre la tour et le roi
+							#pour ne pas qu'il commence a partir de la position du roi, on est oblige de faire comme ça car on ne connait pas le sens du parcours (ascendant ou descendannt)
+							print("rocRoi")
+							return False
+					#on fait le roc avec une permutation
+					line_roi = roi.get_piece_position()[0]
+					col_roi = roi.get_piece_position()[1]
+					line_tour = tour.get_piece_position()[0]
+					col_tour=tour.get_piece_position()[1]
+
+					if col_roi<col_tour:  #petit roc
+						col_roi = col_roi +2
+						col_tour = col_tour-2
+					else:  #grant roc
+						col_roi = col_roi-2
+						col_tour = col_tour +3
+
+					roi.set_piece_position([line_roi,col_roi])
+					tour.set_piece_position([line_tour,col_tour])
+					return True
+		return False
+
+	def case_occupe(self, posLine, posCol):
+		"""
+		@NR
+		:param posLine: position ligne
+		:param posCol: position colonne
+		:return bool: True si la case est occupe, False sinon
+		"""
+		for piece in self.pieces:
+			if piece.get_piece_position()==[posLine, posCol]:
+				print(posLine, posCol)
+				return True
+		return False
