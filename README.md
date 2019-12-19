@@ -19,6 +19,8 @@ Pour lancer le jeu, placez-vous dans le répertoire Polychess et lancez Main.py.
 Tour à tour les joueurs communiquent leurs intentions de jeu selon le format suivant : x1,y1 x2,y2
 x1,y1 représentant les coordonnées initiales de la pièce à déplacer et x2,y2 les coordonnées de la destination de la pièce.
 
+## Trello
+https://trello.com/b/GnWD5gmq/polychess
 ----------
 
 ## Clone du projet
