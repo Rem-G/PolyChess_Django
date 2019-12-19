@@ -93,6 +93,7 @@ def decision_joueur(decision, configuration):
 	"""
 
 	#Conversion des coordonnées utilisateur en coordonnées matricielles
+
 	pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
 	pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
 
@@ -108,11 +109,15 @@ def game_pvp():
 	configuration = GeneralConf()
 
 	#Crée les pièces de jeu
-	init_pieces(configuration)
+	new_partie = input("Voulez-vous charger une partie existante ? Y/N ")
+	if new_partie == 'Y':
+		configuration.charger_partie()
+		print("Partie chargée !")
+	else:
+		init_pieces(configuration)
 
 	#Crée les joueurs
 	configuration.init_joueurs()
-
 
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
@@ -122,23 +127,35 @@ def game_pvp():
 	#print(configuration.pieces[15].get_piece_position())
 	#print(configuration.pieces[15].pawnPossibleMoves())
 
-	while True :#Rajouter option echec et mat
+	while True :#Rajouter option echec et mat + afficher pièces mangées
 		if configuration.avantage_joueur():
 			print('\n', configuration.avantage_joueur())
 
 		if joueur == 1:
 			print("\nAu tour du joueur blanc")
 
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 : "), configuration)
-			print('\n')
-			configuration.deplacement_piece(decision[0], decision[1], True)
+			input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+			if input_decision == 'sauvegarde':
+				configuration.sauvegarde_partie()
+				print('Partie sauvegardée !')
+				break
+			else:
+				decision = decision_joueur(input_decision, configuration)
+				print('\n')
+				configuration.deplacement_piece(decision[0], decision[1], True)
 
 		elif joueur == -1:
 			print("\nAu tour du joueur noir")
 
-			decision = decision_joueur(input("Entrer x1,y1 x2,y2 : "), configuration)
-			print('\n')
-			configuration.deplacement_piece(decision[0], decision[1], False)
+			input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+			if input_decision == 'sauvegarde':
+				configuration.sauvegarde_partie()
+				print('Partie sauvegardée !')
+				break
+			else:
+				decision = decision_joueur(input_decision, configuration)
+				print('\n')
+				configuration.deplacement_piece(decision[0], decision[1], False)
 
 		affichage_plateau(configuration.matrice_affichage())
 

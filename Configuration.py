@@ -1,18 +1,22 @@
 from Board import *
 from Pieces import *
 from Bot import *
+import os
 
 class Joueur():
 	def __init__(self, couleur, points = 0):
 		self.points = points
 		self.couleur = couleur
+		self.pieces_mangees  = list()
 
 	def add_point(self, piece):
 		"""
 		@RG
 		"""
 		points_pieces = {'p' : 1, 'P' : 1, 'f' : 3, 'F' : 3, 'c' : 3, 'C' : 3, 't' : 5, 'T' : 5, 'd' : 9, 'D' : 9}
-		self.points += points_pieces[piece]
+		self.points += points_pieces[piece.nom]
+		self.pieces_mangees.append(piece.nom)
+
 
 
 class GeneralConf():
@@ -23,6 +27,43 @@ class GeneralConf():
 		self.pieces_joueurB = list()
 		self.pieces_joueurN = list()
 		self.avantage = None
+
+	def sauvegarde_partie(self):
+		"""
+		@RG
+		"""
+		os.remove('sauvegarde.txt')
+		for piece in self.pieces:
+			element = str([piece.nom, piece.position]) + '/'
+			with open('sauvegarde.txt', 'a+') as file: 
+				file.write(element)
+
+	def charger_partie(self):
+		"""
+		@RG
+		"""
+		with open('sauvegarde.txt', 'r') as file:
+			elements = file.readlines()
+
+		elements = elements[0].split("/")
+
+		for element in elements[:len(elements)-1]:
+			element = element[1:len(element)-1]
+			nom_piece = element[1]
+			coordonnees_pieces = [int(element[6]), int(element[9])]
+			if nom_piece == 'p' or nom_piece == 'P':
+				self.add_piece(Pion(nom_piece, coordonnees_pieces))
+			elif nom_piece == 'c' or nom_piece == 'C':
+				self.add_piece(Cavalier(nom_piece, coordonnees_pieces))
+			elif nom_piece == 'f' or nom_piece == 'F':
+				self.add_piece(Fou(nom_piece, coordonnees_pieces))
+			elif nom_piece == 't' or nom_piece == 'T':
+				self.add_piece(Tour(nom_piece, coordonnees_pieces))
+			elif nom_piece == 'd' or nom_piece == 'D':
+				self.add_piece(Dame(nom_piece, coordonnees_pieces))
+			elif nom_piece == 'r' or nom_piece == 'R':
+				self.add_piece(Roi(nom_piece, coordonnees_pieces))
+
 
 	def add_piece(self, piece):
 		"""
@@ -135,9 +176,9 @@ class GeneralConf():
 						if pos_arrivee == piece.position:
 							self.del_piece(piece)
 							if piece.nom.islower():
-								self.joueurB.add_point(piece.nom)
+								self.joueurB.add_point(piece)
 							else:
-								self.joueurN.add_point(piece.nom)
+								self.joueurN.add_point(piece)
 
 				return True
 		return False
