@@ -30,13 +30,17 @@ class GeneralConf():
 		if msg not in self.msg_error:
 			self.msg_error.append(msg)
 
-	def infos_pieces(self):
-		"""
-		@RG
-		Intérêt ?
-		"""
-		return [{'nom' : p.nom, 'position' : p.position, 'joueur_blanc' : p.nom.isupper()} for p in self.pieces]
 
+	def pieces_joueurs(self):
+		"""
+		"""
+		pieces_joueurB = list() #Joueur blanc
+		pieces_joueurN = list() #Joueur noir
+		for piece in self.pieces:
+			if piece.nom.isupper():
+				pieces_joueurB.append(piece)
+			else:
+				pieces_joueurN.append(piece)
 
 	def matrice_affichage(self):
 		"""
