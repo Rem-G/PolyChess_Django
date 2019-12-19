@@ -110,6 +110,10 @@ def game_pvp():
 	#Crée les pièces de jeu
 	init_pieces(configuration)
 
+	#Crée les joueurs
+	configuration.init_joueurs()
+
+
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
  
@@ -119,6 +123,9 @@ def game_pvp():
 	#print(configuration.pieces[15].pawnPossibleMoves())
 
 	while True :#Rajouter option echec et mat
+		if configuration.avantage_joueur():
+			print('\n', configuration.avantage_joueur())
+
 		if joueur == 1:
 			print("\nAu tour du joueur blanc")
 

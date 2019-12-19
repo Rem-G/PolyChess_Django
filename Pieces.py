@@ -167,6 +167,7 @@ class Fou(Piece):
         x = self.position[0]
         y = self.position[1]
         listC = []
+        y2 = int()
         if x<y:
             y2 = 8-y
         #Haut - droit

@@ -2,6 +2,18 @@ from Board import *
 from Pieces import *
 from Bot import *
 
+class Joueur():
+	def __init__(self, couleur, points = 0):
+		self.points = points
+		self.couleur = couleur
+
+	def add_point(self, piece):
+		"""
+		@RG
+		"""
+		points_pieces = {'p' : 1, 'P' : 1, 'f' : 3, 'F' : 3, 'c' : 3, 'C' : 3, 't' : 5, 'T' : 5, 'd' : 9, 'D' : 9}
+		self.points += points_pieces[piece]
+
 
 class GeneralConf():
 	def __init__(self):
@@ -10,6 +22,7 @@ class GeneralConf():
 		self.board = Mat64()
 		self.pieces_joueurB = list()
 		self.pieces_joueurN = list()
+		self.avantage = None
 
 	def add_piece(self, piece):
 		"""
@@ -30,6 +43,29 @@ class GeneralConf():
 		"""
 		if msg not in self.msg_error:
 			self.msg_error.append(msg)
+
+	def init_joueurs(self):
+		"""
+		@RG
+		"""
+		self.joueurB = Joueur('B')
+		self.joueurN = Joueur('N')
+
+
+	def avantage_joueur(self):
+		"""
+		@RG
+		"""
+		if self.joueurB.points > self.joueurN.points:
+			self.avantage = 'Avantage joueur blanc ' + str(self.joueurB.points - self.joueurN.points)
+
+		elif self.joueurB.points < self.joueurN.points:
+			self.avantage = 'Avantage joueur noir ' + str(self.joueurN.points - self.joueurB.points)
+
+		else:
+			self.avantage = None
+
+		return self.avantage
 
 
 	def pieces_joueurs(self):
@@ -73,7 +109,7 @@ class GeneralConf():
 
 		return matrice_screen
 
-	def verification_deplacement(self, moves, pos_arrivee):
+	def verification_deplacement(self, moves, pos_arrivee, joueur):
 		"""
 		@RG
 		Vérifie si pour les mouvements d'une pièce donnée, sa position d'arrivée est autorisée
@@ -98,56 +134,14 @@ class GeneralConf():
 					for piece in self.pieces:
 						if pos_arrivee == piece.position:
 							self.del_piece(piece)
+							if piece.nom.islower():
+								self.joueurB.add_point(piece.nom)
+							else:
+								self.joueurN.add_point(piece.nom)
+
 				return True
 		return False
 
-
-	def sameTeam(self, piece1, piece2):
-		""" @NR
-		verifie si piece 1 et piece 2 sont dans le meme equipe
-		:param piece1 : une piece
-		:param piece2 : une piece
-		:return bool : renvoie vrai si piece 1 et piece 2 sont dans la meme equipe
-		"""
-		if (piece1 in self.pieces_joueurB and piece2 in self.pieces_joueurB) or (piece1 in self.pieces_joueurN and piece2 in self.pieces_joueurN):
-			return True
-		return False
-
-
-	def verification_deplacement_roi(self, roi, moves, pos_arrivee):
-		""" @NR
-		Verifie si le deplacement du roi est possible, sans l'emmener en echec
-		:param roi: le roi
-		:param moves: deplacements autorisés du roi
-		:param pos_arrivee: Destination voulue par le joueur pour le roi
-		:return bool : renvoie vrai si le deplacement est possible et faux sinon
-		"""
-
-		possible_moves = moves[0]
-		possible_eat = moves[1]
-
-		emplacements_pieces = list()
-		[emplacements_pieces.append(piece.position) for piece in self.pieces]
-
-		emplacements_reachable_by_opponent = list()
-		for piece in self.pieces:
-			if not (self.sameTeam(piece,roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
-				for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
-					if erbo not in emplacements_reachable_by_opponent:  # Pour ne pas avoir de doublon
-						emplacements_reachable_by_opponent.append(erbo)  # on ajoute les emplacements de capture de chaque piece
-
-		if ((pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces) or (pos_arrivee in possible_eat)) and pos_arrivee not in emplacements_reachable_by_opponent:
-			# verification si la position d'arrivee est dans les moves possibles et qu'il n'y pas de piece à cette emplacement ou que on peut manger une piece a cet emplacement
-			# et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
-			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
-				# Vérification si la position d'arrivée voulue est sur le plateau de jeu
-				if pos_arrivee in possible_eat:
-					# Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-					for piece in self.pieces:
-						if pos_arrivee == piece.position:
-							self.del_piece(piece)
-				return True
-		return False
 
 	def tour_joueur(self, piece, pos_arrivee):
 		"""
@@ -172,7 +166,7 @@ class GeneralConf():
 
 		else:
 
-			if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
+			if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee, piece):
 				piece.set_piece_position(pos_arrivee)
 
 			else:
@@ -223,6 +217,60 @@ class GeneralConf():
 		else:
 			# Si le joueur entre des coordonnées en dehor du plateau de jeu
 			self.add_msg_error("Merci de jouer sur le plateau")
+
+
+
+###############################################################
+###FONCTIONS ROI @NR
+###############################################################
+
+
+	def sameTeam(self, piece1, piece2):
+		""" @NR
+		verifie si piece 1 et piece 2 sont dans le meme equipe
+		:param piece1 : une piece
+		:param piece2 : une piece
+		:return bool : renvoie vrai si piece 1 et piece 2 sont dans la meme equipe
+		"""
+		if (piece1 in self.pieces_joueurB and piece2 in self.pieces_joueurB) or (piece1 in self.pieces_joueurN and piece2 in self.pieces_joueurN):
+			return True
+		return False
+
+
+	def verification_deplacement_roi(self, roi, moves, pos_arrivee):
+		""" @NR
+		Verifie si le deplacement du roi est possible, sans l'emmener en echec
+		:param roi: le roi
+		:param moves: deplacements autorisés du roi
+		:param pos_arrivee: Destination voulue par le joueur pour le roi
+		:return bool : renvoie vrai si le deplacement est possible et faux sinon
+		"""
+
+		possible_moves = moves[0]
+		possible_eat = moves[1]
+
+		emplacements_pieces = list()
+		[emplacements_pieces.append(piece.position) for piece in self.pieces]
+
+		emplacements_reachable_by_opponent = list()
+		for piece in self.pieces:
+			if not (self.sameTeam(piece,roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
+				for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
+					if erbo not in emplacements_reachable_by_opponent:  # Pour ne pas avoir de doublon
+						emplacements_reachable_by_opponent.append(erbo)  # on ajoute les emplacements de capture de chaque piece
+
+		if ((pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces) or (pos_arrivee in possible_eat)) and pos_arrivee not in emplacements_reachable_by_opponent:
+			# verification si la position d'arrivee est dans les moves possibles et qu'il n'y pas de piece à cette emplacement ou que on peut manger une piece a cet emplacement
+			# et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
+			if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
+				# Vérification si la position d'arrivée voulue est sur le plateau de jeu
+				if pos_arrivee in possible_eat:
+					# Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+					for piece in self.pieces:
+						if pos_arrivee == piece.position:
+							self.del_piece(piece)
+				return True
+		return False
 
 
 	def rocRoi (self, roi, pos_arrivee):
