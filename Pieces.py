@@ -68,16 +68,6 @@ class Pion(Piece):
 
 class Roi(Piece):
 
-<<<<<<< HEAD
-	def __init__(self, nom, pos_initiale):
-		"""@NR
-		:type nom: string
-		"""
-		super().__init__(nom, pos_initiale)
-		self.firstMove = True
-		self.check = False
-		self.checkMate = False
-=======
     def __init__(self, nom, pos_initiale):
         """@NR
         :type nom: string
@@ -86,15 +76,6 @@ class Roi(Piece):
         self.firstMove = True
         self.check = False
         self.checkMate = False
-
-
-    def __init__(self, nom, pos_initiale):
-        """@NR
-        :type nom: string
-        """
-        super().__init__(nom, pos_initiale)
-        self.firstMove = True
->>>>>>> 18024280c4d9c505129eda081b550b33877eca58
 
     def firstMoveOver(self):
         """

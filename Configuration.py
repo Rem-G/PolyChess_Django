@@ -35,7 +35,6 @@ class GeneralConf():
 	def pieces_joueurs(self):
 		"""
 		"""
-<<<<<<< HEAD
 		pieces_joueurB = list() #Joueur blanc
 		pieces_joueurN = list() #Joueur noir
 		for piece in self.pieces:
@@ -43,22 +42,8 @@ class GeneralConf():
 				pieces_joueurB.append(piece)
 			else:
 				pieces_joueurN.append(piece)
-=======
 		return [{'nom': p.nom, 'position': p.position, 'joueur_blanc': p.nom.isupper()} for p in self.pieces]
 
-	def pieces_joueurs(self):
-		"""
-		@NR
-		Ajoute chaque piece a la liste des piece de chaque equipe
-		"""
-
-		for piece in self.pieces :
-			if piece.nom.isupper():
-				self.pieces_joueurB.append(piece)
-			else:
-				self.pieces_joueurN.append(piece)
-
->>>>>>> 18024280c4d9c505129eda081b550b33877eca58
 
 	def matrice_affichage(self):
 		"""
