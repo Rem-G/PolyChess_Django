@@ -112,9 +112,11 @@ def game_pvp():
 	new_partie = input("Voulez-vous charger une partie existante ? Y/N ")
 	if new_partie == 'Y':
 		configuration.charger_partie()
+		joueur = configuration.joueur_sauvegarde
 		print("Partie chargée !")
 	else:
 		init_pieces(configuration)
+		joueur = 1
 
 	#Crée les joueurs
 	configuration.init_joueurs()
@@ -122,7 +124,6 @@ def game_pvp():
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
  
-	joueur = 1
 	#print(configuration.pieces[15].nom)
 	#print(configuration.pieces[15].get_piece_position())
 	#print(configuration.pieces[15].pawnPossibleMoves())
@@ -133,29 +134,22 @@ def game_pvp():
 
 		if joueur == 1:
 			print("\nAu tour du joueur blanc")
+		else:
+			print('\nAu tour du joueur noir')
 
-			input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
-			if input_decision == 'sauvegarde':
-				configuration.sauvegarde_partie()
-				print('Partie sauvegardée !')
-				break
-			else:
-				decision = decision_joueur(input_decision, configuration)
-				print('\n')
+		input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+		if input_decision == 'sauvegarde':
+			configuration.sauvegarde_partie(joueur)
+			print('Partie sauvegardée !')
+			break
+		else:
+			decision = decision_joueur(input_decision, configuration)
+			print('\n')
+			if joueur == 1:
 				configuration.deplacement_piece(decision[0], decision[1], True)
-
-		elif joueur == -1:
-			print("\nAu tour du joueur noir")
-
-			input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
-			if input_decision == 'sauvegarde':
-				configuration.sauvegarde_partie()
-				print('Partie sauvegardée !')
-				break
 			else:
-				decision = decision_joueur(input_decision, configuration)
-				print('\n')
 				configuration.deplacement_piece(decision[0], decision[1], False)
+
 
 		affichage_plateau(configuration.matrice_affichage())
 

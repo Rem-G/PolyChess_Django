@@ -28,7 +28,7 @@ class GeneralConf():
 		self.pieces_joueurN = list()
 		self.avantage = None
 
-	def sauvegarde_partie(self):
+	def sauvegarde_partie(self, joueur):
 		"""
 		@RG
 		"""
@@ -37,6 +37,8 @@ class GeneralConf():
 			element = str([piece.nom, piece.position]) + '/'
 			with open('sauvegarde.txt', 'a+') as file: 
 				file.write(element)
+		with open('sauvegarde.txt', 'a+') as file: 
+			file.write(str(joueur))
 
 	def charger_partie(self):
 		"""
@@ -64,6 +66,7 @@ class GeneralConf():
 			elif nom_piece == 'r' or nom_piece == 'R':
 				self.add_piece(Roi(nom_piece, coordonnees_pieces))
 
+		self.joueur_sauvegarde = int(elements[len(elements)-1])
 
 	def add_piece(self, piece):
 		"""
