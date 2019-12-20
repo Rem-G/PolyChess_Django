@@ -149,8 +149,24 @@ class Cavalier(Piece):
         super().__init__(nom, pos_initiale)
 
     def PossibleMoves(self):
+        """
+		:return list: retourne la liste des mobves possibles pour le cavalier
+		@TC
+		"""
+        moves = []
 
-        return [[self.position],[self.position]] # test pour @NR
+        x, y = self.position[0], self.position[1]
+
+        moves.append(x + 2, y + 1)
+        moves.append(x + 2, y - 1)
+        moves.append(x + 1, y + 2)
+        moves.append(x + 1, y - 2)
+        moves.append(x - 2, y + 1)
+        moves.append(x - 2, y - 1)
+        moves.append(x - 1, y + 2)
+        moves.append(x - 1, y - 2)
+
+        return moves
 
 ###########################################################################################################
 ###########################################################################################################
