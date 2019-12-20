@@ -214,16 +214,16 @@ class GeneralConf():
 		"""
 
 		if piece.__class__ is Roi :  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
-			roc_roi_fait = False
+			roque_roi_fait = False
 			if piece.firstMove == True : # roi n'a pas encore joue son premier tour
-				#on essaie le roc
-				roc_roi_fait = self.rocRoi(piece, pos_arrivee)
+				#on essaie le roque
+				roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
 
-			if not (roc_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
+			if not (roque_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
 				piece.set_piece_position(pos_arrivee)
 
 			else:
-				if not (roc_roi_fait):
+				if not (roque_roi_fait):
 					self.add_msg_error("déplacement interdit ou mise en échec du roi")
 
 		else:
@@ -338,13 +338,13 @@ class GeneralConf():
 		return False
 
 
-	def rocRoi (self, roi, pos_arrivee):
+	def roqueRoi (self, roi, pos_arrivee):
 		"""
 		@NR
-		applique le roc depuis le roi vers la tour
+		applique le roque depuis le roi vers la tour
 		:param roi : une piece roi
 		:param pos_arrivee : la position d'arrivee, sur cette emplacement doit etre un roi ou une tour
-		:return bool: true si le roc reussi, false sinon
+		:return bool: true si le roque reussi, false sinon
 		"""
 
 		tour_allie = list()  # tour_allie : list des tours de tour allie
@@ -356,20 +356,20 @@ class GeneralConf():
 				if tour.firstMove:
 					print("roi y: ",roi.get_piece_position()[1], "tour y :",tour.get_piece_position()[1])
 					for posCol in range (roi.get_piece_position()[1],tour.get_piece_position()[1]):  #on parcours l'echiquier sur l'horizontale entre les 2 pieces
-						if posCol != roi.get_piece_position()[1] and self.case_occupe(roi.position[0],posCol): #on ne peut pas faire le roc, car il y a des piece entre la tour et le roi
+						if posCol != roi.get_piece_position()[1] and self.case_occupe(roi.position[0],posCol): #on ne peut pas faire le roque, car il y a des piece entre la tour et le roi
 							#pour ne pas qu'il commence a partir de la position du roi, on est oblige de faire comme ça car on ne connait pas le sens du parcours (ascendant ou descendannt)
-							print("rocRoi")
+							print("roqueRoi")
 							return False
-					#on fait le roc avec une permutation
+					#on fait le roque avec une permutation
 					line_roi = roi.get_piece_position()[0]
 					col_roi = roi.get_piece_position()[1]
 					line_tour = tour.get_piece_position()[0]
 					col_tour=tour.get_piece_position()[1]
 
-					if col_roi<col_tour:  #petit roc
+					if col_roi<col_tour:  #petit roque
 						col_roi = col_roi +2
 						col_tour = col_tour-2
-					else:  #grant roc
+					else:  #grant roque
 						col_roi = col_roi-2
 						col_tour = col_tour +3
 
@@ -390,3 +390,31 @@ class GeneralConf():
 				print(posLine, posCol)
 				return True
 		return False
+
+###############################################################
+###FONCTIONS PION @TC
+###############################################################
+
+	def promotion(self, piece):
+		"""
+		promeut un pion en une piece choisie par l'utilisateur
+		@TC
+		"""
+		position = piece.get_piece_position()
+		if piece.nom.isupper:
+			nom_piece = str(input('Votre pion peut être promu, merci de choisir la nouvelle pièce :\nCavalier (C)\nFou (F)\nTour (T)\nDame (D)\n')).upper()
+		else:
+			nom_piece = str(input('Votre pion peut être promu, merci de choisir la nouvelle pièce :\nCavalier (c)\nFou (f)\nTour (t)\nDame (d)\n')).lower()
+		self.del_piece(piece)
+
+		if nom_piece == 'C' or nom_piece == 'c':
+			self.add_piece(Cavalier(nom_piece, position))
+
+		elif nom_piece == 'F' or nom_piece == 'f':
+			self.add_piece(Fou(nom_piece, position))
+
+		elif nom_piece == 'T' or nom_piece == 't':
+			self.add_piece(Tour(nom_piece, position))
+
+		elif nom_piece == 'D' or nom_piece == 'd':
+			self.add_piece(Dame(nom_piece, position))
