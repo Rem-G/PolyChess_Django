@@ -35,11 +35,14 @@ class GeneralConf():
 		"""
 		os.remove('sauvegarde.txt')
 		for piece in self.pieces:
-			element = str([piece.nom, piece.position]) + '/'
 			with open('sauvegarde.txt', 'a+') as file: 
-				file.write(element)
+				file.write(str([piece.nom, piece.position]) + '/')
+
 		with open('sauvegarde.txt', 'a+') as file: 
+			file.write(str([self.joueurB.couleur, self.joueurB.points]) + '/')
+			file.write(str([self.joueurN.couleur, self.joueurN.points]) + '/')
 			file.write(str(joueur))
+
 
 	def charger_partie(self):
 		"""
@@ -56,7 +59,7 @@ class GeneralConf():
 		if elements:
 			elements = elements[0].split("/")
 
-			for element in elements[:len(elements)-1]:
+			for element in elements[:len(elements)-3]:
 				element = element[1:len(element)-1]
 				nom_piece = element[1]
 				coordonnees_pieces = [int(element[6]), int(element[9])]
@@ -72,6 +75,12 @@ class GeneralConf():
 					self.add_piece(Dame(nom_piece, coordonnees_pieces))
 				elif nom_piece == 'r' or nom_piece == 'R':
 					self.add_piece(Roi(nom_piece, coordonnees_pieces))
+
+			self.joueurB.couleur = elements[len(elements)-3][2]
+			self.joueurB.points = int(elements[len(elements)-3][6])
+
+			self.joueurN.couleur = elements[len(elements)-2][2]
+			self.joueurN.points = int(elements[len(elements)-2][6])
 
 			self.joueur_sauvegarde = int(elements[len(elements)-1])
 

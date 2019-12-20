@@ -108,6 +108,9 @@ def game_pvp():
 	"""
 	configuration = GeneralConf()
 
+	#Crée les joueurs
+	configuration.init_joueurs()
+
 	#Crée les pièces de jeu
 	new_game = input("Voulez-vous charger une partie existante ? Y/N ")
 	if new_game == 'Y':
@@ -117,9 +120,6 @@ def game_pvp():
 	else:
 		init_pieces(configuration)
 		joueur = 1
-
-	#Crée les joueurs
-	configuration.init_joueurs()
 
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
