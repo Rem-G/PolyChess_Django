@@ -31,6 +31,7 @@ class GeneralConf():
 	def sauvegarde_partie(self, joueur):
 		"""
 		@RG
+		Sauvegarde la partie (pièces, tour du joueur, avantage)
 		"""
 		os.remove('sauvegarde.txt')
 		for piece in self.pieces:
@@ -43,34 +44,36 @@ class GeneralConf():
 	def charger_partie(self):
 		"""
 		@RG
+		Charge une partie existante si le fichier sauvegade.txt existe
 		"""
 		try:
 			with open('sauvegarde.txt', 'r') as file:
 				elements = file.readlines()
 		except:
+			elements = None
 			print('Impossible de charger la sauvegarde')
-			break
 
-		elements = elements[0].split("/")
+		if elements:
+			elements = elements[0].split("/")
 
-		for element in elements[:len(elements)-1]:
-			element = element[1:len(element)-1]
-			nom_piece = element[1]
-			coordonnees_pieces = [int(element[6]), int(element[9])]
-			if nom_piece == 'p' or nom_piece == 'P':
-				self.add_piece(Pion(nom_piece, coordonnees_pieces))
-			elif nom_piece == 'c' or nom_piece == 'C':
-				self.add_piece(Cavalier(nom_piece, coordonnees_pieces))
-			elif nom_piece == 'f' or nom_piece == 'F':
-				self.add_piece(Fou(nom_piece, coordonnees_pieces))
-			elif nom_piece == 't' or nom_piece == 'T':
-				self.add_piece(Tour(nom_piece, coordonnees_pieces))
-			elif nom_piece == 'd' or nom_piece == 'D':
-				self.add_piece(Dame(nom_piece, coordonnees_pieces))
-			elif nom_piece == 'r' or nom_piece == 'R':
-				self.add_piece(Roi(nom_piece, coordonnees_pieces))
+			for element in elements[:len(elements)-1]:
+				element = element[1:len(element)-1]
+				nom_piece = element[1]
+				coordonnees_pieces = [int(element[6]), int(element[9])]
+				if nom_piece == 'p' or nom_piece == 'P':
+					self.add_piece(Pion(nom_piece, coordonnees_pieces))
+				elif nom_piece == 'c' or nom_piece == 'C':
+					self.add_piece(Cavalier(nom_piece, coordonnees_pieces))
+				elif nom_piece == 'f' or nom_piece == 'F':
+					self.add_piece(Fou(nom_piece, coordonnees_pieces))
+				elif nom_piece == 't' or nom_piece == 'T':
+					self.add_piece(Tour(nom_piece, coordonnees_pieces))
+				elif nom_piece == 'd' or nom_piece == 'D':
+					self.add_piece(Dame(nom_piece, coordonnees_pieces))
+				elif nom_piece == 'r' or nom_piece == 'R':
+					self.add_piece(Roi(nom_piece, coordonnees_pieces))
 
-		self.joueur_sauvegarde = int(elements[len(elements)-1])
+			self.joueur_sauvegarde = int(elements[len(elements)-1])
 
 	def add_piece(self, piece):
 		"""
@@ -95,6 +98,7 @@ class GeneralConf():
 	def init_joueurs(self):
 		"""
 		@RG
+		Crée les joueurs (couleur, points à 0)
 		"""
 		self.joueurB = Joueur('B')
 		self.joueurN = Joueur('N')
@@ -103,6 +107,7 @@ class GeneralConf():
 	def avantage_joueur(self):
 		"""
 		@RG
+		:return str or None: Si un joueur a l'avantage, renvoie sa couleur et son score
 		"""
 		if self.joueurB.points > self.joueurN.points:
 			self.avantage = 'Avantage joueur blanc ' + str(self.joueurB.points - self.joueurN.points)
@@ -280,6 +285,9 @@ class GeneralConf():
 		:param piece2 : une piece
 		:return bool : renvoie vrai si piece 1 et piece 2 sont dans la meme equipe
 		"""
+		#Suggestion : if (piece1.isupper() and piece2.islower()) or (piece1.islower() and piece2.isupper())
+		#				return False
+		#			return True
 		if (piece1 in self.pieces_joueurB and piece2 in self.pieces_joueurB) or (piece1 in self.pieces_joueurN and piece2 in self.pieces_joueurN):
 			return True
 		return False

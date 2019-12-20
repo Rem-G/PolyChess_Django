@@ -109,8 +109,8 @@ def game_pvp():
 	configuration = GeneralConf()
 
 	#Crée les pièces de jeu
-	new_partie = input("Voulez-vous charger une partie existante ? Y/N ")
-	if new_partie == 'Y':
+	new_game = input("Voulez-vous charger une partie existante ? Y/N ")
+	if new_game == 'Y':
 		configuration.charger_partie()
 		joueur = configuration.joueur_sauvegarde
 		print("Partie chargée !")
@@ -123,12 +123,10 @@ def game_pvp():
 
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
- 
-	#print(configuration.pieces[15].nom)
-	#print(configuration.pieces[15].get_piece_position())
-	#print(configuration.pieces[15].pawnPossibleMoves())
 
-	while True :#Rajouter option echec et mat + afficher pièces mangées
+	game = True
+
+	while game :#Rajouter option echec et mat + afficher pièces mangées
 		if configuration.avantage_joueur():
 			print('\n', configuration.avantage_joueur())
 
