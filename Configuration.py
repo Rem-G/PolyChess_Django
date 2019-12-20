@@ -44,8 +44,12 @@ class GeneralConf():
 		"""
 		@RG
 		"""
-		with open('sauvegarde.txt', 'r') as file:
-			elements = file.readlines()
+		try:
+			with open('sauvegarde.txt', 'r') as file:
+				elements = file.readlines()
+		except:
+			print('Impossible de charger la sauvegarde')
+			break
 
 		elements = elements[0].split("/")
 
