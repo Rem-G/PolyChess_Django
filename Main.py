@@ -68,9 +68,6 @@ def init_pieces(configuration):
 
 	configuration.add_piece(Roi("r", [2, 5]))
 
-	# Equipes
-	configuration.pieces_joueurs()
-
 def affichage_plateau(matrice_affichage):
 	"""
 	@RG
@@ -126,6 +123,9 @@ def game_pvp():
 	else:
 		init_pieces(configuration)
 		joueur = 1
+
+	#Attribution pièces de chaque joueur
+	configuration.pieces_joueurs()
 
 	#Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())

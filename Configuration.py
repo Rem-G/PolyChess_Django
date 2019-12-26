@@ -130,14 +130,11 @@ class GeneralConf():
     def pieces_joueurs(self):
         """
 		"""
-        pieces_joueurB = list()  # Joueur blanc
-        pieces_joueurN = list()  # Joueur noir
         for piece in self.pieces:
             if piece.nom.isupper():
                 self.pieces_joueurB.append(piece)  # NR il a oublié les self
             else:
                 self.pieces_joueurN.append(piece)  # NR il a oublié les self
-        return [{'nom': p.nom, 'position': p.position, 'joueur_blanc': p.nom.isupper()} for p in self.pieces]
 
     def matrice_affichage(self):
         """
