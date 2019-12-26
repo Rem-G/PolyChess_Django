@@ -131,7 +131,7 @@ class Tour(Piece):
         for i in range(x):
             listC.append([(x - 1) - i, y])
 
-        # Haur
+        # Haut
         for i in range(8 - x):
             listC.append([(x + 1) + i, y])
 

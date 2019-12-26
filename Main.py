@@ -17,9 +17,9 @@ def init_pieces(configuration):
 	"""
 	#Pieces blanches
 	configuration.add_piece(Pion("P", [8, 1]))
-	configuration.add_piece(Pion("P", [8, 2]))
-	configuration.add_piece(Pion("P", [8, 3]))
-	configuration.add_piece(Pion("P", [8, 4]))
+	# configuration.add_piece(Pion("P", [8, 2]))
+	# configuration.add_piece(Pion("P", [8, 3]))
+	# configuration.add_piece(Pion("P", [8, 4]))
 	configuration.add_piece(Pion("P", [8, 5]))
 	configuration.add_piece(Pion("P", [8, 6]))
 	configuration.add_piece(Pion("P", [8, 7]))
@@ -52,6 +52,12 @@ def init_pieces(configuration):
 	configuration.add_piece(Tour("t", [2, 1]))
 	configuration.add_piece(Tour("t", [2, 8]))
 
+	#pour test roque
+	configuration.add_piece(Tour("t", [6, 2]))
+	configuration.add_piece(Tour("t", [6, 3]))
+	configuration.add_piece(Tour("t", [6, 4]))
+
+
 	configuration.add_piece(Cavalier("c", [2, 2]))
 	configuration.add_piece(Cavalier("c", [2, 7]))
 
@@ -64,7 +70,6 @@ def init_pieces(configuration):
 
 	# Equipes
 	configuration.pieces_joueurs()
-	print("les pieces du joueur B : ",configuration.pieces_joueurB)
 
 def affichage_plateau(matrice_affichage):
 	"""
