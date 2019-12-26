@@ -1,4 +1,4 @@
-class Piece():#Classe mère
+class Piece:  # Classe mère
     def __init__(self, nom, pos_initiale):
         self.nom = nom
         self.position = pos_initiale
@@ -16,6 +16,7 @@ class Piece():#Classe mère
         @TC
         """
         self.position = position
+
 
 ###########################################################################################################
 ###########################################################################################################
@@ -62,6 +63,7 @@ class Pion(Piece):
 
         return destination
 
+
 ###########################################################################################################
 ###########################################################################################################
 
@@ -84,7 +86,6 @@ class Roi(Piece):
         """
         self.firstMove = False
 
-
     def PossibleMoves(self):
         """ return une liste des moves possibles pour le roi @NR"""
         # je teste avec les coordonnees carstesiennes pas avec les coordonnes de l'echiquer
@@ -98,8 +99,9 @@ class Roi(Piece):
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
-                    moves.append([x + i,y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
-        return [moves,moves]
+                    moves.append([x + i,
+                                  y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
+        return [moves, moves]
 
 
 ###########################################################################################################
@@ -115,6 +117,7 @@ class Tour(Piece):
         Permet de mettre à jour l'etat du 1er tour du pion
         """
         self.firstMove = False
+
     def PossibleMoves(self):
         '''
         Retourne la liste possible pour un tour
@@ -123,24 +126,26 @@ class Tour(Piece):
         x = self.position[0]
         y = self.position[1]
         listC = []
-        
-        #Bas
+
+        # Bas
         for i in range(x):
-            listC.append([(x-1)-i,y])
-            
-        #Haur
-        for i in range(8-x):
-            listC.append([(x+1)+i,y])
-            
-        #Gauche
+            listC.append([(x - 1) - i, y])
+
+        # Haur
+        for i in range(8 - x):
+            listC.append([(x + 1) + i, y])
+
+        # Gauche
         for i in range(y):
-            listC.append([x,(y-1)-i])
-        
-        #Droit
-        for i in range(8-y):
-            listC.append([x,(y+1)+i])
-        
-        return [listC,listC]
+            listC.append([x, (y - 1) - i])
+
+        # Droit
+        for i in range(8 - y):
+            listC.append([x, (y + 1) + i])
+
+        return [listC, listC]
+
+
 ###########################################################################################################
 ###########################################################################################################
 
@@ -157,16 +162,17 @@ class Cavalier(Piece):
 
         x, y = self.position[0], self.position[1]
 
-        moves.append(x + 2, y + 1)
-        moves.append(x + 2, y - 1)
-        moves.append(x + 1, y + 2)
-        moves.append(x + 1, y - 2)
-        moves.append(x - 2, y + 1)
-        moves.append(x - 2, y - 1)
-        moves.append(x - 1, y + 2)
-        moves.append(x - 1, y - 2)
+        moves.append([x + 2, y + 1])  # il a oublié les accolades pour dire que c'est une liste
+        moves.append([x + 2, y - 1])
+        moves.append([x + 1, y + 2])
+        moves.append([x + 1, y - 2])
+        moves.append([x - 2, y + 1])
+        moves.append([x - 2, y - 1])
+        moves.append([x - 1, y + 2])
+        moves.append([x - 1, y - 2])
 
         return [moves, moves]
+
 
 ###########################################################################################################
 ###########################################################################################################
@@ -175,6 +181,7 @@ class Cavalier(Piece):
 class Fou(Piece):
     def __init__(self, nom, pos_initiale):
         super().__init__(nom, pos_initiale)
+
     def PossibleMoves(self):
         '''
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
@@ -184,25 +191,27 @@ class Fou(Piece):
         y = self.position[1]
         listC = []
         y2 = int()
-        if x<y:
-            y2 = 8-y
-        #Haut - droit
-        for i in range(min(x,y2)):
-            listC.append([(x-1)-i,(y+1)+i])
-            
-        #Bas - droit
-        for i in range(max(x,y2)):
-            listC.append([(x+1)+i,(y+1)+i])
-        
-        #Haut - gauche
-        for i in range(min(y,x)):
-            listC.append([(x-1)-i,(y-1)-i])
-            
-        #Bas - gauche
-        for i in range(max(y,x)):
-            listC.append([(x+1)+i,(y-1)-i])
-            
-        return [listC,listC]
+        if x < y:
+            y2 = 8 - y
+        # Haut - droit
+        for i in range(min(x, y2)):
+            listC.append([(x - 1) - i, (y + 1) + i])
+
+        # Bas - droit
+        for i in range(max(x, y2)):
+            listC.append([(x + 1) + i, (y + 1) + i])
+
+        # Haut - gauche
+        for i in range(min(y, x)):
+            listC.append([(x - 1) - i, (y - 1) - i])
+
+        # Bas - gauche
+        for i in range(max(y, x)):
+            listC.append([(x + 1) + i, (y - 1) - i])
+
+        return [listC, listC]
+
+
 ###########################################################################################################
 ###########################################################################################################
 
@@ -210,7 +219,7 @@ class Fou(Piece):
 class Dame(Piece):
     def __init__(self, nom, pos_initiale):
         super().__init__(nom, pos_initiale)
-        
+
     def PossibleMoves(self):
         '''
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
@@ -219,39 +228,38 @@ class Dame(Piece):
         x = self.position[0]
         y = self.position[1]
         listC = []
-        if x<y:
-            y2 = 8-y
-        #Haut - droit
-        for i in range(min(x,y2)):
-            listC.append([(x-1)-i,(y+1)+i])
-            
-        #Bas - droit
-        for i in range(max(x,y2)):
-            listC.append([(x+1)+i,(y+1)+i])
-        
-        #Haut - gauche
-        for i in range(min(y,x)):
-            listC.append([(x-1)-i,(y-1)-i])
-            
-        #Bas - gauche
-        for i in range(max(y,x)):
-            listC.append([(x+1)+i,(y-1)-i])
-        
-                #Bas
+        if x < y:
+            y2 = 8 - y
+        # Haut - droit
+        for i in range(min(x, y2)):
+            listC.append([(x - 1) - i, (y + 1) + i])
+
+        # Bas - droit
+        for i in range(max(x, y2)):
+            listC.append([(x + 1) + i, (y + 1) + i])
+
+        # Haut - gauche
+        for i in range(min(y, x)):
+            listC.append([(x - 1) - i, (y - 1) - i])
+
+        # Bas - gauche
+        for i in range(max(y, x)):
+            listC.append([(x + 1) + i, (y - 1) - i])
+
+            # Bas
         for i in range(x):
-            listC.append([(x-1)-i,y])
-            
-        #Haur
-        for i in range(8-x):
-            listC.append([(x+1)+i,y])
-            
-        #Gauche
+            listC.append([(x - 1) - i, y])
+
+        # Haur
+        for i in range(8 - x):
+            listC.append([(x + 1) + i, y])
+
+        # Gauche
         for i in range(y):
-            listC.append([x,(y-1)-i])
-        
-        #Droit
-        for i in range(8-y):
-            listC.append([x,(y+1)+i])
-            
-        return [listC,listC]
-    
+            listC.append([x, (y - 1) - i])
+
+        # Droit
+        for i in range(8 - y):
+            listC.append([x, (y + 1) + i])
+
+        return [listC, listC]

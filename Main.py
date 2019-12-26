@@ -28,13 +28,13 @@ def init_pieces(configuration):
 	configuration.add_piece(Tour("T", [9, 1]))
 	configuration.add_piece(Tour("T", [9, 8]))
 
-	configuration.add_piece(Cavalier("C", [9, 2]))
+	#configuration.add_piece(Cavalier("C", [9, 2]))
 	configuration.add_piece(Cavalier("C", [9, 7]))
 
-	configuration.add_piece(Fou("F", [9, 3]))
+	#configuration.add_piece(Fou("F", [9, 3]))
 	configuration.add_piece(Fou("F", [9, 6]))
 
-	configuration.add_piece(Dame("D", [9, 4]))
+	#configuration.add_piece(Dame("D", [9, 4]))
 
 	configuration.add_piece(Roi("R", [9, 5]))
 
@@ -64,6 +64,7 @@ def init_pieces(configuration):
 
 	# Equipes
 	configuration.pieces_joueurs()
+	print("les pieces du joueur B : ",configuration.pieces_joueurB)
 
 def affichage_plateau(matrice_affichage):
 	"""
