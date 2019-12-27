@@ -17,9 +17,9 @@ def init_pieces(configuration):
 	"""
 	#Pieces blanches
 	configuration.add_piece(Pion("P", [8, 1]))
-	# configuration.add_piece(Pion("P", [8, 2]))
-	# configuration.add_piece(Pion("P", [8, 3]))
-	# configuration.add_piece(Pion("P", [8, 4]))
+	configuration.add_piece(Pion("P", [8, 2]))
+	configuration.add_piece(Pion("P", [8, 3]))
+	configuration.add_piece(Pion("P", [8, 4]))
 	configuration.add_piece(Pion("P", [8, 5]))
 	configuration.add_piece(Pion("P", [8, 6]))
 	configuration.add_piece(Pion("P", [8, 7]))
@@ -28,13 +28,13 @@ def init_pieces(configuration):
 	configuration.add_piece(Tour("T", [9, 1]))
 	configuration.add_piece(Tour("T", [9, 8]))
 
-	#configuration.add_piece(Cavalier("C", [9, 2]))
+	configuration.add_piece(Cavalier("C", [9, 2]))
 	configuration.add_piece(Cavalier("C", [9, 7]))
 
-	#configuration.add_piece(Fou("F", [9, 3]))
+	configuration.add_piece(Fou("F", [9, 3]))
 	configuration.add_piece(Fou("F", [9, 6]))
 
-	#configuration.add_piece(Dame("D", [9, 4]))
+	configuration.add_piece(Dame("D", [9, 4]))
 
 	configuration.add_piece(Roi("R", [9, 5]))
 
@@ -51,12 +51,6 @@ def init_pieces(configuration):
 
 	configuration.add_piece(Tour("t", [2, 1]))
 	configuration.add_piece(Tour("t", [2, 8]))
-
-	#pour test roque
-	configuration.add_piece(Tour("t", [6, 2]))
-	configuration.add_piece(Tour("t", [6, 3]))
-	configuration.add_piece(Tour("t", [6, 4]))
-
 
 	configuration.add_piece(Cavalier("c", [2, 2]))
 	configuration.add_piece(Cavalier("c", [2, 7]))

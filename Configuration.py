@@ -273,9 +273,8 @@ class GeneralConf():
             self.add_msg_error("Merci de jouer sur le plateau")
 
     ###############################################################
-    ###FONCTIONS ROI @NR
+    ###FONCTIONS pour ROI et pour le jeu @NR
     ###############################################################
-
     def sameTeam(self, piece1, piece2):
         """ @NR
         verifie si piece 1 et piece 2 sont dans le meme equipe
@@ -286,11 +285,6 @@ class GeneralConf():
         if (piece1.nom.isupper() and piece2.nom.isupper()) or (piece1.nom.islower() and piece2.nom.islower()):
             return True
         return False
-
-        # if (piece1 in self.pieces_joueurB and piece2 in self.pieces_joueurB) or (
-        #         piece1 in self.pieces_joueurN and piece2 in self.pieces_joueurN):
-        #     return True
-        # return False
 
     def verification_deplacement_roi(self, roi, moves, pos_arrivee):
         """ @NR
@@ -337,7 +331,6 @@ class GeneralConf():
         :param pos_arrivee : la position d'arrivee, sur cette emplacement doit etre un roi ou une tour
         :return bool: true si le roque reussi, false sinon
         """
-
         tour_allie = list()  # tour_allie : list des tours de tour allie
         for piece1 in self.pieces:
             if piece1.__class__ is Tour and self.sameTeam(roi, piece1):
@@ -346,14 +339,17 @@ class GeneralConf():
             if tour.position == pos_arrivee:
                 if tour.firstMove:
                     for posCol in range(roi.get_piece_position()[1], tour.get_piece_position()[1]):  # on parcours
-                        # l'echiquier sur l'horizontale entre les 2 pieces (de gauche à droite ou de gauche à droite)
-                        if posCol != roi.get_piece_position()[1] and self.case_occupe(roi.position[0], posCol) and \
+                        # l'echiquier sur l'horizontale entre les 2 pieces (de gauche à droite)
+                        if posCol != roi.get_piece_position()[1] or self.case_occupe(roi.position[0], posCol) or \
                                 self.case_menace(roi.position[0], posCol, roi):  # on
-                            # ne peut pas faire le roque, car il y a des piece entre la tour et le roi ou les cases
-                            # entre le roi et la piece sont menaces.
-                            # Pour ne pas qu'il commence a partir de la
-                            # position du roi, on est oblige de faire comme ça car on ne connait pas le sens du
-                            # parcours (ascendant ou descendant)
+                            # ne peut pas faire le roque, si les cases entre le roi et la tour sont occupees ou menacees.
+                            return False
+                    #ou
+                    for posCol in range(tour.get_piece_position()[1], roi.get_piece_position()[1]):  # on parcours
+                        # l'echiquier sur l'horizontale entre les 2 pieces (de doite à gauche)
+                        if posCol != roi.get_piece_position()[1] or self.case_occupe(roi.position[0],
+                                                                                      posCol) or self.case_menace(
+                                roi.position[0], posCol, roi):
                             return False
                     # on fait le roque avec une permutation
                     line_roi = roi.get_piece_position()[0]
@@ -371,7 +367,6 @@ class GeneralConf():
                     roi.set_piece_position([line_roi, col_roi])
                     tour.set_piece_position([line_tour, col_tour])
                     return True
-        print("false")
         return False
 
     def case_occupe(self, posLine, posCol):
@@ -383,7 +378,6 @@ class GeneralConf():
         """
         for piece in self.pieces:
             if piece.get_piece_position() == [posLine, posCol]:
-                print(posLine, posCol)
                 return True
         return False
 
@@ -395,9 +389,11 @@ class GeneralConf():
         :param piece: piece appartenant à l'équipe ami
         :return: True si la case est menace, False sinon
         """
-        for piece1 in self.piece:
+        for piece1 in self.pieces:
             if not self.sameTeam(piece, piece1):
-                for case in piece1.possibleMoves[1]: #case que peut attaquer l'ennemi
+                if piece1.__class__ is Tour:
+                    print(piece1.nom," : ", piece1.PossibleMoves()[1])
+                for case in piece1.PossibleMoves()[1]:  # case que peut attaquer l'ennemi
                     if case == [posLine, posCol]:
                         return True
         return False
@@ -431,3 +427,4 @@ class GeneralConf():
 
         elif nom_piece == 'D' or nom_piece == 'd':
             self.add_piece(Dame(nom_piece, position))
+
