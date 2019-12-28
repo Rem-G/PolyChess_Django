@@ -275,6 +275,16 @@ class GeneralConf():
     ###############################################################
     ###FONCTIONS pour ROI et pour le jeu @NR
     ###############################################################
+    def init_roi(self, roi):
+        """
+        init le roi au joueur, on crée un nouvel attribut a la classe joueur (roi)
+        :param roi: piece roi
+        """
+        if roi.nom.isupper():
+            self.joueurB.roi = roi
+        else:
+            self.joueurN.roi = roi
+
     def sameTeam(self, piece1, piece2):
         """ @NR
         verifie si piece 1 et piece 2 sont dans le meme equipe
@@ -397,6 +407,26 @@ class GeneralConf():
                     if case == [posLine, posCol]:
                         return True
         return False
+
+    def est_en_echec(self, joueur):
+        """
+        @NR verifie si le joueur est en echec (mise en echec)
+        :param joueur: INT 1 si joueur blanc sinon joueur noir
+        :return: True si le joueur est en echec, False sinon
+        """
+        if joueur == 1:
+            for piece in self.pieces:
+                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi):
+                    if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possibles moves de la reine, et la tour c'est pour ca que je mis le roi ennemi
+                        return True
+            return False
+        else:
+            for piece in self.pieces:
+                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi):
+                    if piece.PossibleMoves()[1] == self.joueurN.roi.position:
+                        return True
+            return False
+
 
     ###############################################################
     ###FONCTIONS PION @TC

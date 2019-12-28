@@ -106,10 +106,10 @@ class Roi(Piece):
 ###########################################################################################################
 ###########################################################################################################
 
-class Tour(Piece):
-    def __init__(self, nom, pos_initiale):
-        super().__init__(nom, pos_initiale)
-        self.firstMove = True
+class Tour(Piece):                                          ############################################################
+    def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
+        self.firstMove = True                               ############################################################
 
     def firstMoveOver(self):
         """
@@ -125,8 +125,9 @@ class Tour(Piece):
         x = self.position[0]
         y = self.position[1]
         listC = []
-
-        # Bas
+                                    ################################################################################
+                                    ####ATTENTION erreur : on ne va pas jusqu'à la ligne 9 ( la derniere ligne)#####
+        # Bas                       ################################################################################
         for i in range(x):
             listC.append([(x - 1) - i, y])
 
@@ -177,10 +178,10 @@ class Cavalier(Piece):
 ###########################################################################################################
 
 
-class Fou(Piece):
-    def __init__(self, nom, pos_initiale):
-        super().__init__(nom, pos_initiale)
-
+class Fou(Piece):                                           ############################################################
+    def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
+                                                            ############################################################
     def PossibleMoves(self):
         '''
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
@@ -215,9 +216,10 @@ class Fou(Piece):
 ###########################################################################################################
 
 
-class Dame(Piece):
-    def __init__(self, nom, pos_initiale):
-        super().__init__(nom, pos_initiale)
+class Dame(Piece):                                        ############################################################
+    def __init__(self, nom, pos_initiale):                #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)               # la piece ne peut pas sauter par dessus les autres pieces##
+                                                          ############################################################
 
     def PossibleMoves(self):
         '''
@@ -230,7 +232,7 @@ class Dame(Piece):
         if x < y:
             y2 = 8 - y
         # Haut - droit
-        for i in range(min(x, y2)):
+        for i in range(min(x, y2)): # ATTENTION erreur : y2 reference avant assignement, si x n'est pas inferieur a y, y2 n'existe pas mais le for (ligne 235) l'appel
             listC.append([(x - 1) - i, (y + 1) + i])
 
         # Bas - droit

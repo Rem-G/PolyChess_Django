@@ -6,7 +6,9 @@ RAZAFINDRABE Noah
 GOSSELIN Rémi
 '''
 from Configuration import *
-#test commit
+
+
+# test commit
 
 
 def init_pieces(configuration):
@@ -15,7 +17,7 @@ def init_pieces(configuration):
 	Initialisation des pièces de jeu
 	Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
 	"""
-	#Pieces blanches
+	# Pieces blanches
 	configuration.add_piece(Pion("P", [8, 1]))
 	configuration.add_piece(Pion("P", [8, 2]))
 	configuration.add_piece(Pion("P", [8, 3]))
@@ -36,10 +38,11 @@ def init_pieces(configuration):
 
 	configuration.add_piece(Dame("D", [9, 4]))
 
-	configuration.add_piece(Roi("R", [9, 5]))
+	roiB = Roi("R", [9, 5])
+	configuration.add_piece(roiB)
+	configuration.init_roi(roiB)
 
-
-	#Pieces noires
+	# Pieces noires
 	configuration.add_piece(Pion("p", [3, 1]))
 	configuration.add_piece(Pion("p", [3, 2]))
 	configuration.add_piece(Pion("p", [3, 3]))
@@ -60,7 +63,11 @@ def init_pieces(configuration):
 
 	configuration.add_piece(Dame("d", [2, 4]))
 
-	configuration.add_piece(Roi("r", [2, 5]))
+	roiN = Roi("r", [2, 5])
+	configuration.add_piece(roiN)
+	configuration.init_roi(roiN)
+
+
 
 def affichage_plateau(matrice_affichage):
 	"""
@@ -79,7 +86,7 @@ def affichage_plateau(matrice_affichage):
 		for j in i:
 			ch += str(j)
 		print(ch)
-	print('\n'+ligne_valeurs)
+	print('\n' + ligne_valeurs)
 
 
 def decision_joueur(decision, configuration):
@@ -89,7 +96,7 @@ def decision_joueur(decision, configuration):
 	:return list: Choix de jeu du joueur en list
 	"""
 
-	#Conversion des coordonnées utilisateur en coordonnées matricielles
+	# Conversion des coordonnées utilisateur en coordonnées matricielles
 
 	pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
 	pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
@@ -99,17 +106,19 @@ def decision_joueur(decision, configuration):
 
 	return [pos_depart, pos_arrivee]
 
+
 def game_pvp():
 	"""
 	@RG
 	"""
 	configuration = GeneralConf()
 
-	#Crée les joueurs
+	# Crée les joueurs
 	configuration.init_joueurs()
 
-	#Crée les pièces de jeu
+	# Crée les pièces de jeu
 	new_game = input("Voulez-vous charger une partie existante ? Y/N ")
+
 	if new_game == 'Y':
 		configuration.charger_partie()
 		joueur = configuration.joueur_sauvegarde
@@ -118,24 +127,33 @@ def game_pvp():
 		init_pieces(configuration)
 		joueur = 1
 
-	#Attribution pièces de chaque joueur
+	# Attribution pièces de chaque joueur
 	configuration.pieces_joueurs()
 
-	#Affiche le palteau de jeu initial
+	# Affiche le palteau de jeu initial
 	affichage_plateau(configuration.matrice_affichage())
 
 	game = True
 
-	while game :#Rajouter option echec et mat + afficher pièces mangées
+	while game:  # Rajouter option echec et mat + afficher pièces mangées
 		if configuration.avantage_joueur():
 			print('\n', configuration.avantage_joueur())
 
 		if joueur == 1:
 			print("\nAu tour du joueur blanc")
+			if configuration.est_en_echec(joueur):
+				print("")
+				print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')
+				print("Le roi blanc est en echec \nProtegez le !")
+
 		else:
 			print('\nAu tour du joueur noir')
+			if configuration.est_en_echec(joueur):
+				print("")
+				print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')
+				print("Le roi noir est en echec \nProtegez le !")
 
-		input_decision = input("Entrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+		input_decision = input("\nEntrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
 		if input_decision == 'sauvegarde':
 			configuration.sauvegarde_partie(joueur)
 			print('Partie sauvegardée !')
@@ -148,7 +166,6 @@ def game_pvp():
 			else:
 				configuration.deplacement_piece(decision[0], decision[1], False)
 
-
 		affichage_plateau(configuration.matrice_affichage())
 
 		if len(configuration.msg_error):
@@ -159,5 +176,6 @@ def game_pvp():
 			joueur = -joueur
 
 		configuration.msg_error = list()
+
 
 game_pvp()
