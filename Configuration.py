@@ -411,7 +411,7 @@ class GeneralConf():
         """
         if joueur == 1:
             for piece in self.pieces:
-                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi):
+                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi
                     if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
                         return True
             return False
