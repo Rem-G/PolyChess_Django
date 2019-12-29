@@ -18,52 +18,52 @@ def init_pieces(configuration):
     Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
     """
     # Pieces blanches
-    configuration.add_piece(Pion("P", [8, 1]))
-    configuration.add_piece(Pion("P", [8, 2]))
-    configuration.add_piece(Pion("P", [8, 3]))
-    configuration.add_piece(Pion("P", [8, 4]))
-    configuration.add_piece(Pion("P", [8, 5]))
-    configuration.add_piece(Pion("P", [8, 6]))
-    configuration.add_piece(Pion("P", [8, 7]))
-    configuration.add_piece(Pion("P", [8, 8]))
+    configuration.add_piece(Pion("P", [8, 1], configuration))
+    configuration.add_piece(Pion("P", [8, 2], configuration))
+    configuration.add_piece(Pion("P", [8, 3], configuration))
+    configuration.add_piece(Pion("P", [8, 4], configuration))
+    configuration.add_piece(Pion("P", [8, 5], configuration))
+    configuration.add_piece(Pion("P", [8, 6], configuration))
+    configuration.add_piece(Pion("P", [8, 7], configuration))
+    configuration.add_piece(Pion("P", [8, 8], configuration))
 
-    configuration.add_piece(Tour("T", [9, 1]))
-    configuration.add_piece(Tour("T", [9, 8]))
+    configuration.add_piece(Tour("T", [9, 1], configuration))
+    configuration.add_piece(Tour("T", [9, 8], configuration))
 
-    configuration.add_piece(Cavalier("C", [9, 2]))
-    configuration.add_piece(Cavalier("C", [9, 7]))
+    configuration.add_piece(Cavalier("C", [9, 2], configuration))
+    configuration.add_piece(Cavalier("C", [9, 7], configuration))
 
-    configuration.add_piece(Fou("F", [9, 3]))
-    configuration.add_piece(Fou("F", [9, 6]))
+    configuration.add_piece(Fou("F", [9, 3], configuration))
+    configuration.add_piece(Fou("F", [9, 6], configuration))
 
-    configuration.add_piece(Dame("D", [9, 4]))
+    configuration.add_piece(Dame("D", [9, 4], configuration))
 
-    roiB = Roi("R", [9, 5])
+    roiB = Roi("R", [9, 5], configuration)
     configuration.add_piece(roiB)
     configuration.init_roi(roiB)
 
     # Pieces noires
-    configuration.add_piece(Pion("p", [3, 1]))
-    configuration.add_piece(Pion("p", [3, 2]))
-    configuration.add_piece(Pion("p", [3, 3]))
-    configuration.add_piece(Pion("p", [3, 4]))
-    configuration.add_piece(Pion("p", [3, 5]))
-    configuration.add_piece(Pion("p", [3, 6]))
-    configuration.add_piece(Pion("p", [3, 7]))
-    configuration.add_piece(Pion("p", [3, 8]))
+    configuration.add_piece(Pion("p", [3, 1], configuration))
+    configuration.add_piece(Pion("p", [3, 2], configuration))
+    configuration.add_piece(Pion("p", [3, 3], configuration))
+    configuration.add_piece(Pion("p", [3, 4], configuration))
+    configuration.add_piece(Pion("p", [3, 5], configuration))
+    configuration.add_piece(Pion("p", [3, 6], configuration))
+    configuration.add_piece(Pion("p", [3, 7], configuration))
+    configuration.add_piece(Pion("p", [3, 8], configuration))
 
-    configuration.add_piece(Tour("t", [2, 1]))
-    configuration.add_piece(Tour("t", [2, 8]))
+    configuration.add_piece(Tour("t", [2, 1], configuration))
+    configuration.add_piece(Tour("t", [2, 8], configuration))
 
-    configuration.add_piece(Cavalier("c", [2, 2]))
-    configuration.add_piece(Cavalier("c", [2, 7]))
+    configuration.add_piece(Cavalier("c", [2, 2], configuration))
+    configuration.add_piece(Cavalier("c", [2, 7], configuration))
 
-    configuration.add_piece(Fou("f", [2, 3]))
-    configuration.add_piece(Fou("f", [2, 6]))
+    configuration.add_piece(Fou("f", [2, 3], configuration))
+    configuration.add_piece(Fou("f", [2, 6], configuration))
 
-    configuration.add_piece(Dame("d", [2, 4]))
+    configuration.add_piece(Dame("d", [2, 4], configuration))
 
-    roiN = Roi("r", [2, 5])
+    roiN = Roi("r", [2, 5], configuration)
     configuration.add_piece(roiN)
     configuration.init_roi(roiN)
 
@@ -139,6 +139,7 @@ def game_pvp():
             print('\n', configuration.avantage_joueur())
 
         if joueur == 1:
+            configuration.affiche_case_cible()
             print("\nAu tour du joueur blanc")
             if configuration.est_en_echec(joueur):
                 print("")

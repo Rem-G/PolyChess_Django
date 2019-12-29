@@ -1,7 +1,9 @@
 class Piece:  # Classe mère
-    def __init__(self, nom, pos_initiale):
+    def __init__(self, nom, pos_initiale, configuration):
         self.nom = nom
         self.position = pos_initiale
+        self.configuration = configuration  # ajout attribut configuration pour pouvoir avoir acces a l'echiquier(
+        # l'ensemble des pieces)
 
     def get_piece_position(self):
         """
@@ -17,12 +19,13 @@ class Piece:  # Classe mère
         """
         self.position = position
 
+
 ###########################################################################################################
 ###########################################################################################################
 
 class Pion(Piece):
-    def __init__(self, nom, pos_initiale):
-        super().__init__(nom, pos_initiale)
+    def __init__(self, nom, pos_initiale, configuration):
+        super().__init__(nom, pos_initiale, configuration)
         self.firstMove = True
 
     def firstMoveOver(self):
@@ -69,11 +72,11 @@ class Pion(Piece):
 
 class Roi(Piece):
 
-    def __init__(self, nom, pos_initiale):
+    def __init__(self, nom, pos_initiale, configuration):
         """@NR
         :type nom: string
         """
-        super().__init__(nom, pos_initiale)
+        super().__init__(nom, pos_initiale, configuration)
         self.firstMove = True
         self.check = False
         self.checkMate = False
@@ -98,18 +101,29 @@ class Roi(Piece):
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
-                    moves.append([x + i,
-                                  y + j])  # on ajoute dans la liste toutes les cases autour de lui sans sa position courante
+                    # il faut verifier si la case est occupe par un joueur enemi ou allie
+                    if self.configuration.case_occupe(x + i, y + j):
+                        for piece in self.configuration.pieces:
+                            if piece.position == [x + i, x + j] and not (self.configuration.sameTeam(self, piece)):
+                                moves.append([x + i, y + j])
+                    else:
+                        moves.append([x + i, y + j])  # on ajoute dans la liste toutes les cases autour de lui sans
+                        # sa position courante
+        # en gros :
+        # si la case est occupe par un joueur ennemi, on l'ajoute
+        # si la case est occupe par un joueur allie, on l'ajoute pas
+        # si la case n'est pas occupe, on l'ajoute
+        # pas pris en compte si la case est en dehors de l'echiquier
         return [moves, moves]
 
 
 ###########################################################################################################
 ###########################################################################################################
 
-class Tour(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
-        self.firstMove = True                               ############################################################
+class Tour(Piece):  ############################################################
+    def __init__(self, nom, pos_initiale, configuration):  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+        self.firstMove = True  ############################################################
 
     def firstMoveOver(self):
         """
@@ -125,8 +139,8 @@ class Tour(Piece):                                          ####################
         x = self.position[0]
         y = self.position[1]
         listC = []
-                                    ################################################################################
-                                    ####ATTENTION erreur : on ne va pas jusqu'à la ligne 9 ( la derniere ligne)#####
+        ################################################################################
+        ####ATTENTION erreur : on ne va pas jusqu'à la ligne 9 ( la derniere ligne)#####
         # Bas                       ################################################################################
         for i in range(x):
             listC.append([(x - 1) - i, y])
@@ -150,8 +164,8 @@ class Tour(Piece):                                          ####################
 ###########################################################################################################
 
 class Cavalier(Piece):
-    def __init__(self, nom, pos_initiale):
-        super().__init__(nom, pos_initiale)
+    def __init__(self, nom, pos_initiale, configuration):
+        super().__init__(nom, pos_initiale, configuration)
 
     def PossibleMoves(self):
         """
@@ -178,10 +192,11 @@ class Cavalier(Piece):
 ###########################################################################################################
 
 
-class Fou(Piece):                                           ############################################################
-    def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
-                                                            ############################################################
+class Fou(Piece):  ############################################################
+    def __init__(self, nom, pos_initiale, configuration):  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+        ############################################################
+
     def PossibleMoves(self):
         '''
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
@@ -216,10 +231,10 @@ class Fou(Piece):                                           ####################
 ###########################################################################################################
 
 
-class Dame(Piece):                                        ############################################################
-    def __init__(self, nom, pos_initiale):                #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale)               # la piece ne peut pas sauter par dessus les autres pieces##
-                                                          ############################################################
+class Dame(Piece):  ############################################################
+    def __init__(self, nom, pos_initiale, configuration):  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+        ############################################################
 
     def PossibleMoves(self):
         '''
@@ -232,7 +247,8 @@ class Dame(Piece):                                        ######################
         if x < y:
             y2 = 8 - y
         # Haut - droit
-        for i in range(min(x, y2)): # ATTENTION erreur : y2 reference avant assignement, si x n'est pas inferieur a y, y2 n'existe pas mais le for (ligne 235) l'appel
+        for i in range(min(x,
+                           y2)):  # ATTENTION erreur : y2 reference avant assignement, si x n'est pas inferieur a y, y2 n'existe pas mais le for (ligne 235) l'appel
             listC.append([(x - 1) - i, (y + 1) + i])
 
         # Bas - droit

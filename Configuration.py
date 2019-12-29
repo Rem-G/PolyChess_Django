@@ -428,7 +428,7 @@ class GeneralConf():
     def affiche_case_cible(self):
         """ affiche les cases ou la pieces peut se déplacer"""
         for piece in self.pieces:
-            if piece.position == [8, 2]: # mettre les coordonnees de la piece que l'on étudie
+            if piece.position == [7, 5]: # mettre les coordonnees de la piece que l'on étudie
                 print(piece.nom, " : ", "position :", piece.nom, ":" ,piece.PossibleMoves()[1])
                 return True
 #######################################################################################################################
