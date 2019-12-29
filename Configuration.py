@@ -348,18 +348,15 @@ class GeneralConf():
         for tour in tour_allie:
             if tour.position == pos_arrivee:
                 if tour.firstMove:
-                    for posCol in range(roi.get_piece_position()[1], tour.get_piece_position()[1]):  # on parcours
+                    for posCol in range(roi.get_piece_position()[1]+1, tour.get_piece_position()[1]):  # on parcours
                         # l'echiquier sur l'horizontale entre les 2 pieces (de gauche à droite)
-                        if posCol != roi.get_piece_position()[1] or self.case_occupe(roi.position[0], posCol) or \
-                                self.case_menace(roi.position[0], posCol, roi):  # on
+                        if  self.case_occupe(roi.position[0], posCol) or self.case_menace(roi.position[0], posCol, roi):  # on
                             # ne peut pas faire le roque, si les cases entre le roi et la tour sont occupees ou menacees.
                             return False
                     #ou
-                    for posCol in range(tour.get_piece_position()[1], roi.get_piece_position()[1]):  # on parcours
+                    for posCol in range(tour.get_piece_position()[1]+1, roi.get_piece_position()[1]):  # on parcours
                         # l'echiquier sur l'horizontale entre les 2 pieces (de doite à gauche)
-                        if posCol != roi.get_piece_position()[1] or self.case_occupe(roi.position[0],
-                                                                                      posCol) or self.case_menace(
-                                roi.position[0], posCol, roi):
+                        if self.case_occupe(roi.position[0], posCol) or self.case_menace(roi.position[0], posCol, roi):
                             return False
                     # on fait le roque avec une permutation
                     line_roi = roi.get_piece_position()[0]
@@ -401,8 +398,6 @@ class GeneralConf():
         """
         for piece1 in self.pieces:
             if not self.sameTeam(piece, piece1):
-                if piece1.__class__ is Tour:
-                    print(piece1.nom," : ", piece1.PossibleMoves()[1])
                 for case in piece1.PossibleMoves()[1]:  # case que peut attaquer l'ennemi
                     if case == [posLine, posCol]:
                         return True
@@ -427,6 +422,16 @@ class GeneralConf():
                         return True
             return False
 
+#######################################################################################################################
+### FONTION POUR DEBUGGAGE  ##### @NR
+
+    def affiche_case_cible(self):
+        """ affiche les cases ou la pieces peut se déplacer"""
+        for piece in self.pieces:
+            if piece.position == [8, 2]: # mettre les coordonnees de la piece que l'on étudie
+                print(piece.nom, " : ", "position :", piece.nom, ":" ,piece.PossibleMoves()[1])
+                return True
+#######################################################################################################################
 
     ###############################################################
     ###FONCTIONS PION @TC
