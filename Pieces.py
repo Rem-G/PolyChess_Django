@@ -1,9 +1,7 @@
 class Piece:  # Classe mère
-    def __init__(self, nom, pos_initiale, configuration):
+    def __init__(self, nom, pos_initiale):
         self.nom = nom
         self.position = pos_initiale
-        self.configuration = configuration  # ajout attribut configuration pour pouvoir avoir acces a l'echiquier(
-        # l'ensemble des pieces)
 
     def get_piece_position(self):
         """
@@ -24,8 +22,8 @@ class Piece:  # Classe mère
 ###########################################################################################################
 
 class Pion(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale, configuration):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
 
     def firstMoveOver(self):
@@ -72,11 +70,11 @@ class Pion(Piece):                                          ####################
 
 class Roi(Piece):
 
-    def __init__(self, nom, pos_initiale, configuration):
+    def __init__(self, nom, pos_initiale):
         """@NR
         :type nom: string
         """
-        super().__init__(nom, pos_initiale, configuration)
+        super().__init__(nom, pos_initiale)
         self.firstMove = True
         self.check = False
         self.checkMate = False
@@ -101,19 +99,7 @@ class Roi(Piece):
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 or j != 0:
-                    # il faut verifier si la case est occupe par un joueur enemi ou allie
-                    if self.configuration.case_occupe(x + i, y + j):
-                        for piece in self.configuration.pieces:
-                            if piece.position == [x + i, x + j] and not (self.configuration.sameTeam(self, piece)):
-                                moves.append([x + i, y + j])
-                    else:
-                        moves.append([x + i, y + j])  # on ajoute dans la liste toutes les cases autour de lui sans
-                        # sa position courante
-        # en gros :
-        # si la case est occupe par un joueur ennemi, on l'ajoute
-        # si la case est occupe par un joueur allie, on l'ajoute pas
-        # si la case n'est pas occupe, on l'ajoute
-        # pas pris en compte si la case est en dehors de l'echiquier
+                    moves.append([x + i, y + j])
         return [moves, moves]
 
 
@@ -121,8 +107,8 @@ class Roi(Piece):
 ###########################################################################################################
 
 class Tour(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale, configuration):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
 
     def firstMoveOver(self):
@@ -165,8 +151,8 @@ class Tour(Piece):                                          ####################
 ###########################################################################################################
 
 class Cavalier(Piece):
-    def __init__(self, nom, pos_initiale, configuration):
-        super().__init__(nom, pos_initiale, configuration)
+    def __init__(self, nom, pos_initiale):
+        super().__init__(nom, pos_initiale)
 
     def PossibleMoves(self):
         """
@@ -194,8 +180,8 @@ class Cavalier(Piece):
 
 
 class Fou(Piece):                                           ############################################################
-    def __init__(self, nom, pos_initiale, configuration):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
                                                             ############################################################
 
     def PossibleMoves(self):
@@ -233,8 +219,8 @@ class Fou(Piece):                                           ####################
 
 
 class Dame(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale, configuration):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale, configuration)  # la piece ne peut pas sauter par dessus les autres pieces##
+    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
                                                             ############################################################
 
     def PossibleMoves(self):

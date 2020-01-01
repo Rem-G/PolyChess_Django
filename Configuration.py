@@ -306,12 +306,17 @@ class GeneralConf():
         """
 
         possible_moves = moves[0]
-        possible_eat = moves[1]
+        #pas de list possible_eat car c'est la même chose que possible moves pour le roi
 
-        emplacements_pieces = list()
-        [emplacements_pieces.append(piece.position) for piece in self.pieces]
+        # modification des moves en prenant en compte l'etat de l'echiquier (postion des pieces)
+        for piece in self.pieces:
+            if piece.PossibleMoves()[0] in possible_moves and self.sameTeam(piece, roi): # si sur l'emplacement ou
+                # l'on veut se déplacer il y a déja un piece allié, on l'èleve de la liste
+                possible_moves.remove(piece.PossibleMoves()[0])
+        #pas de probleme si l'emplacement est vide ou il y a un ennemi
 
-        emplacements_reachable_by_opponent = list()
+        #erbo pour voir si sur ce coup le roi se met en echec
+        emplacements_reachable_by_opponent = list() #emplacement que les ennemis peuvent atteindre
         for piece in self.pieces:
             if not (self.sameTeam(piece, roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
                 for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
@@ -319,17 +324,15 @@ class GeneralConf():
                         emplacements_reachable_by_opponent.append(
                             erbo)  # on ajoute les emplacements de capture de chaque piece
 
-        if ((pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces) or (
-                pos_arrivee in possible_eat)) and pos_arrivee not in emplacements_reachable_by_opponent:
+        if (pos_arrivee in possible_moves) and (pos_arrivee not in emplacements_reachable_by_opponent):
             # verification si la position d'arrivee est dans les moves possibles et qu'il n'y pas de piece à cette emplacement ou que on peut manger une piece a cet emplacement
             # et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                if pos_arrivee in possible_eat:
                     # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                    for piece in self.pieces:
-                        if pos_arrivee == piece.position:
-                            self.del_piece(piece)
+                for piece in self.pieces:
+                    if pos_arrivee == piece.position:
+                        self.del_piece(piece)
                 return True
         return False
 
@@ -428,7 +431,7 @@ class GeneralConf():
     def affiche_case_cible(self):
         """ affiche les cases ou la pieces peut se déplacer"""
         for piece in self.pieces:
-            if piece.position == [7, 5]: # mettre les coordonnees de la piece que l'on étudie
+            if piece.position == [9, 5]: # mettre les coordonnees de la piece que l'on étudie
                 print(piece.nom, " : ", "position :", piece.nom, ":" ,piece.PossibleMoves()[1])
                 return True
 #######################################################################################################################
