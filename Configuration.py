@@ -73,7 +73,9 @@ class GeneralConf():
                 elif nom_piece == 'd' or nom_piece == 'D':
                     self.add_piece(Dame(nom_piece, coordonnees_pieces))
                 elif nom_piece == 'r' or nom_piece == 'R':
-                    self.add_piece(Roi(nom_piece, coordonnees_pieces))
+                    roi = Roi(nom_piece, coordonnees_pieces)
+                    self.add_piece(roi)
+                    self.init_roi(roi)
 
             self.joueurB.couleur = elements[len(elements) - 3][2]
             self.joueurB.points = int(elements[len(elements) - 3][6])
