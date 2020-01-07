@@ -166,7 +166,7 @@ class GeneralConf():
 
         return matrice_screen
 
-    def verification_deplacement(self, moves, pos_arrivee, joueur):
+    def verification_deplacement(self, moves, pos_arrivee,joueur): #parametre joueur n'est pas utilisé
         """
 		@RG
 		Vérifie si pour les mouvements d'une pièce donnée, sa position d'arrivée est autorisée
@@ -418,16 +418,56 @@ class GeneralConf():
             for piece in self.pieces:
 
                 #if piece.__class__ is Roi and not piece.nom == 'R'
-                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi
+                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
                         return True
             return False
         else:
             for piece in self.pieces:
-                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi):
+                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if piece.PossibleMoves()[1] == self.joueurN.roi.position:
                         return True
             return False
+
+    # def emplacements_menacees_mouvement_roi(self, roi):
+    #     """
+    #     @NR renvoie liste des emplacements menacé ou le roi peut se déplacer
+    #     :param roi: une piece roi
+    #     :return: liste des emplacements menacé ou le roi peut se déplacer
+    #     """
+    #
+    #     emplacements_menacees_mouvement_roi=[]
+    #     listes_pos_roi = roi.PossibleMoves().extend(roi.position) # liste des emplacement: position du roi + emplacement ou il peut se deplacer
+    #     for piece in self.pieces():
+    #         if not self.sameTeam(piece, roi):
+    #             for move in piece.PossibleMoves()[1]:
+    #                 if move in listes_pos_roi and move not in emplacements_menacees_mouvement_roi : #pour ne pas avoir de doublon d'emplacements
+    #                     emplacements_menacees_mouvement_roi.append(move)
+    #     return emplacements_menacees_mouvement_roi
+    #
+    # def est_en_eche_et_mat(self, joueur): #si le roi est en echec au prochain coup et aucune parade ne peut-etre faite
+    #     """
+    #     @NR verifie si le joueur est en echec et mat
+    #     :param joueur:  INT 1 si joueur blanc sinon joueur noir
+    #     :return: True si le joueur est en echec et mat, False sinon
+    #     """
+    #     if joueur == 1:
+    #         if self.est_en_echec(joueur):
+    #             #on test si le roi peut bouger
+    #             for move_arrive in self.joueurB.roi.PossibleMoves()[1]:
+    #                 if self.verification_deplacement_roi(self.joueurB.roi, self.joueurB.roi.PossibleMoves(),move_arrive): ### verfie si pour chaque coup du roi, il ne se met pas en echec
+    #                     # REMARQUE: si verficication deplacement roi renvoi True et qu'il y a une piece ou il veut se deplacr, il la supprime
+    #                     return True
+    #             #il faut aussi verfier si une piece allie peut le sauver
+    #             #Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
+    #             for piece in self.pieces:
+    #                 if self.sameTeam(piece, self.joueurB.roi):
+    #                     for move_allie in piece.PossibleMoves()[1]:
+    #                         if self.verification_deplacement(piece.PossibleMoves(), move_allie):
+    #                             #il faut maintenant tester si on fait le coup, le roi est sauve ou pas
+    #
+    #
+    #             return False
 
 #######################################################################################################################
 ### FONTION POUR DEBUGGAGE  ##### @NR
