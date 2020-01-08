@@ -97,8 +97,9 @@ def decision_joueur(decision, configuration):
 
     # Conversion des coordonnées utilisateur en coordonnées matricielles
 
-    pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
-    pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
+    decision = decision.split(" ")
+    pos_depart = configuration.board.position_piece_mat([decision[0][0], decision[0][1]])
+    pos_arrivee = configuration.board.position_piece_mat([decision[1][0], decision[1][1]])
 
     pos_depart = [int(pos) for pos in pos_depart]
     pos_arrivee = [int(pos) for pos in pos_arrivee]

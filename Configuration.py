@@ -166,7 +166,7 @@ class GeneralConf():
 
         return matrice_screen
 
-    def verification_deplacement(self, moves, pos_arrivee,joueur): #parametre joueur n'est pas utilisé
+    def verification_deplacement(self, moves, pos_arrivee):
         """
 		@RG
 		Vérifie si pour les mouvements d'une pièce donnée, sa position d'arrivée est autorisée
@@ -222,7 +222,7 @@ class GeneralConf():
 
         else:
 
-            if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee, piece):
+            if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
                 piece.set_piece_position(pos_arrivee)
 
             else:
