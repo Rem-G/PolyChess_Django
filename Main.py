@@ -67,6 +67,8 @@ def init_pieces(configuration):
     configuration.add_piece(roiN)
     configuration.init_roi(roiN)
 
+# # test mise en echec
+#     configuration.add_piece(Roi("r", [8,5]))
 
 def affichage_plateau(matrice_affichage):
     """
@@ -97,8 +99,9 @@ def decision_joueur(decision, configuration):
 
     # Conversion des coordonnées utilisateur en coordonnées matricielles
 
-    pos_depart = configuration.board.position_piece_mat(decision.split(" ")[0].split(","))
-    pos_arrivee = configuration.board.position_piece_mat(decision.split(" ")[1].split(","))
+    decision = decision.split(" ")
+    pos_depart = configuration.board.position_piece_mat([decision[0][0], decision[0][1]])
+    pos_arrivee = configuration.board.position_piece_mat([decision[1][0], decision[1][1]])
 
     pos_depart = [int(pos) for pos in pos_depart]
     pos_arrivee = [int(pos) for pos in pos_arrivee]
@@ -136,10 +139,9 @@ def game_pvp():
 
     while game:  # Rajouter option echec et mat + afficher pièces mangées
         if configuration.avantage_joueur():
-            print('\n', configuration.avantage_joueur())
+            print(configuration.avantage_joueur())
 
         if joueur == 1:
-            configuration.affiche_case_cible()
             print("\nAu tour du joueur blanc")
             if configuration.est_en_echec(joueur):
                 print("")
@@ -153,7 +155,7 @@ def game_pvp():
                 print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')
                 print("Le roi noir est en echec \nProtegez le !")
 
-        input_decision = input("\nEntrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+        input_decision = input("\nEntrer x1y1 x2y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
         if input_decision == 'sauvegarde':
             configuration.sauvegarde_partie(joueur)
             print('Partie sauvegardée !')
@@ -167,6 +169,16 @@ def game_pvp():
                 configuration.deplacement_piece(decision[0], decision[1], False)
 
         affichage_plateau(configuration.matrice_affichage())
+
+        for piece in configuration.pieces_joueurB:
+            if piece.get_piece_position()[0] == 2 and piece.nom == 'P' and piece.promotion:
+                configuration.promotion(piece)
+                piece.promotion = False
+
+        for piece in configuration.pieces_joueurN:
+            if piece.get_piece_position()[0] == 9 and piece.nom == 'p' and piece.promotion:
+                configuration.promotion(piece)
+                piece.promotion = False
 
         if len(configuration.msg_error):
             for msg in configuration.msg_error:

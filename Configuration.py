@@ -27,6 +27,9 @@ class GeneralConf():
         self.pieces_joueurB = list()
         self.pieces_joueurN = list()
         self.avantage = None
+        self.died_pieces_B = list()
+        self.died_pieces_N = list()
+        self.in_promotion = False
 
     def sauvegarde_partie(self, joueur):
         """
@@ -39,8 +42,11 @@ class GeneralConf():
                 file.write(str([piece.nom, piece.position]) + '/')
 
         with open('sauvegarde.txt', 'a+') as file:
+            file.write(str(self.died_pieces_B) + '/')
+            file.write(str(self.died_pieces_N) + '/')
             file.write(str([self.joueurB.couleur, self.joueurB.points]) + '/')
             file.write(str([self.joueurN.couleur, self.joueurN.points]) + '/')
+
             file.write(str(joueur))
 
     def charger_partie(self):
@@ -58,7 +64,7 @@ class GeneralConf():
         if elements:
             elements = elements[0].split("/")
 
-            for element in elements[:len(elements) - 3]:
+            for element in elements[:len(elements) - 5]:
                 element = element[1:len(element) - 1]
                 nom_piece = element[1]
                 coordonnees_pieces = [int(element[6]), int(element[9])]
@@ -76,6 +82,9 @@ class GeneralConf():
                     roi = Roi(nom_piece, coordonnees_pieces)
                     self.add_piece(roi)
                     self.init_roi(roi)
+
+            self.died_pieces_B =[e[1:len(e)-1] for e in elements[len(elements) - 5][1:len(elements[len(elements) - 5])-1].split(',')]#Récupération des pièces blanches mangées et mise en page de celles-ci sous forme de liste composée des noms des pièces
+            self.died_pieces_N = [e[1:len(e)-1] for e in elements[len(elements) - 4][1:len(elements[len(elements) - 4])-1].split(',')]
 
             self.joueurB.couleur = elements[len(elements) - 3][2]
             self.joueurB.points = int(elements[len(elements) - 3][6])
@@ -96,6 +105,10 @@ class GeneralConf():
         """
         @RG
         """
+        if piece.nom.isupper() and self.in_promotion is False:
+            self.died_pieces_B.append(piece.nom)
+        elif piece.nom.islower() and self.in_promotion is False:
+            self.died_pieces_N.append(piece.nom)
         self.pieces.pop(self.pieces.index(piece))
 
     def add_msg_error(self, msg):
@@ -163,10 +176,28 @@ class GeneralConf():
                     pass
 
         matrice_screen = matrice[2:len(matrice) - 2]
+        pieces_mangees_B = '            Pieces blanches mangées ' + str(self.died_pieces_B)
+        pieces_mangees_N = '            Pieces noires mangées ' + str(self.died_pieces_N)
+
+        matrice_screen[len(matrice_screen)-5].append(pieces_mangees_B)
+        matrice_screen[len(matrice_screen)-4].append(pieces_mangees_N)
 
         return matrice_screen
 
-    def verification_deplacement(self, moves, pos_arrivee,joueur): #parametre joueur n'est pas utilisé
+
+    def chemin_parcouru_piece(self, piece):
+        """
+        @RG
+        """
+        #Sauf Cavalier et Roi
+        pass
+        #if piece.__class__ is Cavalier:
+            #for p in self.pieces:
+                #if p.position in piece[0]:
+                   #piece[0].pop(p.position)
+
+
+    def verification_deplacement(self, moves, pos_arrivee):
         """
 		@RG
 		Vérifie si pour les mouvements d'une pièce donnée, sa position d'arrivée est autorisée
@@ -186,18 +217,25 @@ class GeneralConf():
             # Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                if pos_arrivee in possible_eat:
-                    # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                    for piece in self.pieces:
-                        if pos_arrivee == piece.position:
-                            self.del_piece(piece)
-                            if piece.nom.islower():
-                                self.joueurB.add_point(piece)
-                            else:
-                                self.joueurN.add_point(piece)
-
                 return True
         return False
+
+
+    def mange_piece(self, piece, possible_eat, pos_arrivee):
+        """
+        @RG
+        """
+        for p in self.pieces:
+            # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+            if pos_arrivee == p.position and pos_arrivee in possible_eat:
+                if p.nom.islower():
+                    self.joueurB.add_point(p)
+                else:
+                    self.joueurN.add_point(p)
+                self.del_piece(p)
+
+        piece.set_piece_position(pos_arrivee)
+
 
     def tour_joueur(self, piece, pos_arrivee):
         """
@@ -214,7 +252,7 @@ class GeneralConf():
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
 
             if not (roque_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
-                piece.set_piece_position(pos_arrivee)
+                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
 
             else:
                 if not (roque_roi_fait):
@@ -222,8 +260,8 @@ class GeneralConf():
 
         else:
 
-            if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee, piece):
-                piece.set_piece_position(pos_arrivee)
+            if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
+                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
 
             else:
                 self.add_msg_error("Déplacement interdit")
@@ -242,6 +280,10 @@ class GeneralConf():
         if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(
                 pos_arrivee) != -1:
             for piece in self.pieces:
+                ###########
+                if piece.__class__ is Cavalier:
+                    self.chemin_parcouru_piece(piece)
+                ###########
                 # Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
                 piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
                 coordonnees_pieces.append([piece_x, piece_y])
@@ -332,9 +374,9 @@ class GeneralConf():
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
                     # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                for piece in self.pieces:
-                    if pos_arrivee == piece.position:
-                        self.del_piece(piece)
+                # for piece in self.pieces:
+                #     if pos_arrivee == piece.position:
+                #         self.del_piece(piece)
                 return True
         return False
 
@@ -417,14 +459,17 @@ class GeneralConf():
         if joueur == 1:
             for piece in self.pieces:
 
-                #if piece.__class__ is Roi and not piece.nom == 'R'
-                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
+                # if piece.__class__ is Roi and not piece.nom == 'R'
+                if not self.sameTeam(piece,
+                                     self.joueurB.roi):  ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                    if self.joueurB.roi.position in piece.PossibleMoves()[
+                        1]:  # Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
                         return True
             return False
         else:
             for piece in self.pieces:
-                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                if not self.sameTeam(piece,
+                                     self.joueurN.roi):  ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if piece.PossibleMoves()[1] == self.joueurN.roi.position:
                         return True
             return False
@@ -456,7 +501,6 @@ class GeneralConf():
     #             #on test si le roi peut bouger
     #             for move_arrive in self.joueurB.roi.PossibleMoves()[1]:
     #                 if self.verification_deplacement_roi(self.joueurB.roi, self.joueurB.roi.PossibleMoves(),move_arrive): ### verfie si pour chaque coup du roi, il ne se met pas en echec
-    #                     # REMARQUE: si verficication deplacement roi renvoi True et qu'il y a une piece ou il veut se deplacr, il la supprime
     #                     return True
     #             #il faut aussi verfier si une piece allie peut le sauver
     #             #Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
@@ -471,13 +515,6 @@ class GeneralConf():
 
 #######################################################################################################################
 ### FONTION POUR DEBUGGAGE  ##### @NR
-
-    def affiche_case_cible(self):
-        """ affiche les cases ou la pieces peut se déplacer"""
-        for piece in self.pieces:
-            if piece.position == [9, 5]: # mettre les coordonnees de la piece que l'on étudie
-                print(piece.nom, " : ", "position :", piece.nom, ":" ,piece.PossibleMoves()[1])
-                return True
 #######################################################################################################################
 
     ###############################################################
@@ -486,9 +523,10 @@ class GeneralConf():
 
     def promotion(self, piece):
         """
-		promeut un pion en une piece choisie par l'utilisateur
-		@TC
-		"""
+        promeut un pion en une piece choisie par l'utilisateur
+        @TC
+        """
+        self.in_promotion = True
         position = piece.get_piece_position()
         if piece.nom.isupper:
             nom_piece = str(input(
@@ -509,4 +547,4 @@ class GeneralConf():
 
         elif nom_piece == 'D' or nom_piece == 'd':
             self.add_piece(Dame(nom_piece, position))
-
+        self.in_promotion = False
