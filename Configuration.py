@@ -374,9 +374,9 @@ class GeneralConf():
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
                     # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                for piece in self.pieces:
-                    if pos_arrivee == piece.position:
-                        self.del_piece(piece)
+                # for piece in self.pieces:
+                #     if pos_arrivee == piece.position:
+                #         self.del_piece(piece)
                 return True
         return False
 
@@ -459,14 +459,17 @@ class GeneralConf():
         if joueur == 1:
             for piece in self.pieces:
 
-                #if piece.__class__ is Roi and not piece.nom == 'R'
-                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
+                # if piece.__class__ is Roi and not piece.nom == 'R'
+                if not self.sameTeam(piece,
+                                     self.joueurB.roi):  ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                    if self.joueurB.roi.position in piece.PossibleMoves()[
+                        1]:  # Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
                         return True
             return False
         else:
             for piece in self.pieces:
-                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                if not self.sameTeam(piece,
+                                     self.joueurN.roi):  ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if piece.PossibleMoves()[1] == self.joueurN.roi.position:
                         return True
             return False
@@ -498,7 +501,6 @@ class GeneralConf():
     #             #on test si le roi peut bouger
     #             for move_arrive in self.joueurB.roi.PossibleMoves()[1]:
     #                 if self.verification_deplacement_roi(self.joueurB.roi, self.joueurB.roi.PossibleMoves(),move_arrive): ### verfie si pour chaque coup du roi, il ne se met pas en echec
-    #                     # REMARQUE: si verficication deplacement roi renvoi True et qu'il y a une piece ou il veut se deplacr, il la supprime
     #                     return True
     #             #il faut aussi verfier si une piece allie peut le sauver
     #             #Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
