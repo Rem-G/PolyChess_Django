@@ -159,7 +159,6 @@ class Tour(Piece):                                          ####################
             y1 = y1+1
             listC.append([y1,x1])
 
-        print(listC)
         return [listC, listC]
 
 
