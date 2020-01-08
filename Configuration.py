@@ -27,6 +27,9 @@ class GeneralConf():
         self.pieces_joueurB = list()
         self.pieces_joueurN = list()
         self.avantage = None
+        self.died_pieces_B = list()
+        self.died_pieces_N = list()
+        self.in_promotion = False
 
     def sauvegarde_partie(self, joueur):
         """
@@ -96,6 +99,10 @@ class GeneralConf():
         """
         @RG
         """
+        if piece.nom.isupper() and self.in_promotion is False:
+            self.died_pieces_B.append(piece.nom)
+        elif piece.nom.islower() and self.in_promotion is False:
+            self.died_pieces_N.append(piece.nom)
         self.pieces.pop(self.pieces.index(piece))
 
     def add_msg_error(self, msg):
@@ -163,8 +170,25 @@ class GeneralConf():
                     pass
 
         matrice_screen = matrice[2:len(matrice) - 2]
+        pieces_mangees_B = 'Pieces blanches mangées' + str(self.died_pieces_B)
+        pieces_mangees_N = 'Pieces noires mangées' + str(self.died_pieces_N)
+        matrice_screen[len(matrice_screen)-2].append(pieces_mangees_B)
+        matrice_screen[len(matrice_screen)-1].append(pieces_mangees_B)
 
         return matrice_screen
+
+
+    def chemin_parcouru_piece(self, piece):
+        """
+        @RG
+        """
+        #Sauf Cavalier et Roi
+        pass
+        #if piece.__class__ is Cavalier:
+            #for p in self.pieces:
+                #if p.position in piece[0]:
+                   #piece[0].pop(p.position)
+
 
     def verification_deplacement(self, moves, pos_arrivee):
         """
@@ -186,18 +210,25 @@ class GeneralConf():
             # Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                if pos_arrivee in possible_eat:
-                    # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                    for piece in self.pieces:
-                        if pos_arrivee == piece.position:
-                            self.del_piece(piece)
-                            if piece.nom.islower():
-                                self.joueurB.add_point(piece)
-                            else:
-                                self.joueurN.add_point(piece)
-
                 return True
         return False
+
+
+    def mange_piece(self, piece, possible_eat, pos_arrivee):
+        """
+        @RG
+        """
+        for p in self.pieces:
+            # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+            if pos_arrivee == p.position and pos_arrivee in possible_eat:
+                if p.nom.islower():
+                    self.joueurB.add_point(p)
+                else:
+                    self.joueurN.add_point(p)
+                self.del_piece(p)
+
+        piece.set_piece_position(pos_arrivee)
+
 
     def tour_joueur(self, piece, pos_arrivee):
         """
@@ -214,7 +245,7 @@ class GeneralConf():
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
 
             if not (roque_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
-                piece.set_piece_position(pos_arrivee)
+                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
 
             else:
                 if not (roque_roi_fait):
@@ -223,7 +254,7 @@ class GeneralConf():
         else:
 
             if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
-                piece.set_piece_position(pos_arrivee)
+                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
 
             else:
                 self.add_msg_error("Déplacement interdit")
@@ -242,6 +273,10 @@ class GeneralConf():
         if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(
                 pos_arrivee) != -1:
             for piece in self.pieces:
+                ###########
+                if piece.__class__ is Cavalier:
+                    self.chemin_parcouru_piece(piece)
+                ###########
                 # Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
                 piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
                 coordonnees_pieces.append([piece_x, piece_y])
@@ -471,13 +506,6 @@ class GeneralConf():
 
 #######################################################################################################################
 ### FONTION POUR DEBUGGAGE  ##### @NR
-
-    def affiche_case_cible(self):
-        """ affiche les cases ou la pieces peut se déplacer"""
-        for piece in self.pieces:
-            if piece.position == [9, 5]: # mettre les coordonnees de la piece que l'on étudie
-                print(piece.nom, " : ", "position :", piece.nom, ":" ,piece.PossibleMoves()[1])
-                return True
 #######################################################################################################################
 
     ###############################################################
@@ -489,6 +517,7 @@ class GeneralConf():
         promeut un pion en une piece choisie par l'utilisateur
         @TC
         """
+        self.in_promotion = True
         position = piece.get_piece_position()
         if piece.nom.isupper:
             nom_piece = str(input(
@@ -509,4 +538,4 @@ class GeneralConf():
 
         elif nom_piece == 'D' or nom_piece == 'd':
             self.add_piece(Dame(nom_piece, position))
-
+        self.in_promotion = False

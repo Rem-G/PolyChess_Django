@@ -137,10 +137,9 @@ def game_pvp():
 
     while game:  # Rajouter option echec et mat + afficher pièces mangées
         if configuration.avantage_joueur():
-            print('\n', configuration.avantage_joueur())
+            print(configuration.avantage_joueur())
 
         if joueur == 1:
-            configuration.affiche_case_cible()
             print("\nAu tour du joueur blanc")
             if configuration.est_en_echec(joueur):
                 print("")
@@ -154,7 +153,7 @@ def game_pvp():
                 print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')
                 print("Le roi noir est en echec \nProtegez le !")
 
-        input_decision = input("\nEntrer x1,y1 x2,y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+        input_decision = input("\nEntrer x1y1 x2y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
         if input_decision == 'sauvegarde':
             configuration.sauvegarde_partie(joueur)
             print('Partie sauvegardée !')
