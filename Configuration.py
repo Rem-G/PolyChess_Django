@@ -42,8 +42,11 @@ class GeneralConf():
                 file.write(str([piece.nom, piece.position]) + '/')
 
         with open('sauvegarde.txt', 'a+') as file:
+            file.write(str(self.died_pieces_B) + '/')
+            file.write(str(self.died_pieces_N) + '/')
             file.write(str([self.joueurB.couleur, self.joueurB.points]) + '/')
             file.write(str([self.joueurN.couleur, self.joueurN.points]) + '/')
+
             file.write(str(joueur))
 
     def charger_partie(self):
@@ -61,7 +64,7 @@ class GeneralConf():
         if elements:
             elements = elements[0].split("/")
 
-            for element in elements[:len(elements) - 3]:
+            for element in elements[:len(elements) - 5]:
                 element = element[1:len(element) - 1]
                 nom_piece = element[1]
                 coordonnees_pieces = [int(element[6]), int(element[9])]
@@ -79,6 +82,9 @@ class GeneralConf():
                     roi = Roi(nom_piece, coordonnees_pieces)
                     self.add_piece(roi)
                     self.init_roi(roi)
+
+            self.died_pieces_B =[e[1:len(e)-1] for e in elements[len(elements) - 5][1:len(elements[len(elements) - 5])-1].split(',')]#Récupération des pièces blanches mangées et mise en page de celles-ci sous forme de liste composée des noms des pièces
+            self.died_pieces_N = [e[1:len(e)-1] for e in elements[len(elements) - 4][1:len(elements[len(elements) - 4])-1].split(',')]
 
             self.joueurB.couleur = elements[len(elements) - 3][2]
             self.joueurB.points = int(elements[len(elements) - 3][6])
@@ -170,10 +176,11 @@ class GeneralConf():
                     pass
 
         matrice_screen = matrice[2:len(matrice) - 2]
-        pieces_mangees_B = 'Pieces blanches mangées' + str(self.died_pieces_B)
-        pieces_mangees_N = 'Pieces noires mangées' + str(self.died_pieces_N)
-        matrice_screen[len(matrice_screen)-2].append(pieces_mangees_B)
-        matrice_screen[len(matrice_screen)-1].append(pieces_mangees_B)
+        pieces_mangees_B = '            Pieces blanches mangées ' + str(self.died_pieces_B)
+        pieces_mangees_N = '            Pieces noires mangées ' + str(self.died_pieces_N)
+
+        matrice_screen[len(matrice_screen)-5].append(pieces_mangees_B)
+        matrice_screen[len(matrice_screen)-4].append(pieces_mangees_N)
 
         return matrice_screen
 
