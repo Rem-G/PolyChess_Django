@@ -184,6 +184,19 @@ class GeneralConf():
 
         return matrice_screen
 
+
+    def chemin_parcouru_piece(self, piece):
+        """
+        @RG
+        """
+        #Sauf Cavalier et Roi
+        pass
+        #if piece.__class__ is Cavalier:
+            #for p in self.pieces:
+                #if p.position in piece[0]:
+                   #piece[0].pop(p.position)
+
+
     def verification_deplacement(self, moves, pos_arrivee):
         """
         @RG
@@ -207,6 +220,7 @@ class GeneralConf():
                 return True
         return False
 
+
     def mange_piece(self, piece, possible_eat, pos_arrivee):
         """
         @RG
@@ -221,6 +235,7 @@ class GeneralConf():
                 self.del_piece(p)
 
         piece.set_piece_position(pos_arrivee)
+
 
     def tour_joueur(self, piece, pos_arrivee):
         """
@@ -265,6 +280,10 @@ class GeneralConf():
         if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(
                 pos_arrivee) != -1:
             for piece in self.pieces:
+                ###########
+                if piece.__class__ is Cavalier:
+                    self.chemin_parcouru_piece(piece)
+                ###########
                 # Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
                 piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
                 coordonnees_pieces.append([piece_x, piece_y])
@@ -439,13 +458,15 @@ class GeneralConf():
         """
         if joueur == 1:
             for piece in self.pieces:
-                if not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
+
+                #if piece.__class__ is Roi and not piece.nom == 'R'
+                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
                         return True
             return False
         else:
             for piece in self.pieces:
-                if not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
                     if piece.PossibleMoves()[1] == self.joueurN.roi.position:
                         return True
             return False
