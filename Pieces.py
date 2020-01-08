@@ -25,6 +25,7 @@ class Pion(Piece):                                          ####################
     def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
         super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
+        self.promotion = True
 
     def firstMoveOver(self):
         """
@@ -122,28 +123,43 @@ class Tour(Piece):                                          ####################
         Retourne la liste possible pour un tour
         @LV
         '''
-        x = self.position[0]
-        y = self.position[1]
+        x = self.position[1]
+        y = self.position[0]
+        x1 = x
+        y1 = y
         listC = []
-        ################################################################################
-        ####ATTENTION erreur : on ne va pas jusqu'à la ligne 9 ( la derniere ligne)#####
-        ################################################################################
-        # Bas
-        for i in range(x):
-            listC.append([(x - 1) - i, y])
+        
+        #D
+        while x1 <8:
+            x1 = x1+1
+            y1 = y1
+            listC.append([y1,x1])
+            
+        x1 = x
+        y1 = y
+        #G    
+        while x1 >1 :
+            x1 = x1-1
+            y1 = y1
+            listC.append([y1,x1])
+        
+        x1 = x
+        y1 = y    
+        #H    
+        while y1 > 2:
+            x1 = x1
+            y1 = y1-1
+            listC.append([y1,x1])
+            
+        x1 = x
+        y1 = y    
+        #B
+        while y1 > 9:
+            x1 = x1
+            y1 = y1+1
+            listC.append([y1,x1])
 
-        # Haut
-        for i in range(8 - x):
-            listC.append([(x + 1) + i, y])
-
-        # Gauche
-        for i in range(y):
-            listC.append([x, (y - 1) - i])
-
-        # Droit
-        for i in range(8 - y):
-            listC.append([x, (y + 1) + i])
-
+        print(listC)
         return [listC, listC]
 
 
@@ -189,81 +205,125 @@ class Fou(Piece):                                           ####################
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
         @LV
         '''
-        x = self.position[0]
-        y = self.position[1]
-        listC = []
-        y2 = int()
-        if x < y:
-            y2 = 8 - y
-        # Haut - droit
-        for i in range(min(x, y2)):
-            listC.append([(x - 1) - i, (y + 1) + i])
-
-        # Bas - droit
-        for i in range(max(x, y2)):
-            listC.append([(x + 1) + i, (y + 1) + i])
-
-        # Haut - gauche
-        for i in range(min(y, x)):
-            listC.append([(x - 1) - i, (y - 1) - i])
-
-        # Bas - gauche
-        for i in range(max(y, x)):
-            listC.append([(x + 1) + i, (y - 1) - i])
-
-        return [listC, listC]
+        x = self.position[1]
+        y = self.position[0]
+        x1 = x
+        y1 = y
+        listeC = []
+        
+        #B-D
+        while x1 >1 and y1 < 9:
+            x1 = x1-1
+            y1 = y1+1
+            listeC.append([y1,x1])
+        
+        x1 = x
+        y1 = y
+        #B -G    
+        while x1 <8 and y1 < 9:
+            x1 = x1+1
+            y1 = y1+1
+            listeC.append([y1,x1])
+        
+        x1 = x
+        y1 = y    
+        #H - D    
+        while x1 > 1 and y1 > 2:
+            x1 = x1-1
+            y1 = y1-1
+            listeC.append([y1,x1])
+            
+        x1 = x
+        y1 = y    
+        #H - G
+        while x1 < 8 and y1 > 2:
+            x1 = x1+1
+            y1 = y1-1
+            listeC.append([y1,x1])
+            
+        return ([listeC,listeC])
 
 
 ###########################################################################################################
 ###########################################################################################################
 
 
-class Dame(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
-                                                            ############################################################
+class Dame(Piece):                                          
+    def __init__(self, nom, pos_initiale):   
+        super().__init__(nom, pos_initiale)  
+                                                           
 
     def PossibleMoves(self):
         '''
         Retourne la liste des mouvements d'un fou en connaissant  sa position initial
         @LV
         '''
-        x = self.position[0]
-        y = self.position[1]
+        x = self.position[1]
+        y = self.position[0]
         listC = []
-        if x < y:
-            y2 = 8 - y
-        # Haut - droit
-        for i in range(min(x,
-                           y2)):  # ATTENTION erreur : y2 reference avant assignement, si x n'est pas inferieur a y, y2 n'existe pas mais le for (ligne 235) l'appel
-            listC.append([(x - 1) - i, (y + 1) + i])
-
-        # Bas - droit
-        for i in range(max(x, y2)):
-            listC.append([(x + 1) + i, (y + 1) + i])
-
-        # Haut - gauche
-        for i in range(min(y, x)):
-            listC.append([(x - 1) - i, (y - 1) - i])
-
-        # Bas - gauche
-        for i in range(max(y, x)):
-            listC.append([(x + 1) + i, (y - 1) - i])
-
-            # Bas
-        for i in range(x):
-            listC.append([(x - 1) - i, y])
-
-        # Haur
-        for i in range(8 - x):
-            listC.append([(x + 1) + i, y])
-
-        # Gauche
-        for i in range(y):
-            listC.append([x, (y - 1) - i])
-
-        # Droit
-        for i in range(8 - y):
-            listC.append([x, (y + 1) + i])
+        x1 = x
+        y1 = y        
+        while x1 >1 and y1 < 9:
+            x1 = x1-1
+            y1 = y1+1
+            listC.append([y1,x1])
+        
+        x1 = x
+        y1 = y
+        #B -G    
+        while x1 <8 and y1 < 9:
+            x1 = x1+1
+            y1 = y1+1
+            listC.append([y1,x1])
+        
+        x1 = x
+        y1 = y    
+        #H - D    
+        while x1 > 1 and y1 > 2:
+            x1 = x1-1
+            y1 = y1-1
+            listC.append([y1,x1])
+            
+        x1 = x
+        y1 = y    
+        #H - G
+        while x1 < 8 and y1 > 2:
+            x1 = x1+1
+            y1 = y1-1
+            listC.append([y1,x1])
+            
+#--------------------------------------------------------------            
+        x1 = x
+        y1 = y
+        
+        #D
+        while x1 <8:
+            x1 = x1+1
+            y1 = y1
+            listC.append([y1,x1])
+            
+        x1 = x
+        y1 = y
+        #G    
+        while x1 >1 :
+            x1 = x1-1
+            y1 = y1
+            listC.append([y1,x1])
+        
+        x1 = x
+        y1 = y    
+        #H    
+        while y1 > 2:
+            x1 = x1
+            y1 = y1-1
+            listC.append([y1,x1])
+            
+        x1 = x
+        y1 = y    
+        #B
+        while y1 > 9:
+            x1 = x1
+            y1 = y1+1
+            listC.append([y1,x1])
 
         return [listC, listC]
