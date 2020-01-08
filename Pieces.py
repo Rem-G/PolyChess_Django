@@ -154,7 +154,7 @@ class Tour(Piece):                                          ####################
         x1 = x
         y1 = y    
         #B
-        while y1 > 9:
+        while y1 < 9:
             x1 = x1
             y1 = y1+1
             listC.append([y1,x1])
@@ -320,7 +320,7 @@ class Dame(Piece):
         x1 = x
         y1 = y    
         #B
-        while y1 > 9:
+        while y1 < 9:
             x1 = x1
             y1 = y1+1
             listC.append([y1,x1])
