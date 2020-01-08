@@ -169,6 +169,16 @@ def game_pvp():
 
         affichage_plateau(configuration.matrice_affichage())
 
+        for piece in configuration.pieces_joueurB:
+            if piece.get_piece_position()[0] == 2 and piece.nom == 'P' and piece.promotion:
+                configuration.promotion(piece)
+                piece.promotion = False
+
+        for piece in configuration.pieces_joueurN:
+            if piece.get_piece_position()[0] == 9 and piece.nom == 'p' and piece.promotion:
+                configuration.promotion(piece)
+                piece.promotion = False
+
         if len(configuration.msg_error):
             for msg in configuration.msg_error:
                 print("")

@@ -25,6 +25,7 @@ class Pion(Piece):                                          ####################
     def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
         super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
+        self.promotion = True
 
     def firstMoveOver(self):
         """

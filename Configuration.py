@@ -486,9 +486,9 @@ class GeneralConf():
 
     def promotion(self, piece):
         """
-		promeut un pion en une piece choisie par l'utilisateur
-		@TC
-		"""
+        promeut un pion en une piece choisie par l'utilisateur
+        @TC
+        """
         position = piece.get_piece_position()
         if piece.nom.isupper:
             nom_piece = str(input(
