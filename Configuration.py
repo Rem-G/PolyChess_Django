@@ -216,7 +216,7 @@ class GeneralConf():
                             if [x,y] in possible_moves_fou:
                                 possible_moves_fou.pop(possible_moves_fou.index([x,y]))
 
-                if (#Coin inférieur gauche du fou
+                if (#Coin inférieur droit du fou
                     move[0] <= pos_arrivee[0]
                     and move[1] <= pos_arrivee[1]
                     and move[0] > piece.position[0]
@@ -227,9 +227,9 @@ class GeneralConf():
                             if [x,y] in possible_moves_fou:
                                 possible_moves_fou.pop(possible_moves_fou.index([x,y]))
 
-                if (#Coin inférieur droit du fou
+                if (#Coin inférieur gauche du fou
                     move[0] <= pos_arrivee[0]
-                    and move[1] >= pos_arrivee[1]
+                    and move[1] <= pos_arrivee[1]
                     and move[0] > piece.position[0]
                     and move[1] < piece.position[1]
                     ):
@@ -243,31 +243,31 @@ class GeneralConf():
         """
         @RG
         """
-        test = False
         possible_moves_tour = possible_moves
         for move in possible_moves_tour:
-            if move in position_pieces and test:
+            if move in position_pieces:
 
                 if pos_arrivee[1] >= move[1] and move[1] > piece.position[1]:#Droite 
-                    for x in range(move[0], 10):
-                        if [x,move[1]] in possible_moves_tour:
-                            possible_moves_tour.pop(possible_moves_tour.index([x,move[1]]))
+                    for x in range(move[1], 10):
+                        if [move[1], x] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([move[1], x]))
 
                 if pos_arrivee[1] <= move[1] and move[1] < piece.position[1]:#Gauche
-                    for x in range(move[0], 0, -1):
-                        if [x,move[1]] in possible_moves_tour:
-                            possible_moves_tour.pop(possible_moves_tour.index([x,move[1]]))
+                    for x in range(move[1], 0, -1):
+                        if [move[1], x] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([move[1], x]))
 
                 if pos_arrivee[0] >= move[0] and move[0] > piece.position[0]:#Bas
-                    for y in range(move[1], 10):
-                        if [move[0],y] in possible_moves_tour:
-                            possible_moves_tour.pop(possible_moves_tour.index([move[0],y]))
+                    for y in range(move[0], 10):
+                        if [y, move[0]] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([y, move[0]]))
 
                 if pos_arrivee[0] <= move[0] and move[0] < piece.position[0]:#Haut
-                    for y in range(move[1], 0, -1):
-                        if [move[0],y] in possible_moves_tour:
-                            possible_moves_tour.pop(possible_moves_tour.index([move[0],y]))
+                    for y in range(move[0], 0, -1):
+                        if [y, move[0]] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([y, move[0]]))
 
+        print(possible_moves_tour, 'TOUR')
         return possible_moves_tour
 
     def chemin_Pion(self, possible_moves, position_pieces, piece):
@@ -356,7 +356,8 @@ class GeneralConf():
         """
         if piece.__class__ is Roi:  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
             roque_roi_fait = False
-            if piece.firstMove == True:  # roi n'a pas encore joue son premier tour
+            print(piece.nom, piece.firstMove())
+            if piece.firstMove() == True:  # roi n'a pas encore joue son premier tour
                 # on essaie le roque
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
 
@@ -455,7 +456,7 @@ class GeneralConf():
             return True
         return False
 
-    def verification_deplacement_roi(self, roi, moves, pos_arrivee):
+    def verification_deplacement_roi(self, roi, moves, pos_arrivee): #OK marche
         """ @NR
         Verifie si le deplacement du roi est possible, sans l'emmener en echec
         :param roi: le roi
@@ -465,17 +466,16 @@ class GeneralConf():
         """
 
         possible_moves = moves[0]
-        #pas de list possible_eat car c'est la même chose que possible moves pour le roi
+        # pas de list possible_eat car c'est la même chose que possible moves pour le roi
 
         # modification des moves en prenant en compte l'etat de l'echiquier (postion des pieces)
         for piece in self.pieces:
-            if piece.PossibleMoves()[0] in possible_moves and self.sameTeam(piece, roi): # si sur l'emplacement ou
+            if piece.position in possible_moves and self.sameTeam(piece, roi):  # si sur l'emplacement ou
                 # l'on veut se déplacer il y a déja un piece allié, on l'èleve de la liste
-                possible_moves.remove(piece.PossibleMoves()[0])
-        #pas de probleme si l'emplacement est vide ou il y a un ennemi
-
-        #erbo pour voir si sur ce coup le roi se met en echec
-        emplacements_reachable_by_opponent = list() #emplacement que les ennemis peuvent atteindre
+                possible_moves.remove(piece.position)
+        # pas de probleme si l'emplacement est vide ou il y a un ennemi
+        # erbo pour voir si sur ce coup le roi se met en echec
+        emplacements_reachable_by_opponent = list()  # emplacement que les ennemis peuvent atteindre
         for piece in self.pieces:
             if not (self.sameTeam(piece, roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
                 for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
@@ -488,12 +488,9 @@ class GeneralConf():
             # et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                    # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                for piece in self.pieces:
-                    if pos_arrivee == piece.position:
-                        self.del_piece(piece)
                 return True
         return False
+
 
     def roqueRoi(self, roi, pos_arrivee):
         """
@@ -509,7 +506,7 @@ class GeneralConf():
                 tour_allie.append(piece1)
         for tour in tour_allie:
             if tour.position == pos_arrivee:
-                if tour.firstMove:
+                if tour.firstMove():
                     for posCol in range(roi.get_piece_position()[1]+1, tour.get_piece_position()[1]):  # on parcours
                         # l'echiquier sur l'horizontale entre les 2 pieces (de gauche à droite)
                         if  self.case_occupe(roi.position[0], posCol) or self.case_menace(roi.position[0], posCol, roi):  # on
@@ -560,7 +557,7 @@ class GeneralConf():
         """
         for piece1 in self.pieces:
             if not self.sameTeam(piece, piece1):
-                for case in piece1.PossibleMoves()[1]:  # case que peut attaquer l'ennemi
+                for case in piece1.PossibleMoves()[1]:  # case que peut attaquer l'ennemi, c'est ici ou il faut prendre les nouveaux deplacements (par PossibleMoves()[1) de base)
                     if case == [posLine, posCol]:
                         return True
         return False
@@ -572,59 +569,82 @@ class GeneralConf():
         :return: True si le joueur est en echec, False sinon
         """
         if joueur == 1:
-            for piece in self.pieces:
-
-                #if piece.__class__ is Roi and not piece.nom == 'R'
-                if piece.__class__ is Roi and not self.sameTeam(piece, self.joueurB.roi): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if self.joueurB.roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
-                        return True
-            return False
+            roi = self.joueurB.roi
         else:
-            for piece in self.pieces:
-                if piece.__class__ is Tour and not self.sameTeam(piece, self.joueurN.roi): ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if piece.PossibleMoves()[1] == self.joueurN.roi.position:
-                        return True
-            return False
+            roi = self.joueurN.roi
 
-    # def emplacements_menacees_mouvement_roi(self, roi):
-    #     """
-    #     @NR renvoie liste des emplacements menacé ou le roi peut se déplacer
-    #     :param roi: une piece roi
-    #     :return: liste des emplacements menacé ou le roi peut se déplacer
-    #     """
-    #
-    #     emplacements_menacees_mouvement_roi=[]
-    #     listes_pos_roi = roi.PossibleMoves().extend(roi.position) # liste des emplacement: position du roi + emplacement ou il peut se deplacer
-    #     for piece in self.pieces():
-    #         if not self.sameTeam(piece, roi):
-    #             for move in piece.PossibleMoves()[1]:
-    #                 if move in listes_pos_roi and move not in emplacements_menacees_mouvement_roi : #pour ne pas avoir de doublon d'emplacements
-    #                     emplacements_menacees_mouvement_roi.append(move)
-    #     return emplacements_menacees_mouvement_roi
-    #
-    # def est_en_eche_et_mat(self, joueur): #si le roi est en echec au prochain coup et aucune parade ne peut-etre faite
-    #     """
-    #     @NR verifie si le joueur est en echec et mat
-    #     :param joueur:  INT 1 si joueur blanc sinon joueur noir
-    #     :return: True si le joueur est en echec et mat, False sinon
-    #     """
-    #     if joueur == 1:
-    #         if self.est_en_echec(joueur):
-    #             #on test si le roi peut bouger
-    #             for move_arrive in self.joueurB.roi.PossibleMoves()[1]:
-    #                 if self.verification_deplacement_roi(self.joueurB.roi, self.joueurB.roi.PossibleMoves(),move_arrive): ### verfie si pour chaque coup du roi, il ne se met pas en echec
-    #                     # REMARQUE: si verficication deplacement roi renvoi True et qu'il y a une piece ou il veut se deplacr, il la supprime
-    #                     return True
-    #             #il faut aussi verfier si une piece allie peut le sauver
-    #             #Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
-    #             for piece in self.pieces:
-    #                 if self.sameTeam(piece, self.joueurB.roi):
-    #                     for move_allie in piece.PossibleMoves()[1]:
-    #                         if self.verification_deplacement(piece.PossibleMoves(), move_allie):
-    #                             #il faut maintenant tester si on fait le coup, le roi est sauve ou pas
-    #
-    #
-    #             return False
+        for piece in self.pieces:
+            #if piece.__class__ is Roi and not piece.nom == 'R'
+            if not(self.sameTeam(piece, roi)): ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
+                if roi.position in piece.PossibleMoves()[1]: #Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
+                    return True
+        return False
+
+    def est_en_eche_et_mat(self,joueur):  # si le roi est en echec et en echec aussi au prochain coup et aucune parade ne peut-etre faite
+        """
+        @NR verifie si le joueur est en echec et mat
+        :param joueur:  INT 1 si joueur blanc sinon joueur noir
+        :return: True si le joueur est en echec et mat, False sinon
+        """
+        if joueur == 1:
+            roi = self.joueurB.roi
+        else:
+            roi = self.joueurN.roi
+
+        if self.est_en_echec(joueur):
+            # on test si le roi peut bouger
+            print("echec de echec et mat")
+            for move_arrive in roi.PossibleMoves()[1]:
+                if self.verification_deplacement_roi(roi, roi.PossibleMoves(),
+                                                     move_arrive):  ### verfie si pour chaque coup du roi, il ne se met pas en echec
+                    print("false")
+                    return False
+            # il faut aussi verfier si une piece allie peut le sauver
+            # Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
+            for piece in self.pieces:
+                if (piece is not roi) and (self.sameTeam(piece, roi)):
+                    for move_allie in piece.PossibleMoves()[1]:
+                        if self.verification_deplacement(piece.PossibleMoves(), move_allie):
+                            # il faut maintenant tester: si on fait le coup, le roi est sauve ou pas
+                            liste_pseudo_echiquier = self.pseudo_mange_piece(piece, piece.PossibleMoves()[1],
+                                                                             move_allie)
+                            if not (self.est_en_echec(joueur)):
+                                piece.set_piece_position(liste_pseudo_echiquier[
+                                                             0].position)  # on remet l'ancienne position de la piece (l'ancienne configuration)
+                                if liste_pseudo_echiquier[1] is not None:
+                                    self.add_piece(liste_pseudo_echiquier[
+                                                       1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
+                                print("false1")
+                                return False
+                            # on remet l'etat precedent de l'echiquier
+                            piece.set_piece_position(
+                                liste_pseudo_echiquier[0].position)  # on remet l'ancienne position de la piece
+                            if liste_pseudo_echiquier[1] is not None:
+                                self.add_piece(liste_pseudo_echiquier[
+                                                   1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
+            return True  # si il n'y pas de solution, on est en echec et mat
+        return False
+
+    def pseudo_mange_piece(self, piece, possible_eat, pos_arrivee):
+        """
+        pseudo bouge la piece a une nouvelle position
+        :param piece: une piece
+        :param possible_eat: emplacement ou la piece peut bouger
+        :param pos_arrivee: emplacement ou la piece veut aller
+        :return: une liste composé de la piece pseudo bouge et de la piece pseudo mange s'il y a
+        """
+
+        piece_pseudo_mange = None
+        for p in self.pieces:
+            # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
+            if pos_arrivee == p.position and pos_arrivee in possible_eat:
+                piece_pseudo_mange = p
+                self.del_piece(p)
+
+        piece_pseudo_bouge = piece
+        piece.set_piece_position(pos_arrivee)
+
+        return [piece_pseudo_bouge, piece_pseudo_mange]
 
 #######################################################################################################################
 ### FONTION POUR DEBUGGAGE  ##### @NR
