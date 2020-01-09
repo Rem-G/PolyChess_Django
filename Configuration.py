@@ -356,7 +356,6 @@ class GeneralConf():
         """
         if piece.__class__ is Roi:  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
             roque_roi_fait = False
-            print(piece.nom, piece.firstMove())
             if piece.firstMove() == True:  # roi n'a pas encore joue son premier tour
                 # on essaie le roque
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
@@ -593,11 +592,9 @@ class GeneralConf():
 
         if self.est_en_echec(joueur):
             # on test si le roi peut bouger
-            print("echec de echec et mat")
             for move_arrive in roi.PossibleMoves()[1]:
                 if self.verification_deplacement_roi(roi, roi.PossibleMoves(),
                                                      move_arrive):  ### verfie si pour chaque coup du roi, il ne se met pas en echec
-                    print("false")
                     return False
             # il faut aussi verfier si une piece allie peut le sauver
             # Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
@@ -614,7 +611,6 @@ class GeneralConf():
                                 if liste_pseudo_echiquier[1] is not None:
                                     self.add_piece(liste_pseudo_echiquier[
                                                        1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
-                                print("false1")
                                 return False
                             # on remet l'etat precedent de l'echiquier
                             piece.set_piece_position(
@@ -645,6 +641,50 @@ class GeneralConf():
         piece.set_piece_position(pos_arrivee)
 
         return [piece_pseudo_bouge, piece_pseudo_mange]
+
+    def pat(self, joueur): # c'est a dire le roi du joueur n'est pas en echec mais il ne peut plus jouer de coup sans mettre son roi en echec
+        """
+        verifie si nous avons un pat
+        :param joueur: INT 1 si joueur blanc sinon joueur noir
+        :return: true si c'est le cas, false sinon
+        """
+        if joueur == 1:
+            roi = self.joueurB.roi
+        else:
+            roi = self.joueurN.roi
+
+        if not(self.est_en_echec(joueur)):
+            # on test si le roi peut bouger
+            for move_arrive in roi.PossibleMoves()[1]:
+                if self.verification_deplacement_roi(roi, roi.PossibleMoves(),
+                                                     move_arrive):  ### verfie si pour chaque coup du roi, il ne se met pas en echec
+                    return False
+            # il faut aussi verfier si une piece allie peut le sauver
+            # Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
+            for piece in self.pieces:
+                if (piece is not roi) and (self.sameTeam(piece, roi)):
+                    for move_allie in piece.PossibleMoves()[1]:
+                        if self.verification_deplacement(piece.PossibleMoves(), move_allie):
+                            # il faut maintenant tester: si on fait le coup, le roi est sauve ou pas
+                            liste_pseudo_echiquier = self.pseudo_mange_piece(piece, piece.PossibleMoves()[1],
+                                                                             move_allie)
+                            if not (self.est_en_echec(joueur)):
+                                piece.set_piece_position(liste_pseudo_echiquier[
+                                                             0].position)  # on remet l'ancienne position de la piece (l'ancienne configuration)
+                                if liste_pseudo_echiquier[1] is not None:
+                                    self.add_piece(liste_pseudo_echiquier[
+                                                       1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
+                                return False
+                            # on remet l'etat precedent de l'echiquier
+                            piece.set_piece_position(
+                                liste_pseudo_echiquier[0].position)  # on remet l'ancienne position de la piece
+                            if liste_pseudo_echiquier[1] is not None:
+                                self.add_piece(liste_pseudo_echiquier[
+                                                   1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
+            return True  # si il n'y pas de solution, on est en echec et mat
+        return False
+
+
 
 #######################################################################################################################
 ### FONTION POUR DEBUGGAGE  ##### @NR

@@ -13,12 +13,12 @@ class GUI:
     def __init__(self, parent):
         self.parent = parent
         # Adding Frame
-        self.btmfrm = tk.Frame(parent, height=64)
-        self.info_label = tk.Label(self.btmfrm,
+        self.bottomframe = tk.Frame(parent, height=64)
+        self.info_label = tk.Label(self.bottomframe,
                                 text="   Les blancs commencent la partie  ",
                                 fg=self.color2)
         self.info_label.pack(side=tk.RIGHT, padx=8, pady=5)
-        self.btmfrm.pack(fill="x", side=tk.BOTTOM)
+        self.bottomframe.pack(fill="x", side=tk.BOTTOM)
 
         canvas_width = self.columns * self.dim_square
         canvas_height = self.rows * self.dim_square

@@ -18,7 +18,8 @@ def init_pieces(configuration):
     Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
     Coordonnées en 12*10
     """
-    # Pieces blanches
+
+     # Pieces blanches
     configuration.add_piece(Pion("P", [8, 1]))
     configuration.add_piece(Pion("P", [8, 2]))
     configuration.add_piece(Pion("P", [8, 3]))
@@ -27,22 +28,22 @@ def init_pieces(configuration):
     configuration.add_piece(Pion("P", [8, 6]))
     configuration.add_piece(Pion("P", [8, 7]))
     configuration.add_piece(Pion("P", [8, 8]))
-
+    
     configuration.add_piece(Tour("T", [9, 1]))
     configuration.add_piece(Tour("T", [9, 8]))
-
+    
     configuration.add_piece(Cavalier("C", [9, 2]))
     configuration.add_piece(Cavalier("C", [9, 7]))
-
+    
     configuration.add_piece(Fou("F", [9, 3]))
     configuration.add_piece(Fou("F", [9, 6]))
-
+    
     configuration.add_piece(Dame("D", [9, 4]))
-
+    
     roiB = Roi("R", [9, 5])
     configuration.add_piece(roiB)
     configuration.init_roi(roiB)
-
+    
     # Pieces noires
     configuration.add_piece(Pion("p", [3, 1]))
     configuration.add_piece(Pion("p", [3, 2]))
@@ -52,22 +53,21 @@ def init_pieces(configuration):
     configuration.add_piece(Pion("p", [3, 6]))
     configuration.add_piece(Pion("p", [3, 7]))
     configuration.add_piece(Pion("p", [3, 8]))
-
+    
     configuration.add_piece(Tour("t", [2, 1]))
     configuration.add_piece(Tour("t", [2, 8]))
-
+    
     configuration.add_piece(Cavalier("c", [2, 2]))
     configuration.add_piece(Cavalier("c", [2, 7]))
-
+    
     configuration.add_piece(Fou("f", [2, 3]))
     configuration.add_piece(Fou("f", [2, 6]))
-
+    
     configuration.add_piece(Dame("d", [2, 4]))
-
+    
     roiN = Roi("r", [2, 5])
     configuration.add_piece(roiN)
     configuration.init_roi(roiN)
-
 
 
 def affichage_plateau(matrice_affichage):
@@ -145,6 +145,13 @@ def game_pvp():
                 print('\x1b[0;30;41m' + 'ECHEC ET MAT !' + '\x1b[0m')  # couleur rouge
                 print("Les noirs ont gagne !")
                 game = False
+
+            # if configuration.pat(joueur):
+            #     print('\x1b[0;30;41m' + 'PAT !' + '\x1b[0m')
+            #     print("La partie est nulle !")
+            #     game = False
+
+
             if game is True:
                 print("\nAu tour du joueur blanc")
 
@@ -158,6 +165,12 @@ def game_pvp():
                 print('\x1b[0;30;41m' + 'ECHEC ET MAT !' + '\x1b[0m')  # couleur rouge
                 print("Les noirs ont gagne !")
                 game = False
+
+            # if configuration.pat(joueur):
+            #     print('\x1b[0;30;41m' + 'ECHEC ET MAT !' + '\x1b[0m')
+            #     print("La partie est nulle !")
+            #     game = False
+
             if game is True:
                 print('\nAu tour du joueur noir')
                 if configuration.est_en_echec(joueur):
