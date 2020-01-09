@@ -61,7 +61,7 @@ def init_pieces(configuration):
     configuration.add_piece(Fou("f", [2, 3]))
     configuration.add_piece(Fou("f", [2, 6]))
 
-    configuration.add_piece(Dame("d", [2, 4]))
+    #configuration.add_piece(Dame("d", [2, 4]))
 
     roiN = Roi("r", [2, 5])
     configuration.add_piece(roiN)
@@ -106,8 +106,101 @@ def decision_joueur(decision, configuration):
 
     return [pos_depart, pos_arrivee]
 
-
 def game_pvp():
+    """
+    @RG @NR
+    """
+    configuration = GeneralConf()
+
+    # Crée les joueurs
+    configuration.init_joueurs()
+
+    # Crée les pièces de jeu
+    new_game = input("Voulez-vous charger une partie existante ? Y/N ")
+
+    if new_game == 'Y':
+        configuration.charger_partie()
+        joueur = configuration.joueur_sauvegarde
+        print("Partie chargée !")
+    else:
+        init_pieces(configuration)
+        joueur = 1
+
+    # Attribution pièces de chaque joueur
+    configuration.pieces_joueurs()
+
+    # Affiche le palteau de jeu initial
+    affichage_plateau(configuration.matrice_affichage())
+
+    game = True
+
+    while game:  # Rajouter option echec et mat + afficher pièces mangées
+        if configuration.avantage_joueur():
+            print(configuration.avantage_joueur())
+
+        if joueur == 1:
+            if configuration.est_en_eche_et_mat(joueur):
+                print('\x1b[0;30;41m' + 'ECHEC ET MAT !' + '\x1b[0m')  # couleur rouge
+                print("Les noirs ont gagne !")
+                game = False
+            if game is True:
+                print("\nAu tour du joueur blanc")
+
+                if configuration.est_en_echec(joueur):
+                    print("")
+                    print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m') #couleur rouge
+                    print("Le roi blanc est en echec \nProtegez le !")
+
+        else:
+            if configuration.est_en_eche_et_mat(joueur):
+                print('\x1b[0;30;41m' + 'ECHEC ET MAT !' + '\x1b[0m')  # couleur rouge
+                print("Les noirs ont gagne !")
+                game = False
+            if game is True:
+                print('\nAu tour du joueur noir')
+                if configuration.est_en_echec(joueur):
+                    print("")
+                    print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')
+                    print("Le roi noir est en echec \nProtegez le !")
+
+        if game is True:
+            input_decision = input("\nEntrer x1y1 x2y2  ou sauvegarde pour sauvegarder la partie et quitter: ")
+            if input_decision == 'sauvegarde':
+                configuration.sauvegarde_partie(joueur)
+                print('Partie sauvegardée !')
+                break
+            else:
+                decision = decision_joueur(input_decision, configuration)
+                print('\n')
+                if joueur == 1:
+                    configuration.deplacement_piece(decision[0], decision[1], True)
+                else:
+                    configuration.deplacement_piece(decision[0], decision[1], False)
+
+            affichage_plateau(configuration.matrice_affichage())
+
+            for piece in configuration.pieces_joueurB:
+                if piece.get_piece_position()[0] == 2 and piece.nom == 'P' and piece.promotion:
+                    configuration.promotion(piece)
+                    piece.promotion = False
+
+            for piece in configuration.pieces_joueurN:
+                if piece.get_piece_position()[0] == 9 and piece.nom == 'p' and piece.promotion:
+                    configuration.promotion(piece)
+                    piece.promotion = False
+
+            if len(configuration.msg_error):
+                for msg in configuration.msg_error:
+                    print("")
+                    print('\x1b[0;30;41m' + 'ATTENTION !' + '\x1b[0m')  # couleur rouge
+                    print(msg)
+
+            if not len(configuration.msg_error):
+                joueur = -joueur
+
+            configuration.msg_error = list()
+
+def game_pvp1(): #l'ancien, n'est pas utilise
     """
     @RG @NR
     """

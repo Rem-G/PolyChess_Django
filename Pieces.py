@@ -26,6 +26,7 @@ class Pion(Piece):                                          ####################
         super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
         self.promotion = True
+        self.pos_initiale = pos_initiale
 
     def firstMoveOver(self):
         """
@@ -44,7 +45,7 @@ class Pion(Piece):                                          ####################
         if self.nom == 'p':
             moves.append([self.position[0] + 1, self.position[1]])
 
-            if self.firstMove:
+            if self.position == self.pos_initiale: #pour eviter tout problemes, le bug vu avec thomas
                 moves.append([self.position[0] + 2, self.position[1]])
                 self.firstMoveOver()
 
@@ -53,7 +54,8 @@ class Pion(Piece):                                          ####################
 
         if self.nom == 'P':
             moves.append([self.position[0] - 1, self.position[1]])
-            if self.firstMove:
+
+            if self.position == self.pos_initiale: #pour eviter tout problemes, le bug vu avec thomas
                 moves.append([self.position[0] - 2, self.position[1]])
                 self.firstMoveOver()
 
@@ -76,16 +78,24 @@ class Roi(Piece):
         :type nom: string
         """
         super().__init__(nom, pos_initiale)
-        self.firstMove = True
+        self.pos_intiale = pos_initiale
+        #self.firstMove = (self.position == self.pos_intiale)
         self.check = False
         self.checkMate = False
 
-    def firstMoveOver(self):
+    # def firstMoveOver(self):
+    #     """
+    #     Permet de mettre à jour l'etat du 1er tour du pion
+    #     @NR
+    #     """
+    #     self.firstMove = False
+
+    def firstMove(self):
         """
-        Permet de mettre à jour l'etat du 1er tour du pion
-        @NR
+        verifie si c'est son premier coup
+        :return: True si oui, false sinon
         """
-        self.firstMove = False
+        return (self.position == self.pos_intiale)
 
     def PossibleMoves(self):
         """ return une liste des moves possibles pour le roi @NR"""
@@ -108,15 +118,23 @@ class Roi(Piece):
 ###########################################################################################################
 
 class Tour(Piece):                                          ############################################################
-    def __init__(self, nom, pos_initiale):   #####ATTENTION: est ce que c'est checker le fait que #######
-        super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
-        self.firstMove = True                               ############################################################
+    def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
+        super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
+        self.pos_intiale = pos_initiale
+        #self.firstMove = (self.position ==self.pos_intiale)############################################################
 
-    def firstMoveOver(self):
+    # def firstMoveOver(self):
+    #     """
+    #     Permet de mettre à jour l'etat du 1er tour du pion
+    #     """
+    #     self.firstMove = False
+
+    def firstMove(self):
         """
-        Permet de mettre à jour l'etat du 1er tour du pion
+        verifie si c'est son premier coup
+        :return: True si oui, false sinon
         """
-        self.firstMove = False
+        return self.position == self.pos_intiale
 
     def PossibleMoves(self):
         '''
