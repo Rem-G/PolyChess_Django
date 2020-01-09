@@ -79,16 +79,8 @@ class Roi(Piece):
         """
         super().__init__(nom, pos_initiale)
         self.pos_intiale = pos_initiale
-        #self.firstMove = (self.position == self.pos_intiale)
         self.check = False
         self.checkMate = False
-
-    # def firstMoveOver(self):
-    #     """
-    #     Permet de mettre à jour l'etat du 1er tour du pion
-    #     @NR
-    #     """
-    #     self.firstMove = False
 
     def firstMove(self):
         """
@@ -121,13 +113,7 @@ class Tour(Piece):                                          ####################
     def __init__(self, nom, pos_initiale):                  #####ATTENTION: est ce que c'est checker le fait que #######
         super().__init__(nom, pos_initiale)                 # la piece ne peut pas sauter par dessus les autres pieces##
         self.pos_intiale = pos_initiale
-        #self.firstMove = (self.position ==self.pos_intiale)############################################################
 
-    # def firstMoveOver(self):
-    #     """
-    #     Permet de mettre à jour l'etat du 1er tour du pion
-    #     """
-    #     self.firstMove = False
 
     def firstMove(self):
         """

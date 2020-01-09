@@ -373,52 +373,9 @@ class GeneralConf():
             # et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                for piece in self.pieces:
-                    if pos_arrivee == piece.position:
-                        self.del_piece(piece)
                 return True
         return False
 
-    def verification_deplacement_roi1(self, roi, moves, pos_arrivee): #l'ancien, n'est pas utilise
-        """ @NR
-        Verifie si le deplacement du roi est possible, sans l'emmener en echec
-        :param roi: le roi
-        :param moves: deplacements autorisés du roi
-        :param pos_arrivee: Destination voulue par le joueur pour le roi
-        :return bool : renvoie vrai si le deplacement est possible et faux sinon
-        """
-
-        possible_moves = moves[0]
-        #pas de list possible_eat car c'est la même chose que possible moves pour le roi
-
-        # modification des moves en prenant en compte l'etat de l'echiquier (postion des pieces)
-        for piece in self.pieces:
-            if piece.PossibleMoves()[0] in possible_moves and self.sameTeam(piece, roi): # si sur l'emplacement ou
-                # l'on veut se déplacer il y a déja un piece allié, on l'èleve de la liste
-                possible_moves.remove(piece.PossibleMoves()[0])
-        #pas de probleme si l'emplacement est vide ou il y a un ennemi
-
-        #erbo pour voir si sur ce coup le roi se met en echec
-        emplacements_reachable_by_opponent = list() #emplacement que les ennemis peuvent atteindre
-        for piece in self.pieces:
-            if not (self.sameTeam(piece, roi)):  # si la piece courante n'est pas dans la meme equipe que le roi
-                for erbo in piece.PossibleMoves()[1]:  # emplacement de capture de la piece enemie
-                    if erbo not in emplacements_reachable_by_opponent:  # Pour ne pas avoir de doublon
-                        emplacements_reachable_by_opponent.append(
-                            erbo)  # on ajoute les emplacements de capture de chaque piece
-
-        if (pos_arrivee in possible_moves) and (pos_arrivee not in emplacements_reachable_by_opponent):
-            # verification si la position d'arrivee est dans les moves possibles et qu'il n'y pas de piece à cette emplacement ou que on peut manger une piece a cet emplacement
-            # et que dans les deux cas la position d'arrivee ne soit pas un emplacement que pourrait prendre l'ennemi
-            if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
-                # Vérification si la position d'arrivée voulue est sur le plateau de jeu
-                    # Supprime une pièce adverse si la position d'arrivée voulue correspond à l'emplacement d'une pièce adverse
-                for piece in self.pieces:
-                    if pos_arrivee == piece.position:
-                        self.del_piece(piece)
-                return True
-        return False
 
     def roqueRoi(self, roi, pos_arrivee):
         """
@@ -508,25 +465,6 @@ class GeneralConf():
                     return True
         return False
 
-    def est_en_echec1(self, joueur): #l'ancien, n'est pas utilise
-        """
-        @NR verifie si le joueur est en echec (mise en echec)
-        :param joueur: INT 1 si joueur blanc sinon joueur noir
-        :return: True si le joueur est en echec, False sinon
-        """
-        if joueur == 1:
-            for piece in self.pieces:
-                if not self.sameTeam(piece,self.joueurB.roi):  ## normalement a enlever piece.__class__ is Roi car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if self.joueurB.roi.position in piece.PossibleMoves()[1]:  # Attention probleme avec possiblesMoves de la reine, et la tour, c'est pour ca que je mis le roi ennemi
-                        return True
-            return False
-        else:
-            for piece in self.pieces:
-                if not self.sameTeam(piece,self.joueurN.roi):  ## normalement a enlever piece.__class__ is Tour car on ne regarde pas que pour le roi mais tous les autres types de pieces
-                    if piece.PossibleMoves()[1] == self.joueurN.roi.position:
-                        return True
-            return False
-
     def est_en_eche_et_mat(self,
                            joueur):  # si le roi est en echec et en echec aussi au prochain coup et aucune parade ne peut-etre faite
         """
@@ -541,9 +479,11 @@ class GeneralConf():
 
         if self.est_en_echec(joueur):
             # on test si le roi peut bouger
+            print("echec de echec et mat")
             for move_arrive in roi.PossibleMoves()[1]:
                 if self.verification_deplacement_roi(roi, roi.PossibleMoves(),
                                                      move_arrive):  ### verfie si pour chaque coup du roi, il ne se met pas en echec
+                    print("false")
                     return False
             # il faut aussi verfier si une piece allie peut le sauver
             # Pour cela on test pour chaque piece, tout les coups possibles et on regarde si apres le roi n'est plus en echec
@@ -560,6 +500,7 @@ class GeneralConf():
                                 if liste_pseudo_echiquier[1] is not None:
                                     self.add_piece(liste_pseudo_echiquier[
                                                        1])  # on rajoute la piece que l'on vient de supprimer, comme si il n'y avait pas eu de coup
+                                print("false1")
                                 return False
                             # on remet l'etat precedent de l'echiquier
                             piece.set_piece_position(
