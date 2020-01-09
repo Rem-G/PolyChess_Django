@@ -247,7 +247,6 @@ class GeneralConf():
 
         if piece.__class__ is Roi:  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
             roque_roi_fait = False
-            print(piece.nom, piece.firstMove())
             if piece.firstMove() == True:  # roi n'a pas encore joue son premier tour
                 # on essaie le roque
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)

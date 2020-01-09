@@ -30,13 +30,13 @@ def init_pieces(configuration):
     configuration.add_piece(Tour("T", [9, 1]))
     configuration.add_piece(Tour("T", [9, 8]))
 
-    #configuration.add_piece(Cavalier("C", [9, 2]))
-    #configuration.add_piece(Cavalier("C", [9, 7]))
+    configuration.add_piece(Cavalier("C", [9, 2]))
+    configuration.add_piece(Cavalier("C", [9, 7]))
 
-    #configuration.add_piece(Fou("F", [9, 3]))
-    #configuration.add_piece(Fou("F", [9, 6]))
+    configuration.add_piece(Fou("F", [9, 3]))
+    configuration.add_piece(Fou("F", [9, 6]))
 
-    #configuration.add_piece(Dame("D", [9, 4]))
+    configuration.add_piece(Dame("D", [9, 4]))
 
     roiB = Roi("R", [9, 5])
     configuration.add_piece(roiB)
@@ -61,7 +61,7 @@ def init_pieces(configuration):
     configuration.add_piece(Fou("f", [2, 3]))
     configuration.add_piece(Fou("f", [2, 6]))
 
-    #configuration.add_piece(Dame("d", [2, 4]))
+    configuration.add_piece(Dame("d", [2, 4]))
 
     roiN = Roi("r", [2, 5])
     configuration.add_piece(roiN)
