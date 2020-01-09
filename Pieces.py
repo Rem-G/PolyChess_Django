@@ -26,6 +26,7 @@ class Pion(Piece):                                          ####################
         super().__init__(nom, pos_initiale)  # la piece ne peut pas sauter par dessus les autres pieces##
         self.firstMove = True                               ############################################################
         self.promotion = True
+        self.pos_initiale = pos_initiale
 
     def firstMoveOver(self):
         """
@@ -44,7 +45,7 @@ class Pion(Piece):                                          ####################
         if self.nom == 'p':
             moves.append([self.position[0] + 1, self.position[1]])
 
-            if self.firstMove:
+            if self.position == self.pos_initiale:
                 moves.append([self.position[0] + 2, self.position[1]])
                 self.firstMoveOver()
 
@@ -53,7 +54,7 @@ class Pion(Piece):                                          ####################
 
         if self.nom == 'P':
             moves.append([self.position[0] - 1, self.position[1]])
-            if self.firstMove:
+            if self.position == self.pos_initiale:
                 moves.append([self.position[0] - 2, self.position[1]])
                 self.firstMoveOver()
 
@@ -118,7 +119,7 @@ class Tour(Piece):                                          ####################
         """
         self.firstMove = False
 
-    def PossibleMoves(self):
+    def PossibleMoves2(self):
         '''
         Retourne la liste possible pour un tour
         @LV
@@ -130,7 +131,7 @@ class Tour(Piece):                                          ####################
         listC = []
         
         #D
-        while x1 <8:
+        while x1 < 8:
             x1 = x1+1
             y1 = y1
             listC.append([y1,x1])
@@ -138,7 +139,7 @@ class Tour(Piece):                                          ####################
         x1 = x
         y1 = y
         #G    
-        while x1 >1 :
+        while x1 > 1 :
             x1 = x1-1
             y1 = y1
             listC.append([y1,x1])
@@ -158,7 +159,35 @@ class Tour(Piece):                                          ####################
             x1 = x1
             y1 = y1+1
             listC.append([y1,x1])
+        print(listC, 'pieces\n')
+        return [listC, listC]
 
+
+    def PossibleMoves(self):
+        '''
+        Retourne la liste possible pour un tour
+        @LV
+        '''
+        print(self.position, 'POSITION')
+        listC = list()
+
+        #Droite
+        for x in range(self.position[1], 10):
+            listC.append([x, self.position[0]])
+
+        #Gauche
+        for x in range(self.position[1], 0, -1):
+            listC.append([x, self.position[0]])
+
+        #Haut
+        for y in range(self.position[0], 9):
+            listC.append([self.position[1], y])
+
+        #Bas
+        for y in range(self.position[0], 0, -1):
+            listC.append([self.position[1], y])
+
+        print(listC, 'pieces\n')
         return [listC, listC]
 
 

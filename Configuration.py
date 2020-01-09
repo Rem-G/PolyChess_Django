@@ -176,25 +176,135 @@ class GeneralConf():
                     pass
 
         matrice_screen = matrice[2:len(matrice) - 2]
-        pieces_mangees_B = '            Pieces blanches mangées ' + str(self.died_pieces_B)
-        pieces_mangees_N = '            Pieces noires mangées ' + str(self.died_pieces_N)
+        pieces_mangees_B = '            Pièces blanches mangées ' + str(self.died_pieces_B)
+        pieces_mangees_N = '            Pièces noires mangées ' + str(self.died_pieces_N)
 
         matrice_screen[len(matrice_screen)-5].append(pieces_mangees_B)
         matrice_screen[len(matrice_screen)-4].append(pieces_mangees_N)
 
         return matrice_screen
 
+    def chemin_Fou(self, possible_moves, position_pieces, piece, pos_arrivee):
+        """
+        @RG
+        :return possible_moves
+        """
+        possible_moves_fou = possible_moves
+        for move in possible_moves_fou:
+            if move in position_pieces:
 
-    def chemin_parcouru_piece(self, piece):
+                if (#Coin supérieur droit du fou
+                    move[0] >= pos_arrivee[0]
+                    and move[1] <= pos_arrivee[1]
+                    and move[0] < piece.position[0]
+                    and move[1] > piece.position[1]
+                    ):
+
+                    for x in range(move[0], 0, -1):
+                        for y in range(move[1], 11):
+                            if [x,y] in possible_moves_fou:
+                                possible_moves_fou.pop(possible_moves_fou.index([x,y]))
+
+                if (#Coin supérieur gauche du fou
+                    move[0] >= pos_arrivee[0]
+                    and move[1] >= pos_arrivee[1]
+                    and move[0] > piece.position[0]
+                    and move[1] > piece.position[1]
+                    ):
+                    for x in range(move[0], 0, -1):
+                        for y in range(move[1], 0, -1):
+                            if [x,y] in possible_moves_fou:
+                                possible_moves_fou.pop(possible_moves_fou.index([x,y]))
+
+                if (#Coin inférieur gauche du fou
+                    move[0] <= pos_arrivee[0]
+                    and move[1] <= pos_arrivee[1]
+                    and move[0] > piece.position[0]
+                    and move[1] > piece.position[1]
+                    ):
+                    for x in range(move[0], 9):
+                        for y in range(move[1], 11):
+                            if [x,y] in possible_moves_fou:
+                                possible_moves_fou.pop(possible_moves_fou.index([x,y]))
+
+                if (#Coin inférieur droit du fou
+                    move[0] <= pos_arrivee[0]
+                    and move[1] >= pos_arrivee[1]
+                    and move[0] > piece.position[0]
+                    and move[1] < piece.position[1]
+                    ):
+                    for x in range(move[0], 9):
+                        for y in range(move[1], 0, -1):
+                            if [x,y] in possible_moves_fou:
+                                possible_moves_fou.pop(possible_moves_fou.index([x,y]))
+        return possible_moves_fou
+
+    def chemin_Tour(self, possible_moves, position_pieces, piece, pos_arrivee):
+        """
+        @RG
+        """
+        test = False
+        possible_moves_tour = possible_moves
+        for move in possible_moves_tour:
+            if move in position_pieces and test:
+
+                if pos_arrivee[1] >= move[1] and move[1] > piece.position[1]:#Droite 
+                    for x in range(move[0], 10):
+                        if [x,move[1]] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([x,move[1]]))
+
+                if pos_arrivee[1] <= move[1] and move[1] < piece.position[1]:#Gauche
+                    for x in range(move[0], 0, -1):
+                        if [x,move[1]] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([x,move[1]]))
+
+                if pos_arrivee[0] >= move[0] and move[0] > piece.position[0]:#Bas
+                    for y in range(move[1], 10):
+                        if [move[0],y] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([move[0],y]))
+
+                if pos_arrivee[0] <= move[0] and move[0] < piece.position[0]:#Haut
+                    for y in range(move[1], 0, -1):
+                        if [move[0],y] in possible_moves_tour:
+                            possible_moves_tour.pop(possible_moves_tour.index([move[0],y]))
+
+        return possible_moves_tour
+
+    def chemin_Pion(self, possible_moves, position_pieces, piece):
+        """
+        @RG
+        """
+        possible_moves_pion = possible_moves
+        if piece.firstMove:
+            if [piece.position[0] + 1, piece.position[1]] in position_pieces or [pieces.positio[0] + 2, piece.position[1]] in position_pieces:
+                possible_moves_pion = []
+        return possible_moves_pion
+
+    def chemin_parcouru_piece(self, piece, pos_arrivee):
         """
         @RG
         """
         #Sauf Cavalier et Roi
-        pass
-        #if piece.__class__ is Cavalier:
-            #for p in self.pieces:
-                #if p.position in piece[0]:
-                   #piece[0].pop(p.position)
+        position_pieces = list()
+        [position_pieces.append(piece.position) for piece in self.pieces]
+
+        if piece.__class__ is Fou:
+            return [self.chemin_Fou(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)
+                    ,self.chemin_Fou(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)]
+
+        elif piece.__class__ is Tour:
+            return [self.chemin_Tour(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)
+                    ,self.chemin_Tour(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)]
+
+        elif piece.__class__ is Dame:
+            return [self.chemin_Fou(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee) + self.chemin_Tour(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)
+                    ,self.chemin_Fou(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee) + self.chemin_Tour(piece.PossibleMoves()[0], position_pieces, piece, pos_arrivee)]
+
+        elif piece.__class__ is Pion:
+            return [self.chemin_Pion(piece.PossibleMoves()[0], position_pieces, piece), piece.PossibleMoves()[1]]
+
+        else:
+            return piece.PossibleMoves()
 
 
     def verification_deplacement(self, moves, pos_arrivee):
@@ -212,14 +322,15 @@ class GeneralConf():
         emplacements_pieces = list()
         [emplacements_pieces.append(piece.position) for piece in self.pieces]
 
-        if pos_arrivee in possible_moves and pos_arrivee not in emplacements_pieces or pos_arrivee in possible_eat:
+        if (pos_arrivee in possible_moves 
+            and pos_arrivee not in emplacements_pieces
+            or pos_arrivee in possible_eat):
             # Vérification si la position d'arrivee correspond à un mouvement autorisé et qu'elle n'est pas à l'emplacement d'une pièce existante
             # Si la position d'arrivée correspond à l'emplacement d'une pièce existante, on vérifie si elle peut être mangée
             if self.board.matrice_jeu()[pos_arrivee[0]][pos_arrivee[1]] != -1:
                 # Vérification si la position d'arrivée voulue est sur le plateau de jeu
                 return True
         return False
-
 
     def mange_piece(self, piece, possible_eat, pos_arrivee):
         """
@@ -236,7 +347,6 @@ class GeneralConf():
 
         piece.set_piece_position(pos_arrivee)
 
-
     def tour_joueur(self, piece, pos_arrivee):
         """
         @RG @NR
@@ -244,15 +354,14 @@ class GeneralConf():
         :param piece: Piece à vérifier
         :param pos_arrivee: Position d'arrivée désirée par le joueur pour la pièce
         """
-
         if piece.__class__ is Roi:  # on regarde si la piece en question en roi, au quel cas on doit verifier si le move entraine un echec ou echec et matt
             roque_roi_fait = False
             if piece.firstMove == True:  # roi n'a pas encore joue son premier tour
                 # on essaie le roque
                 roque_roi_fait = self.roqueRoi(piece, pos_arrivee)
 
-            if not (roque_roi_fait) and self.verification_deplacement_roi(piece, piece.PossibleMoves(), pos_arrivee):
-                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
+            if not (roque_roi_fait) and self.verification_deplacement_roi(piece, self.chemin_parcouru_piece(piece, pos_arrivee), pos_arrivee):
+                self.mange_piece(piece, self.chemin_parcouru_piece(piece, pos_arrivee)[1], pos_arrivee)
 
             else:
                 if not (roque_roi_fait):
@@ -260,8 +369,19 @@ class GeneralConf():
 
         else:
 
-            if self.verification_deplacement(piece.PossibleMoves(), pos_arrivee):
-                self.mange_piece(piece, piece.PossibleMoves()[1], pos_arrivee)
+            if self.verification_deplacement(self.chemin_parcouru_piece(piece, pos_arrivee), pos_arrivee):
+                if piece in self.pieces_joueurB:
+                   for p in self.pieces_joueurB:
+                    if p.position == pos_arrivee:
+                        self.add_msg_error('Déplacement interdit')
+
+                elif piece in self.pieces_joueurN:
+                    for p in self.pieces_joueurN:
+                        if p.position == pos_arrivee:
+                            self.add_msg_error('Déplacement interdit')
+
+                if not len(self.msg_error):
+                    self.mange_piece(piece, self.chemin_parcouru_piece(piece, pos_arrivee)[1], pos_arrivee)
 
             else:
                 self.add_msg_error("Déplacement interdit")
@@ -277,13 +397,8 @@ class GeneralConf():
         """
         coordonnees_pieces = list()
         # Vérification que la valeur de la position de départ dans la matrice de jeu est différente de 1
-        if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(
-                pos_arrivee) != -1:
+        if self.board.valeur_position_piece_mat(pos_depart) != -1 and self.board.valeur_position_piece_mat(pos_arrivee) != -1:
             for piece in self.pieces:
-                ###########
-                if piece.__class__ is Cavalier:
-                    self.chemin_parcouru_piece(piece)
-                ###########
                 # Récupération et conversion des coordonnées utilisateur de la pièce en coordonnées de la matrice de jeu
                 piece_x, piece_y = piece.get_piece_position()[0], piece.get_piece_position()[1]
                 coordonnees_pieces.append([piece_x, piece_y])

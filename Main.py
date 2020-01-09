@@ -16,6 +16,7 @@ def init_pieces(configuration):
     @RG @RN
     Initialisation des pièces de jeu
     Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
+    Coordonnées en 12*10
     """
     # Pieces blanches
     configuration.add_piece(Pion("P", [8, 1]))
