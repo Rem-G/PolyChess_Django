@@ -1,6 +1,6 @@
-from Board import *
-from Pieces import *
-from Bot import *
+from .Board import *
+from .Pieces import *
+from .Bot import *
 import os
 
 
@@ -623,6 +623,7 @@ class GeneralConf():
 
     def pseudo_mange_piece(self, piece, possible_eat, pos_arrivee):
         """
+        Simulation de mouvement d'une pièce de capture
         pseudo bouge la piece a une nouvelle position
         :param piece: une piece
         :param possible_eat: emplacement ou la piece peut bouger

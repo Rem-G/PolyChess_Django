@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block contenu %}
+
+
+<body>
+    <form role="chessboard" method="post">
+        {% csrf_token %} 
+        <div id="myBoard" style="width: 400px"></div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        if ('{{start}}' == 'False')
+            {
+                var config = {
+                            draggable: true,
+                            moveSpeed: 'slow',
+                            snapbackSpeed: 500,
+                            snapSpeed: 100,
+                            onChange: onChange,
+                            position: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
+                        }
+        }
+
+        else {
+            var config = {
+                        draggable: true,
+                        moveSpeed: 'slow',
+                        snapbackSpeed: 500,
+                        snapSpeed: 100,
+                        onChange: onChange,
+                        position: '{{newPos}}'
+                        }
+        }
+
+        var board = Chessboard('myBoard', config)
+
+        function onChange (oldPos, newPos) {
+            var oldPos = Chessboard.objToFen(oldPos)
+            var newPos = Chessboard.objToFen(newPos)
+
+            $("form").submit(function(){
+                        var params = [
+                                        {name: 'oldPos', value: oldPos},
+                                        {name: 'newPos', value: newPos}
+                                     ];
+
+                        $(this).append($.map(params, function (param) {
+                            return   $('<input>', {
+                                type: 'hidden',
+                                name: param.name,
+                                value: param.value
+                            })
+                        }));
+
+                        $("body").css("cursor", "wait");
+                        });  
+            }
+    </script>
+</body>
+
+{% endblock %}
