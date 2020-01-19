@@ -2,37 +2,26 @@
 
 {% block contenu %}
 
+{{oldPos}}
+{{new_fen}}
 
 <body>
     <form role="chessboard" method="post">
         {% csrf_token %} 
         <div id="myBoard" style="width: 400px"></div>
         <button type="submit">Submit</button>
+        <button type="submit" name="btn_new_game">New Game</button>
     </form>
 
     <script>
-        if ('{{start}}' == 'False')
-            {
-                var config = {
-                            draggable: true,
-                            moveSpeed: 'slow',
-                            snapbackSpeed: 500,
-                            snapSpeed: 100,
-                            onChange: onChange,
-                            position: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-                        }
-        }
-
-        else {
-            var config = {
-                        draggable: true,
-                        moveSpeed: 'slow',
-                        snapbackSpeed: 500,
-                        snapSpeed: 100,
-                        onChange: onChange,
-                        position: '{{newPos}}'
-                        }
-        }
+        var config = {
+                    draggable: true,
+                    moveSpeed: 'slow',
+                    snapbackSpeed: 500,
+                    snapSpeed: 100,
+                    onChange: onChange,
+                    position: '{{new_fen}}'
+                    }
 
         var board = Chessboard('myBoard', config)
 
@@ -43,7 +32,7 @@
             $("form").submit(function(){
                         var params = [
                                         {name: 'oldPos', value: oldPos},
-                                        {name: 'newPos', value: newPos}
+                                        {name: 'newPos', value: newPos},
                                      ];
 
                         $(this).append($.map(params, function (param) {

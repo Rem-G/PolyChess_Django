@@ -6,89 +6,88 @@ RAZAFINDRABE Noah
 GOSSELIN Rémi
 '''
 from .Configuration import *
-
-
-# test commit
+import traceback
+import json
+import os
 
 class Main:
-    def __init__(self):
-        self.joueur = 1
 
-    def init_pieces(self, configuration):
-        """
-        @RG @RN
-        Initialisation des pièces de jeu
-        Les noms en masjuscule représentent les pièces blanches, et ceux en minuscule les pièces noires
-        Coordonnées en 12*10
-        """
-         # Pieces blanches
-        configuration.add_piece(Pion("P", [8, 1]))
-        configuration.add_piece(Pion("P", [8, 2]))
-        configuration.add_piece(Pion("P", [8, 3]))
-        configuration.add_piece(Pion("P", [8, 4]))
-        configuration.add_piece(Pion("P", [8, 5]))
-        configuration.add_piece(Pion("P", [8, 6]))
-        configuration.add_piece(Pion("P", [8, 7]))
-        configuration.add_piece(Pion("P", [8, 8]))
-        
-        configuration.add_piece(Tour("T", [9, 1]))
-        configuration.add_piece(Tour("T", [9, 8]))
-        
-        configuration.add_piece(Cavalier("C", [9, 2]))
-        configuration.add_piece(Cavalier("C", [9, 7]))
-        
-        configuration.add_piece(Fou("F", [9, 3]))
-        configuration.add_piece(Fou("F", [9, 6]))
-        
-        configuration.add_piece(Dame("D", [9, 4]))
-        
-        roiB = Roi("R", [9, 5])
-        configuration.add_piece(roiB)
-        configuration.init_roi(roiB)
-        
-        # Pieces noires
-        configuration.add_piece(Pion("p", [3, 1]))
-        configuration.add_piece(Pion("p", [3, 2]))
-        configuration.add_piece(Pion("p", [3, 3]))
-        configuration.add_piece(Pion("p", [3, 4]))
-        configuration.add_piece(Pion("p", [3, 5]))
-        configuration.add_piece(Pion("p", [3, 6]))
-        configuration.add_piece(Pion("p", [3, 7]))
-        configuration.add_piece(Pion("p", [3, 8]))
-        
-        configuration.add_piece(Tour("t", [2, 1]))
-        configuration.add_piece(Tour("t", [2, 8]))
-        
-        configuration.add_piece(Cavalier("c", [2, 2]))
-        configuration.add_piece(Cavalier("c", [2, 7]))
-        
-        configuration.add_piece(Fou("f", [2, 3]))
-        configuration.add_piece(Fou("f", [2, 6]))
-        
-        configuration.add_piece(Dame("d", [2, 4]))
-        
-        roiN = Roi("r", [2, 5])
-        configuration.add_piece(roiN)
-        configuration.init_roi(roiN)
+    def init_pieces(self, pieces, configuration, init=False):
+        if not init:
+            for piece in pieces:
+                if piece['nom'] is 'p' or piece['nom'] is 'P':
+                    configuration.add_piece(Pion(piece['nom'], piece['position']))
+                elif piece['nom'] is 't' or piece['nom'] is 'T':
+                    configuration.add_piece(Tour(piece['nom'], piece['position']))
 
+                elif piece['nom'] is 'c' or piece['nom'] is 'C':
+                    configuration.add_piece(Cavalier(piece['nom'], piece['position']))
 
-    def decision_joueur(self, decision, configuration):
-        """
-        @RG
-        :param decision: Choix de jeu du joueur en str
-        :return list: Choix de jeu du joueur en list
-        """
+                elif piece['nom'] is 'f' or piece['nom'] is 'F':
+                    configuration.add_piece(Fou(piece['nom'], piece['position']))
 
-        # Conversion des coordonnées utilisateur en coordonnées matricielles
+                elif piece['nom'] is 'd' or piece['nom'] is 'D':
+                    configuration.add_piece(Dame(piece['nom'], piece['position']))
 
-        decision = decision.split(" ")
-        pos_depart = configuration.board.position_piece_mat([decision[0][0], decision[0][1]])
-        pos_arrivee = configuration.board.position_piece_mat([decision[1][0], decision[1][1]])
+                elif piece['nom'] is 'R':
+                    roiB = Roi(piece['nom'], piece['position'])
+                    configuration.add_piece(roiB)
+                    configuration.init_roi(roiB)
 
-        pos_depart = [int(pos) for pos in pos_depart]
-        pos_arrivee = [int(pos) for pos in pos_arrivee]
-
-        return [pos_depart, pos_arrivee]
+                elif piece['nom'] is 'r':
+                    roiN = Roi(piece['nom'], piece['position'])
+                    configuration.add_piece(roiN)
+                    configuration.init_roi(roiN)
+        else:
+             # Pieces blanches
+            configuration.add_piece(Pion("P", [8, 1]))
+            configuration.add_piece(Pion("P", [8, 2]))
+            configuration.add_piece(Pion("P", [8, 3]))
+            configuration.add_piece(Pion("P", [8, 4]))
+            configuration.add_piece(Pion("P", [8, 5]))
+            configuration.add_piece(Pion("P", [8, 6]))
+            configuration.add_piece(Pion("P", [8, 7]))
+            configuration.add_piece(Pion("P", [8, 8]))
+            
+            configuration.add_piece(Tour("T", [9, 1]))
+            configuration.add_piece(Tour("T", [9, 8]))
+            
+            configuration.add_piece(Cavalier("C", [9, 2]))
+            configuration.add_piece(Cavalier("C", [9, 7]))
+            
+            configuration.add_piece(Fou("F", [9, 3]))
+            configuration.add_piece(Fou("F", [9, 6]))
+            
+            configuration.add_piece(Dame("D", [9, 4]))
+            
+            roiB = Roi("R", [9, 5])
+            configuration.add_piece(roiB)
+            configuration.init_roi(roiB)
+            
+            # Pieces noires
+            configuration.add_piece(Pion("p", [3, 1]))
+            configuration.add_piece(Pion("p", [3, 2]))
+            configuration.add_piece(Pion("p", [3, 3]))
+            configuration.add_piece(Pion("p", [3, 4]))
+            configuration.add_piece(Pion("p", [3, 5]))
+            configuration.add_piece(Pion("p", [3, 6]))
+            configuration.add_piece(Pion("p", [3, 7]))
+            configuration.add_piece(Pion("p", [3, 8]))
+            
+            configuration.add_piece(Tour("t", [2, 1]))
+            configuration.add_piece(Tour("t", [2, 8]))
+            
+            configuration.add_piece(Cavalier("c", [2, 2]))
+            configuration.add_piece(Cavalier("c", [2, 7]))
+            
+            configuration.add_piece(Fou("f", [2, 3]))
+            configuration.add_piece(Fou("f", [2, 6]))
+            
+            configuration.add_piece(Dame("d", [2, 4]))
+            
+            roiN = Roi("r", [2, 5])
+            configuration.add_piece(roiN)
+            configuration.init_roi(roiN)
 
 
     def en_to_fr(self, fen):
@@ -97,22 +96,29 @@ class Main:
         :return new_fen_lines list: Composition board en français
         """
         #'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
-        dic_pieces = {'r' : 't', 'n' : 'c', 'b' : 'f', 'q' : 'd', 'k' : 'r', 'p' : 'p', 'P' : 'P', 'R' : 'T', 'N' : 'C', 'B' : 'F', 'Q' : 'D', 'K' : 'R'}#Traduction pièces anglaises vers pièces françaises
-        dic_num = {'1' : 1, '2' : 2, '3' : 3, '4' : 4, '5' : 5, '6' : 6, '7' : 7, '8' : 8}
         fen_lines = fen.split("/")
         new_fen_lines = list()
 
         for fen_line in fen_lines:
             line = str()
             for piece in fen_line:
-                if piece in dic_num.keys():
+                if piece in ['1', '2', '3', '4', '5', '6', '7', '8']:
                     for i in range(0, int(piece)):
                         line += '1'
-                elif piece in dic_pieces.keys():
-                    line += dic_pieces[piece]
+                else:
+                    line += piece
             new_fen_lines.append(line)
 
         return new_fen_lines
+
+
+    def fr_to_en(self, pos):
+        """
+        """
+        dic_pieces = {'t' : 'r', 'c' : 'n', 'f' : 'b', 'd' : 'q', 'r' : 'k', 'p' : 'p', 'P' : 'P', 'T' : 'R', 'C' : 'N', 'F' : 'B', 'D' : 'Q', 'R' : 'K'}#Traduction pièces anglaises vers pièces françaises
+        for piece in pos:
+            pos[pos.index(piece)][1] = dic_pieces[piece[1]]
+        return pos
 
 
     def fen_to_pos(self, fen):
@@ -120,6 +126,7 @@ class Main:
         :param fen str: Composition board en anglais
         :return pos_pieces: Coordonnées et composition de chaque case de l'échiquier
         """
+
         board = self.en_to_fr(fen)
         pos_pieces = list()
 
@@ -150,28 +157,67 @@ class Main:
         return pos_pieces
 
 
-    #avantage joueur, sauvegarde, msg error, promotion, pat
-    def game_pvp(self):
+    def pos_to_fen(self, pos):
+        """
+        """
+
+        pos = self.fr_to_en(pos)
+        fen = str()
+
+        for i in range(2,10):#lignes du plateau
+            line_list = ['1', '1','1', '1','1', '1','1', '1']
+            line_str = str()
+            for j in range(1,9):#colonnes plateau
+                for piece in pos:
+                    if piece[0] == [i,j]:
+                        line_list[j-1] = piece[1]
+            for element in line_list:
+                line_str += element
+            fen += line_str + '/'
+
+        return fen[:len(fen)-1]#retire le dernier /
+
+    def comparaison_coords(self, oldPos, newPos):
+        """
+        """
+        pos_depart = None
+        pos_arrivee = None
+
+        for line in range(0,8):
+            if newPos[line] != oldPos[line]:
+                for piece in range(0,8):
+                    if newPos[line][piece] != oldPos[line][piece] and newPos[line][piece][2] != oldPos[line][piece][2]:
+                        if newPos[line][piece][2] == '1':
+                            pos_depart = newPos[line][piece][:2]
+                        else:
+                            pos_arrivee = newPos[line][piece][:2]
+
+
+        return [pos_depart, pos_arrivee]
+
+    def sauvegarde_partie(self, path, oldPos, newPos, joueur):
+        with open(path, 'r') as json_file:
+            data = json.load(json_file)#Récupère le fichier
+
+        data.append({'pos_start': oldPos, 'pos_end': newPos, 'joueur': joueur})
+
+        with open(path, 'w') as json_file:
+            json.dump(data, json_file, indent=3)
+
+    def pos_to_str(self, pos):
+            lignes_matrice = {'2': '8', '3': '7', '4': '6', '5': '5', '6': '4', '7': '3', '8': '2', '9': '1'}
+            colonnes_matrice = {'1': 'a', '2': 'b', '3': 'c', '4': 'd', '5': 'e', '6': 'f', '7': 'g', '8': 'h'}
+            return [colonnes_matrice[str(pos[1])], lignes_matrice[str(pos[0])]]
+
+
+    def game_pvp(self, configuration, pos_depart, pos_arrivee, joueur):
         """
         @RG @NR
         """
-        configuration = GeneralConf()
-
-        # Crée les joueurs
-        configuration.init_joueurs()
-
-    
-        init_pieces(configuration)
-
-        # Attribution pièces de chaque joueur
-        configuration.pieces_joueurs()
-
-
-        decision = decision_joueur(input_decision, configuration)
-        if self.joueur == 1:
-            configuration.deplacement_piece(decision[0], decision[1], True)
+        if joueur == 1:
+            configuration.deplacement_piece(pos_depart, pos_arrivee, True)
         else:
-            configuration.deplacement_piece(decision[0], decision[1], False)
+            configuration.deplacement_piece(pos_depart, pos_arrivee, False)
 
 
         for piece in configuration.pieces_joueurB:
@@ -184,7 +230,6 @@ class Main:
                 configuration.promotion(piece)
                 piece.promotion = False
 
-        if not len(configuration.msg_error):
-            self.joueur = -self.joueur
-
-        configuration.msg_error = list()
+        positions = list()
+        positions = [[piece.position, piece.nom] for piece in configuration.pieces]
+        return positions
