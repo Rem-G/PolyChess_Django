@@ -52,9 +52,8 @@ class Mat64():
 	def valeur_position_piece_mat(self, piece_pos):
 		"""
 		@RG
-		Permet de vérifier si une positon a la valeur -1
 		:param piece_pos: Position de l'élément à retourner
-		:return int: Renvoie la valeur d'une case de la matrice de jeu définie par rapport à sa position
+		:return int: Renvoie d'une case de la matrice de jeu définie par rapport à sa position
 		"""
 		matrice = self.matrice_jeu()
 		return matrice[piece_pos[0]][piece_pos[1]]

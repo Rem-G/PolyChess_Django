@@ -116,15 +116,10 @@ class Main():
 
         for line in board:#liste des lignes
             for piece in line:#pièces de la ligne
-                if piece != '1' and piece != 'p' and piece != 'P':#évite les doublons
-                    y = line.index(piece)+1
-                    x = board.index(line)+2
+                y = cpt_y + 1
+                x = cpt_x + 2
 
-                else:#8 cases identiques
-                    y = cpt_y + 1
-                    x = cpt_x + 2
-
-                    cpt_y += 1#compteur d'éléments identiques dans une ligne
+                cpt_y += 1#compteur d'éléments identiques dans une ligne
 
                 line_convert.append([x, y, piece])
 

@@ -59,7 +59,7 @@ def read_save_and_play(request, main, configuration, save_json):
 	#Comparaison des anciennes positions avec les nouvelles afin de déterminer la pièce à déplacer
 	pos_start, pos_end = main.comparaison_coords(oldPos_convert, newPos_convert)
 
-	#Envoi de la décision joueur au moteur de jeu sous forme matricielle 
+	#Envoi de la décision joueur au moteur de jeu sous forme matricielle
 	pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))
 
 	#Conversion position piècs à jour en fen
@@ -91,6 +91,10 @@ def chessboard(request):
 				'oldPos': request.POST['oldPos'],
 				'new_fen': play[0],
 				'msg_error': play[1],
+				'avantage': configuration.avantage_joueur(),
+				'died_pieces_B': configuration.died_pieces_B,
+				'died_pieces_N': configuration.died_pieces_N,
+				'joueur': os.environ['JOUEUR'],
 				}
 
 			if not len(configuration.msg_error):#Coup validé par le moteur de jeu

@@ -5,50 +5,86 @@
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="card" style="width: 40rem;">
+            <div class="card" style="width: 55rem;">
                 <form role="chessboard" method="post">
                 {% csrf_token %}
                     <div class="card-header">
-                            <table>
-                                <tr style="text-align: center">
-                                    <th>
-                                        <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess
-                                        </h3>
-                                    </th>
-                                    <th>
-                                        <button type="submit" class="btn btn-primary btn-lg" name="btn_new_game">Nouvelle partie
-                                        </button>
-                                    </th>
-                                </tr>
-                            </table>
-                        </div>
-                        <div id="card-body-board" class="card-body">
-                            <div class="form-horizontal">
-                                <table id="board">
-                                    {% if msg_error %}
-                                        {% for error in msg_error %}
+                        <table>
+                            <tr style="text-align: center">
+                                <th>
+                                    <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess
+                                    </h3>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <table>
+                        <tr>
+                            <th>
+                                <div id="card-body-board" class="card-body">
+                                    <div class="form-horizontal">
+                                        <table id="board">
+                                            {% if msg_error %}
+                                                {% for error in msg_error %}
+                                                <tr>
+                                                    <th>
+                                                        <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
+                                                    </th>
+                                                </tr>
+                                                {% endfor %}
+                                            {% endif %}
+                                            <tr>
+                                                <th>
+                                                    <div id="myBoard"></div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    <button type="submit" class="btn btn-primary btn-lg" name="btn_new_game">Nouvelle partie
+                                                    </button>
+
+                                                    <button type="submit" class="btn btn-primary btn-lg">Jouer</button>
+                                                </th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <table class="table">
                                         <tr>
                                             <th>
-                                                <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
+                                                {% if joueur == '1' %}
+                                                    <p>Au tour du joueur noir</p>
+                                                {% endif %}
+                                                {% if joueur == '-1' %}
+                                                    <p>Au tour du joueur blanc</p>
+                                                {% endif %}
                                             </th>
                                         </tr>
-                                        {% endfor %}
-                                    {% endif %}
-                                    <tr>
-                                        <th>
-                                            <div id="myBoard"></div>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <button type="submit" class="btn btn-primary btn-lg">Jouer</button>
-                                        </th>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                                        <br>
+                                        {%if avantage %}
+                                            <tr>
+                                                <th>
+                                                    <p>{{avantage}}</p>
+                                                </th>
+                                            </tr>
+                                        {% endif %}
+                                        <tr>
+                                            <th>
+                                                <p>Pièces blanches détruites : <br>{{died_pieces_B}}</p>
+                                            </th>
+                                            <th>
+                                                <p>Pièces noires détruites : <br>{{died_pieces_N}}</p>
+                                            </th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </th>
+                        </tr>
+                    </table>
+                </form>
             </div>
         </div>
     </div>

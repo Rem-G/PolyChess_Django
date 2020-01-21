@@ -134,7 +134,7 @@ class Tour(Piece):                                          ####################
         listC = []
         
         #D
-        while x1 < 8:
+        while x1 <8:
             x1 = x1+1
             y1 = y1
             listC.append([y1,x1])
@@ -142,7 +142,7 @@ class Tour(Piece):                                          ####################
         x1 = x
         y1 = y
         #G    
-        while x1 > 1 :
+        while x1 >1 :
             x1 = x1-1
             y1 = y1
             listC.append([y1,x1])
@@ -162,6 +162,7 @@ class Tour(Piece):                                          ####################
             x1 = x1
             y1 = y1+1
             listC.append([y1,x1])
+
         return [listC, listC]
 
 
