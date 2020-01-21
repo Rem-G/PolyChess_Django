@@ -207,4 +207,5 @@ class Main:
 
         positions = list()
         positions = [[piece.position, piece.nom] for piece in configuration.pieces]
-        return positions
+        
+        return [positions, configuration.msg_error]

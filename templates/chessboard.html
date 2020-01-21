@@ -6,12 +6,55 @@
 {{new_fen}}
 
 <body>
-    <form role="chessboard" method="post">
-        {% csrf_token %} 
-        <div id="myBoard" style="width: 400px"></div>
-        <button type="submit">Submit</button>
-        <button type="submit" name="btn_new_game">New Game</button>
-    </form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card" style="width: 40rem;">
+                <form role="chessboard" method="post">
+                {% csrf_token %}
+                    <div class="card-header">
+                            <table>
+                                <tr style="text-align: center">
+                                    <th>
+                                        <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess
+                                        </h3>
+                                    </th>
+                                    <th>
+                                        <button type="submit" class="btn btn-primary btn-lg" name="btn_new_game">Nouvelle partie
+                                        </button>
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="card-body-board" class="card-body">
+                            <div class="form-horizontal">
+                                <table id="board">
+                                    {% if msg_error %}
+                                        {% for error in msg_error %}
+                                        <tr>
+                                            <th>
+                                                <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
+                                            </th>
+                                        </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <tr>
+                                        <th>
+                                            <div id="myBoard"></div>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <button type="submit" class="btn btn-primary btn-lg">Jouer</button>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         var config = {

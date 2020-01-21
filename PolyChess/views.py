@@ -63,7 +63,7 @@ def read_save_and_play(request, main, configuration, save_json):
 	pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))
 
 	#Conversion position piècs à jour en fen
-	return main.pos_to_fen(pos_game)
+	return [main.pos_to_fen(pos_game[0]), pos_game[1]]
 
 
 def chessboard(request):
@@ -85,9 +85,12 @@ def chessboard(request):
 			with open(url) as file:
 				save_json = json.load(file)
 
+			play = read_save_and_play(request, main, configuration, save_json)
+
 			context = {
 				'oldPos': request.POST['oldPos'],
-				'new_fen': read_save_and_play(request, main, configuration, save_json),
+				'new_fen': play[0],
+				'msg_error': play[1],
 				}
 
 			if not len(configuration.msg_error):#Coup validé par le moteur de jeu
