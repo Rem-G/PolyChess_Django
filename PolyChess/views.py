@@ -35,7 +35,7 @@ def new_game(request):
 def read_save_and_play(request, main, configuration, save_json):
 	######Initialissation des pièces et joueurs
 	configuration.init_joueurs()
-	main.init_pieces(None, configuration, True)
+	main.init_pieces(configuration)
 	configuration.pieces_joueurs()
 
 	######Reconstituion des coups joués lors de la partie

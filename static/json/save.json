@@ -3,15 +3,5 @@
       "pos_start": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
       "pos_end": null,
       "joueur": 1
-   },
-   {
-      "pos_start": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
-      "pos_end": "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR",
-      "joueur": 1
-   },
-   {
-      "pos_start": "rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR",
-      "pos_end": "rnbqkbnr/pp1ppppp/8/2p5/6P1/8/PPPPPP1P/RNBQKBNR",
-      "joueur": -1
    }
 ]

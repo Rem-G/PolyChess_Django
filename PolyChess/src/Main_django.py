@@ -12,82 +12,56 @@ import os
 
 class Main:
 
-    def init_pieces(self, pieces, configuration, init=False):
-        if not init:
-            for piece in pieces:
-                if piece['nom'] is 'p' or piece['nom'] is 'P':
-                    configuration.add_piece(Pion(piece['nom'], piece['position']))
-                elif piece['nom'] is 't' or piece['nom'] is 'T':
-                    configuration.add_piece(Tour(piece['nom'], piece['position']))
-
-                elif piece['nom'] is 'c' or piece['nom'] is 'C':
-                    configuration.add_piece(Cavalier(piece['nom'], piece['position']))
-
-                elif piece['nom'] is 'f' or piece['nom'] is 'F':
-                    configuration.add_piece(Fou(piece['nom'], piece['position']))
-
-                elif piece['nom'] is 'd' or piece['nom'] is 'D':
-                    configuration.add_piece(Dame(piece['nom'], piece['position']))
-
-                elif piece['nom'] is 'R':
-                    roiB = Roi(piece['nom'], piece['position'])
-                    configuration.add_piece(roiB)
-                    configuration.init_roi(roiB)
-
-                elif piece['nom'] is 'r':
-                    roiN = Roi(piece['nom'], piece['position'])
-                    configuration.add_piece(roiN)
-                    configuration.init_roi(roiN)
-        else:
-             # Pieces blanches
-            configuration.add_piece(Pion("P", [8, 1]))
-            configuration.add_piece(Pion("P", [8, 2]))
-            configuration.add_piece(Pion("P", [8, 3]))
-            configuration.add_piece(Pion("P", [8, 4]))
-            configuration.add_piece(Pion("P", [8, 5]))
-            configuration.add_piece(Pion("P", [8, 6]))
-            configuration.add_piece(Pion("P", [8, 7]))
-            configuration.add_piece(Pion("P", [8, 8]))
-            
-            configuration.add_piece(Tour("T", [9, 1]))
-            configuration.add_piece(Tour("T", [9, 8]))
-            
-            configuration.add_piece(Cavalier("C", [9, 2]))
-            configuration.add_piece(Cavalier("C", [9, 7]))
-            
-            configuration.add_piece(Fou("F", [9, 3]))
-            configuration.add_piece(Fou("F", [9, 6]))
-            
-            configuration.add_piece(Dame("D", [9, 4]))
-            
-            roiB = Roi("R", [9, 5])
-            configuration.add_piece(roiB)
-            configuration.init_roi(roiB)
-            
-            # Pieces noires
-            configuration.add_piece(Pion("p", [3, 1]))
-            configuration.add_piece(Pion("p", [3, 2]))
-            configuration.add_piece(Pion("p", [3, 3]))
-            configuration.add_piece(Pion("p", [3, 4]))
-            configuration.add_piece(Pion("p", [3, 5]))
-            configuration.add_piece(Pion("p", [3, 6]))
-            configuration.add_piece(Pion("p", [3, 7]))
-            configuration.add_piece(Pion("p", [3, 8]))
-            
-            configuration.add_piece(Tour("t", [2, 1]))
-            configuration.add_piece(Tour("t", [2, 8]))
-            
-            configuration.add_piece(Cavalier("c", [2, 2]))
-            configuration.add_piece(Cavalier("c", [2, 7]))
-            
-            configuration.add_piece(Fou("f", [2, 3]))
-            configuration.add_piece(Fou("f", [2, 6]))
-            
-            configuration.add_piece(Dame("d", [2, 4]))
-            
-            roiN = Roi("r", [2, 5])
-            configuration.add_piece(roiN)
-            configuration.init_roi(roiN)
+    def init_pieces(self, configuration):
+         # Pieces blanches
+        configuration.add_piece(Pion("P", [8, 1]))
+        configuration.add_piece(Pion("P", [8, 2]))
+        configuration.add_piece(Pion("P", [8, 3]))
+        configuration.add_piece(Pion("P", [8, 4]))
+        configuration.add_piece(Pion("P", [8, 5]))
+        configuration.add_piece(Pion("P", [8, 6]))
+        configuration.add_piece(Pion("P", [8, 7]))
+        configuration.add_piece(Pion("P", [8, 8]))
+        
+        configuration.add_piece(Tour("T", [9, 1]))
+        configuration.add_piece(Tour("T", [9, 8]))
+        
+        configuration.add_piece(Cavalier("C", [9, 2]))
+        configuration.add_piece(Cavalier("C", [9, 7]))
+        
+        configuration.add_piece(Fou("F", [9, 3]))
+        configuration.add_piece(Fou("F", [9, 6]))
+        
+        configuration.add_piece(Dame("D", [9, 4]))
+        
+        roiB = Roi("R", [9, 5])
+        configuration.add_piece(roiB)
+        configuration.init_roi(roiB)
+        
+        # Pieces noires
+        configuration.add_piece(Pion("p", [3, 1]))
+        configuration.add_piece(Pion("p", [3, 2]))
+        configuration.add_piece(Pion("p", [3, 3]))
+        configuration.add_piece(Pion("p", [3, 4]))
+        configuration.add_piece(Pion("p", [3, 5]))
+        configuration.add_piece(Pion("p", [3, 6]))
+        configuration.add_piece(Pion("p", [3, 7]))
+        configuration.add_piece(Pion("p", [3, 8]))
+        
+        configuration.add_piece(Tour("t", [2, 1]))
+        configuration.add_piece(Tour("t", [2, 8]))
+        
+        configuration.add_piece(Cavalier("c", [2, 2]))
+        configuration.add_piece(Cavalier("c", [2, 7]))
+        
+        configuration.add_piece(Fou("f", [2, 3]))
+        configuration.add_piece(Fou("f", [2, 6]))
+        
+        configuration.add_piece(Dame("d", [2, 4]))
+        
+        roiN = Roi("r", [2, 5])
+        configuration.add_piece(roiN)
+        configuration.init_roi(roiN)
 
 
     def en_to_fr(self, fen):
@@ -135,22 +109,23 @@ class Main:
 
         line_convert = list()
 
-        for line in board:
-            for piece in line:
-                if piece != '1' and piece != 'p' and piece != 'P':
+        for line in board:#liste des lignes
+            for piece in line:#pièces de la ligne
+                if piece != '1' and piece != 'p' and piece != 'P':#évite les doublons
                     y = line.index(piece)+1
                     x = board.index(line)+2
-                elif len(line) == 8:
-                    y = line.index(piece) + cpt_y + 1
-                    x = cpt_x+2
-                    cpt_y += 1
-                else:
+
+                else:#8 cases identiques
                     y = cpt_y + 1
-                    x = cpt_x+2
-                    cpt_y += 1
+                    x = cpt_x + 2
+
+                    cpt_y += 1#compteur d'éléments identiques dans une ligne
+
                 line_convert.append([x, y, piece])
+
             cpt_y = 0
             cpt_x += 1
+
             pos_pieces.append(line_convert)
             line_convert = list()
 
