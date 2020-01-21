@@ -8,8 +8,7 @@ Razafindrabe Noah, Vieu Loïc, Gosselin Rémi, Cenci Thomas
 Ce projet a pour but la création d'un jeu d'échecs en python. Celui-ci proposera deux modes de jeu : joueur contre joueur et joueur contre machine.
 Le jeu se joue dans un terminal de commandes.
 
-##### Ce dépôt constitue la version interface utilisateur du projet https://github.com/Rem-G/PolyChess
-[A venir]
+## Ce dépôt constitue la version interface utilisateur du projet https://github.com/Rem-G/PolyChess
 
 ## Pré-requis :
 Django >= 2.2.x
