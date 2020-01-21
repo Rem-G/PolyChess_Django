@@ -22,7 +22,7 @@ def new_game(request):
 	with open(url, 'w') as json_file:
 		data = [
 				{
-					'pos_start': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',
+					'pos_start': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR',#Plateau de jeu initial
 					'pos_end': None,
 					'joueur': 1
 				}
@@ -102,7 +102,8 @@ def chessboard(request):
 			return render(request, 'chessboard.html', context)
 
 		except Exception:
-			traceback.print_exc()#Ajouter message erreur 'jouer une pièce'
+			#Gère le cas où deux pièces sont jouées ou aucune
+			traceback.print_exc()
 
 	#Nouvelle partie ouverture page
 	new_game(request)

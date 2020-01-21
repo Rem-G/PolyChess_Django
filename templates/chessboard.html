@@ -2,9 +2,6 @@
 
 {% block contenu %}
 
-{{oldPos}}
-{{new_fen}}
-
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -73,21 +70,21 @@
             var newPos = Chessboard.objToFen(newPos)
 
             $("form").submit(function(){
-                        var params = [
-                                        {name: 'oldPos', value: oldPos},
-                                        {name: 'newPos', value: newPos},
-                                     ];
+                var params = [
+                                {name: 'oldPos', value: oldPos},
+                                {name: 'newPos', value: newPos},
+                             ];
 
-                        $(this).append($.map(params, function (param) {
-                            return   $('<input>', {
-                                type: 'hidden',
-                                name: param.name,
-                                value: param.value
-                            })
-                        }));
+                $(this).append($.map(params, function (param) {
+                    return   $('<input>', {
+                        type: 'hidden',
+                        name: param.name,
+                        value: param.value
+                    })
+                }));
 
-                        $("body").css("cursor", "wait");
-                        });  
+                $("body").css("cursor", "wait");
+                });  
             }
     </script>
 </body>

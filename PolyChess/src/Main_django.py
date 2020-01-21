@@ -10,7 +10,9 @@ import traceback
 import json
 import os
 
-class Main:
+class Main():
+    def __init__(self):
+        pass
 
     def init_pieces(self, configuration):
          # Pieces blanches
@@ -64,7 +66,7 @@ class Main:
         configuration.init_roi(roiN)
 
 
-    def en_to_fr(self, fen):
+    def fen_to_list(self, fen):
         """
         :param fen str: Composition board en anglais
         :return new_fen_lines list: Composition board en français
@@ -88,6 +90,9 @@ class Main:
 
     def fr_to_en(self, pos):
         """
+        Conversion des noms de pièces du français à l'anglais
+        :param pos list:
+        :return pos list:
         """
         dic_pieces = {'t' : 'r', 'c' : 'n', 'f' : 'b', 'd' : 'q', 'r' : 'k', 'p' : 'p', 'P' : 'P', 'T' : 'R', 'C' : 'N', 'F' : 'B', 'D' : 'Q', 'R' : 'K'}#Traduction pièces anglaises vers pièces françaises
         for piece in pos:
@@ -101,7 +106,7 @@ class Main:
         :return pos_pieces: Coordonnées et composition de chaque case de l'échiquier
         """
 
-        board = self.en_to_fr(fen)
+        board = self.fen_to_list(fen)
         pos_pieces = list()
 
         cpt_y = 0
@@ -178,11 +183,6 @@ class Main:
 
         with open(path, 'w') as json_file:
             json.dump(data, json_file, indent=3)
-
-    def pos_to_str(self, pos):
-            lignes_matrice = {'2': '8', '3': '7', '4': '6', '5': '5', '6': '4', '7': '3', '8': '2', '9': '1'}
-            colonnes_matrice = {'1': 'a', '2': 'b', '3': 'c', '4': 'd', '5': 'e', '6': 'f', '7': 'g', '8': 'h'}
-            return [colonnes_matrice[str(pos[1])], lignes_matrice[str(pos[0])]]
 
 
     def game_pvp(self, configuration, pos_depart, pos_arrivee, joueur):
