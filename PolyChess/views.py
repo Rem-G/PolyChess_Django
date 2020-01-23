@@ -13,6 +13,10 @@ import json
 from django.contrib.staticfiles.storage import staticfiles_storage
 
 def new_game(request):
+	'''
+	Réinitialise le jeu en supprimant la sauvegarde actuelle et en remettant le joueur à 1
+	'''
+	os.environ['JOUEUR'] = '1'#joueur blanc
 	url = os.getcwd() + staticfiles_storage.url('json/save.json')
 	try:
 		os.remove(url)#réinitialisation de la partie
@@ -33,6 +37,12 @@ def new_game(request):
 
 
 def read_save_and_play(request, main, configuration, save_json):
+	'''
+	Pour chaque nouveau coup joué, la fonction reconstruit toute la partie à partir du fichier de sauvegarde et envoie le nouveau coup au moteur de jeu
+	:param main object: intermédiaire django/moteur de jeu
+	:param configuration object: moteur de jeu
+	:param save_json dict : sauvegarde de la partie
+	'''
 	######Initialissation des pièces et joueurs
 	configuration.init_joueurs()
 	main.init_pieces(configuration)
@@ -62,11 +72,14 @@ def read_save_and_play(request, main, configuration, save_json):
 	#Envoi de la décision joueur au moteur de jeu sous forme matricielle
 	pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))
 
-	#Conversion position piècs à jour en fen
+	#Conversion position pièces à jour en fen
 	return [main.pos_to_fen(pos_game[0]), pos_game[1]]#pos_game[0] -> position des pièces, pos_game[1] -> msg_error
 
 
 def chessboard(request):
+	'''
+	Analyse les éléments POST du template et les envoie au moteur de jeu
+	'''
 	reset = False
 
 	if not request.POST: #Ouverture de la page de jeu
@@ -87,7 +100,7 @@ def chessboard(request):
 
 			play = read_save_and_play(request, main, configuration, save_json)
 
-			if not len(configuration.msg_error):#Coup validé par le moteur de jeu
+			if not len(play[1]):#Coup validé par le moteur de jeu, pas d'erreur
 				main.sauvegarde_partie(url, request.POST['oldPos'], play[0], int(os.environ['JOUEUR']))
 				os.environ['JOUEUR'] = str(-int(os.environ['JOUEUR']))
 
@@ -107,11 +120,16 @@ def chessboard(request):
 
 		except Exception:
 			#Gère le cas où deux pièces sont jouées ou aucune
-			traceback.print_exc()
+			#traceback.print_exc()
+			pass
 
-	#Nouvelle partie ouverture page
+	#Nouvelle partie/ouverture page
 	new_game(request)
 	return render(request, 'chessboard.html', {'new_fen': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'})
 
 def url_pieces_img(request, img):
+	'''
+	Redirection des url d'images du plateau de jeu de chessboard.js
+	'''
 	return redirect('/static/img/chesspieces/wikipedia/'+img)
+

@@ -25,15 +25,6 @@
                             <div id="card-body-board" class="card-body">
                                 <div class="form-horizontal">
                                     <table id="board">
-                                        {% if msg_error %}
-                                            {% for error in msg_error %}
-                                            <tr>
-                                                <th>
-                                                    <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
-                                                </th>
-                                            </tr>
-                                            {% endfor %}
-                                        {% endif %}
                                         <tr>
                                             <th>
                                                 <div id="myBoard"></div>
@@ -51,36 +42,39 @@
                             </div>
                         </th>
                         <th>
-                            <div>
-                                <table class="table">
+                           {% if msg_error %}
+                                {% for error in msg_error %}
+                                    <div class="alert alert-danger" role="alert" style='text-align: center'>{{ error|safe }}</div>
+                                {% endfor %}
+                            {% endif %}
+                            <table class="table">
+                                <tr>
+                                    <th>
+                                        {% if joueur == '1' %}
+                                            <p>Au tour du joueur blanc</p>
+                                        {% endif %}
+                                        {% if joueur == '-1' %}
+                                            <p>Au tour du joueur noir</p>
+                                        {% endif %}
+                                    </th>
+                                </tr>
+                                <br>
+                                {%if avantage %}
                                     <tr>
                                         <th>
-                                            {% if joueur == '1' %}
-                                                <p>Au tour du joueur blanc</p>
-                                            {% endif %}
-                                            {% if joueur == '-1' %}
-                                                <p>Au tour du joueur noir</p>
-                                            {% endif %}
+                                            <p>{{avantage}}</p>
                                         </th>
                                     </tr>
-                                    <br>
-                                    {%if avantage %}
-                                        <tr>
-                                            <th>
-                                                <p>{{avantage}}</p>
-                                            </th>
-                                        </tr>
-                                    {% endif %}
-                                    <tr>
-                                        <th>
-                                            <p>Pièces blanches détruites : <br>{{died_pieces_B}}</p>
-                                        </th>
-                                        <th>
-                                            <p>Pièces noires détruites : <br>{{died_pieces_N}}</p>
-                                        </th>
-                                    </tr>
-                                </table>
-                            </div>
+                                {% endif %}
+                                <tr>
+                                    <th>
+                                        <p>Pièces blanches détruites : <br>{{died_pieces_B}}</p>
+                                    </th>
+                                    <th>
+                                        <p>Pièces noires détruites : <br>{{died_pieces_N}}</p>
+                                    </th>
+                                </tr>
+                            </table>
                         </th>
                     </tr>
                 </table>

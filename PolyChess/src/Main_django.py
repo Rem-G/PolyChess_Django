@@ -68,8 +68,9 @@ class Main():
 
     def fen_to_list(self, fen):
         """
-        :param fen str: Composition board en anglais
-        :return new_fen_lines list: Composition board en français
+        Conversion coordonnées fen en liste de pièces
+        :param fen str: Composition board
+        :return new_fen_lines list: Liste de pièces
         """
         #'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'
         fen_lines = fen.split("/")
@@ -102,6 +103,7 @@ class Main():
 
     def fen_to_pos(self, fen):
         """
+        Conversion fen en coordonnées matricielles
         :param fen str: Composition board en anglais
         :return pos_pieces: Coordonnées et composition de chaque case de l'échiquier
         """
@@ -119,12 +121,12 @@ class Main():
                 y = cpt_y + 1
                 x = cpt_x + 2
 
-                cpt_y += 1#compteur d'éléments identiques dans une ligne
+                cpt_y += 1#parcours la ligne
 
                 line_convert.append([x, y, piece])
 
             cpt_y = 0
-            cpt_x += 1
+            cpt_x += 1#parcours la colonne
 
             pos_pieces.append(line_convert)
             line_convert = list()
@@ -134,9 +136,12 @@ class Main():
 
     def pos_to_fen(self, pos):
         """
+        Conversion coordonnées matricieelles en coordonnées fen
+        :param pos list: coordonnées matricielles des pièces
+        :return fen str: coordonnées des pièces en fen
         """
 
-        pos = self.fr_to_en(pos)
+        pos = self.fr_to_en(pos)#conversion pièces fr en anglais afin d'être lisibles par le board du template
         fen = str()
 
         for i in range(2,10):#lignes du plateau
@@ -145,7 +150,7 @@ class Main():
             for j in range(1,9):#colonnes plateau
                 for piece in pos:
                     if piece[0] == [i,j]:
-                        line_list[j-1] = piece[1]
+                        line_list[j-1] = piece[1]#-1 -> premier index de liste = 0
             for element in line_list:
                 line_str += element
             fen += line_str + '/'
@@ -154,6 +159,11 @@ class Main():
 
     def comparaison_coords(self, oldPos, newPos):
         """
+        Comparaison des coordonnées entre le board avant coup et board après coup
+        Permet de récupérer la position de départ et d'arrivée du coup joué
+        :param oldPos list: board initial
+        :param newPos list: board après coup
+        :return list: position de départ du coup joué, position d'arrivée du coup joué
         """
         pos_depart = None
         pos_arrivee = None
@@ -161,8 +171,8 @@ class Main():
         for line in range(0,8):
             if newPos[line] != oldPos[line]:
                 for piece in range(0,8):
-                    if newPos[line][piece] != oldPos[line][piece] and newPos[line][piece][2] != oldPos[line][piece][2]:
-                        if newPos[line][piece][2] == '1':
+                    if newPos[line][piece] != oldPos[line][piece] and newPos[line][piece][2] != oldPos[line][piece][2]:#A un emplacement donné, coordonnées pièce différentes et pièces différentes à cet emplacement
+                        if newPos[line][piece][2] == '1':#Si une pièce a été bougé, sa position initiale devient 1
                             pos_depart = newPos[line][piece][:2]
                         else:
                             pos_arrivee = newPos[line][piece][:2]
@@ -171,6 +181,13 @@ class Main():
         return [pos_depart, pos_arrivee]
 
     def sauvegarde_partie(self, path, oldPos, newPos, joueur):
+        """
+        Sauvegarde chaque coup joué dans un fichier json
+        :param path str: chemin du fichier de sauvegarde
+        :oldPos str: composition ancien board en fen
+        :newPos str: composition nouveau board en fen
+        :joueur str: 1 ou -1, joueur qui a joué
+        """
         with open(path, 'r') as json_file:
             data = json.load(json_file)#Récupère le fichier
 
@@ -182,7 +199,13 @@ class Main():
 
     def game_pvp(self, configuration, pos_depart, pos_arrivee, joueur):
         """
-        @RG @NR
+        Envoie la décision du joueur au moteur de jeu, gère la promotion
+
+        :param configuration object: moteur de jeu
+        :param pos_depart list: position de départ du coup joué
+        :param pos_arrivee list: position d'arrivée du coup joué
+        :joueur int: joueur qui a joué le coup
+        :return list: renvoie la position de chaque pièce et les messages d'erreur
         """
         if joueur == 1:
             configuration.deplacement_piece(pos_depart, pos_arrivee, True)
