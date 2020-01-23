@@ -27,6 +27,7 @@ Joueur vs joueur :
   - Coups spéciaux (Roque, PAT, Promotion (Dame uniquement), En passant
   
   Joueur vs bot :
+  
     - Aucune fonctionnalité implantée dans la version UI
 
 
