@@ -63,7 +63,7 @@ def read_save_and_play(request, main, configuration, save_json):
 	pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))
 
 	#Conversion position piècs à jour en fen
-	return [main.pos_to_fen(pos_game[0]), pos_game[1]]
+	return [main.pos_to_fen(pos_game[0]), pos_game[1]]#pos_game[0] -> position des pièces, pos_game[1] -> msg_error
 
 
 def chessboard(request):
@@ -87,6 +87,10 @@ def chessboard(request):
 
 			play = read_save_and_play(request, main, configuration, save_json)
 
+			if not len(configuration.msg_error):#Coup validé par le moteur de jeu
+				main.sauvegarde_partie(url, request.POST['oldPos'], play[0], int(os.environ['JOUEUR']))
+				os.environ['JOUEUR'] = str(-int(os.environ['JOUEUR']))
+
 			context = {
 				'oldPos': request.POST['oldPos'],
 				'new_fen': play[0],
@@ -96,10 +100,6 @@ def chessboard(request):
 				'died_pieces_N': configuration.died_pieces_N,
 				'joueur': os.environ['JOUEUR'],
 				}
-
-			if not len(configuration.msg_error):#Coup validé par le moteur de jeu
-				main.sauvegarde_partie(url, request.POST['oldPos'], request.POST['newPos'], int(os.environ['JOUEUR']))
-				os.environ['JOUEUR'] = str(-int(os.environ['JOUEUR']))
 
 			configuration.msg_error = list()
 

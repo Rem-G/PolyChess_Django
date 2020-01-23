@@ -2,127 +2,126 @@
 
 {% block contenu %}
 
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="card" style="width: 55rem;">
-                <form role="chessboard" method="post">
-                {% csrf_token %}
-                    <div class="card-header">
-                        <table>
-                            <tr style="text-align: center">
-                                <th>
-                                    <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess
-                                    </h3>
-                                </th>
-                            </tr>
-                        </table>
-                    </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card" style="width: 55rem;">
+            <form role="chessboard" method="post">
+            {% csrf_token %}
+                <div class="card-header">
                     <table>
-                        <tr>
+                        <tr style="text-align: center">
                             <th>
-                                <div id="card-body-board" class="card-body">
-                                    <div class="form-horizontal">
-                                        <table id="board">
-                                            {% if msg_error %}
-                                                {% for error in msg_error %}
-                                                <tr>
-                                                    <th>
-                                                        <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
-                                                    </th>
-                                                </tr>
-                                                {% endfor %}
-                                            {% endif %}
-                                            <tr>
-                                                <th>
-                                                    <div id="myBoard"></div>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <button type="submit" class="btn btn-primary btn-lg" name="btn_new_game">Nouvelle partie
-                                                    </button>
-
-                                                    <button type="submit" class="btn btn-primary btn-lg">Jouer</button>
-                                                </th>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
+                                <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess</h3>
                             </th>
                             <th>
-                                <div>
-                                    <table class="table">
-                                        <tr>
-                                            <th>
-                                                {% if joueur == '1' %}
-                                                    <p>Au tour du joueur noir</p>
-                                                {% endif %}
-                                                {% if joueur == '-1' %}
-                                                    <p>Au tour du joueur blanc</p>
-                                                {% endif %}
-                                            </th>
-                                        </tr>
-                                        <br>
-                                        {%if avantage %}
+                                <div class="alert alert-warning" role="alert">Un pion promu devient automatiquement une dame</div>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <table>
+                    <tr>
+                        <th>
+                            <div id="card-body-board" class="card-body">
+                                <div class="form-horizontal">
+                                    <table id="board">
+                                        {% if msg_error %}
+                                            {% for error in msg_error %}
                                             <tr>
                                                 <th>
-                                                    <p>{{avantage}}</p>
+                                                    <div class="alert alert-danger" role="alert">{{ error|safe }}</div>
                                                 </th>
                                             </tr>
+                                            {% endfor %}
                                         {% endif %}
                                         <tr>
                                             <th>
-                                                <p>Pièces blanches détruites : <br>{{died_pieces_B}}</p>
+                                                <div id="myBoard"></div>
                                             </th>
+                                        </tr>
+                                        <tr>
                                             <th>
-                                                <p>Pièces noires détruites : <br>{{died_pieces_N}}</p>
+                                                <button type="submit" class="btn btn-primary btn-lg" name="btn_new_game">New game</button>
+
+                                                <button type="submit" class="btn btn-primary btn-lg">Play</button>
                                             </th>
                                         </tr>
                                     </table>
                                 </div>
-                            </th>
-                        </tr>
-                    </table>
-                </form>
-            </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                <table class="table">
+                                    <tr>
+                                        <th>
+                                            {% if joueur == '1' %}
+                                                <p>Au tour du joueur blanc</p>
+                                            {% endif %}
+                                            {% if joueur == '-1' %}
+                                                <p>Au tour du joueur noir</p>
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                    <br>
+                                    {%if avantage %}
+                                        <tr>
+                                            <th>
+                                                <p>{{avantage}}</p>
+                                            </th>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th>
+                                            <p>Pièces blanches détruites : <br>{{died_pieces_B}}</p>
+                                        </th>
+                                        <th>
+                                            <p>Pièces noires détruites : <br>{{died_pieces_N}}</p>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </th>
+                    </tr>
+                </table>
+            </form>
         </div>
     </div>
+</div>
 
-    <script>
-        var config = {
-                    draggable: true,
-                    moveSpeed: 'slow',
-                    snapbackSpeed: 500,
-                    snapSpeed: 100,
-                    onChange: onChange,
-                    position: '{{new_fen}}'
-                    }
+<script>
+    var config = {
+                draggable: true,
+                moveSpeed: 'slow',
+                snapbackSpeed: 500,
+                snapSpeed: 100,
+                onChange: onChange,
+                position: '{{new_fen}}'
+                }
 
-        var board = Chessboard('myBoard', config)
+    var board = Chessboard('myBoard', config)
 
-        function onChange (oldPos, newPos) {
-            var oldPos = Chessboard.objToFen(oldPos)
-            var newPos = Chessboard.objToFen(newPos)
+    function onChange (oldPos, newPos) {
+        var oldPos = Chessboard.objToFen(oldPos)
+        var newPos = Chessboard.objToFen(newPos)
 
-            $("form").submit(function(){
-                var params = [
-                                {name: 'oldPos', value: oldPos},
-                                {name: 'newPos', value: newPos},
-                             ];
+        $("form").submit(function(){
+            var params = [
+                            {name: 'oldPos', value: oldPos},
+                            {name: 'newPos', value: newPos},
+                         ];
 
-                $(this).append($.map(params, function (param) {
-                    return   $('<input>', {
-                        type: 'hidden',
-                        name: param.name,
-                        value: param.value
-                    })
-                }));
+            $(this).append($.map(params, function (param) {
+                return   $('<input>', {
+                    type: 'hidden',
+                    name: param.name,
+                    value: param.value
+                })
+            }));
 
-                $("body").css("cursor", "wait");
-                });  
-            }
-    </script>
-</body>
+            $("body").css("cursor", "wait");
+            });  
+        }
+</script>
 
 {% endblock %}

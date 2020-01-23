@@ -851,26 +851,17 @@ class GeneralConf():
         @TC
         """
         self.in_promotion = True
+        
         position = piece.get_piece_position()
-        if piece.nom.isupper:
-            nom_piece = str(input(
-                'Votre pion peut être promu, merci de choisir la nouvelle pièce :\nCavalier (C)\nFou (F)\nTour (T)\nDame (D)\n')).upper()
+
+        if piece.nom.isupper():
+            nom_piece = 'D'
         else:
-            nom_piece = str(input(
-                'Votre pion peut être promu, merci de choisir la nouvelle pièce :\nCavalier (c)\nFou (f)\nTour (t)\nDame (d)\n')).lower()
+            nom_piece = 'd'
+            
         self.del_piece(piece)
-
-        if nom_piece == 'C' or nom_piece == 'c':
-            self.add_piece(Cavalier(nom_piece, position))
-
-        elif nom_piece == 'F' or nom_piece == 'f':
-            self.add_piece(Fou(nom_piece, position))
-
-        elif nom_piece == 'T' or nom_piece == 't':
-            self.add_piece(Tour(nom_piece, position))
-
-        elif nom_piece == 'D' or nom_piece == 'd':
-            self.add_piece(Dame(nom_piece, position))
+        self.add_piece(Dame(nom_piece, position))
+        
         self.in_promotion = False
 
     def enPassant(self):
