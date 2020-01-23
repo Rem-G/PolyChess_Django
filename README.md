@@ -10,6 +10,8 @@ Le jeu se joue dans un terminal de commandes.
 
 ## Ce dépôt constitue la version interface utilisateur du projet https://github.com/Rem-G/PolyChess
 
+## Jouer en ligne : http://ceremi.pythonanywhere.com/polychess/
+
 ## Pré-requis :
 Django >= 2.2.x
 
