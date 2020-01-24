@@ -70,10 +70,10 @@ def read_save_and_play(request, main, configuration, save_json, url, bot = False
 	#Comparaison des anciennes positions avec les nouvelles afin de déterminer la pièce à déplacer
 	pos_start, pos_end = main.comparaison_coords(oldPos_convert, newPos_convert)
 
-	#Envoi de la décision joueur au moteur de jeu sous forme matricielle
-	pos_game = main.game_pvp(configuration, pos_start, pos_end, 1)
-
 	if bot:
+		#Envoi de la décision joueur au moteur de jeu sous forme matricielle
+		pos_game = main.game_pvp(configuration, pos_start, pos_end, 1)
+
 		if not len(pos_game[1]):
 			#######Sauvegarde coup joueur accepté
 			play = [main.pos_to_fen(pos_game[0]), pos_game[1]]
@@ -96,15 +96,13 @@ def read_save_and_play(request, main, configuration, save_json, url, bot = False
 
 			return [main.pos_to_fen(pos_game[0]), pos_game[1], play[0]]
 
-
-	#Conversion position pièces à jour en fen
-	return [main.pos_to_fen(pos_game[0]), pos_game[1]]#pos_game[0] -> position des pièces, pos_game[1] -> msg_error
+	else:
+		pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))
+		#Conversion position pièces à jour en fen
+		return [main.pos_to_fen(pos_game[0]), pos_game[1]]#pos_game[0] -> position des pièces, pos_game[1] -> msg_error
 
 
 def chessboard(request):
-	'''
-	Analyse les éléments POST du template et les envoie au moteur de jeu
-	'''
 	reset = False
 
 	if not request.POST: #Ouverture de la page de jeu
@@ -122,9 +120,10 @@ def chessboard(request):
 			url = os.getcwd() + staticfiles_storage.url('json/save.json')
 			with open(url) as file:
 				save_json = json.load(file)
+
 			play = read_save_and_play(request, main, configuration, save_json, url)
 
-			if not len(play[1]):#Coup validé par le moteur de jeu, pas d'erreur
+			if not len(configuration.msg_error):#Coup validé par le moteur de jeu
 				main.sauvegarde_partie(url, request.POST['oldPos'], play[0], int(os.environ['JOUEUR']))
 				os.environ['JOUEUR'] = str(-int(os.environ['JOUEUR']))
 
@@ -144,10 +143,9 @@ def chessboard(request):
 
 		except Exception:
 			#Gère le cas où deux pièces sont jouées ou aucune
-			#traceback.print_exc()
-			pass
+			traceback.print_exc()
 
-	#Nouvelle partie/ouverture page
+	#Nouvelle partie ouverture page
 	new_game(request)
 	return render(request, 'chessboard.html', {'new_fen': 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'})
 
