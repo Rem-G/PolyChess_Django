@@ -89,12 +89,16 @@ def read_save_and_play(request, main, configuration, save_json, url, bot = False
 
 				pos_game = main.game_pvp(configuration, decision_bot[0], decision_bot[1], -1)
 
+				print(pos_game[1])
+
 				if not len(pos_game[1]):
 					error = False
 
 				configuration.msg_error = list()
 
 			return [main.pos_to_fen(pos_game[0]), pos_game[1], play[0]]
+		else:
+			return[main.pos_to_fen(pos_game[0]), pos_game[1]]
 
 	else:
 		pos_game = main.game_pvp(configuration, pos_start, pos_end, int(os.environ['JOUEUR']))

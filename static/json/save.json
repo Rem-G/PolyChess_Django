@@ -3,25 +3,5 @@
       "pos_start": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
       "pos_end": null,
       "joueur": 1
-   },
-   {
-      "pos_start": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
-      "pos_end": "rnbqkbnr/pppppppp/11111111/11111111/11111111/P1111111/1PPPPPPP/RNBQKBNR",
-      "joueur": 1
-   },
-   {
-      "pos_start": "rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR",
-      "pos_end": "rnbqkbnr/ppp1pppp/11111111/111p1111/11111111/P1111111/1PPPPPPP/RNBQKBNR",
-      "joueur": -1
-   },
-   {
-      "pos_start": "rnbqkbnr/ppp1pppp/8/3p4/8/P7/1PPPPPPP/RNBQKBNR",
-      "pos_end": "rnbqkbnr/ppp1pppp/11111111/111p1111/11P11111/P1111111/1P1PPPPP/RNBQKBNR",
-      "joueur": 1
-   },
-   {
-      "pos_start": "rnbqkbnr/ppp1pppp/8/3p4/2P5/P7/1P1PPPPP/RNBQKBNR",
-      "pos_end": "rnbqkbnr/ppp1pppp/11111111/11111111/11p11111/P1111111/1P1PPPPP/RNBQKBNR",
-      "joueur": -1
    }
 ]

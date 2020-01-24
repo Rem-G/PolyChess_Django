@@ -5,20 +5,30 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="card" style="width: 55rem;">
+            <div class="card-header">
+                <table>
+                    <tr style="text-align: center">
+                        <th>
+                            <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess</h3>
+                        </th>
+                        <th>
+                            <a href="{% url 'polychess:chessboard_bot' %}">
+                                <button class="btn btn-primary btn-lg" id='bot'>Bot</button>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{% url 'polychess:chessboard' %}">
+                                <button class="btn btn-primary btn-lg">PvP</button>
+                            </a>
+                        </th>
+                        <th>
+                            <div class="alert alert-warning" role="alert">Un pion promu devient automatiquement une dame</div>
+                        </th>
+                    </tr>
+                </table>
+            </div>
             <form role="chessboard" method="post">
             {% csrf_token %}
-                <div class="card-header">
-                    <table>
-                        <tr style="text-align: center">
-                            <th>
-                                <h3 class="card-title"><i class="far fa-compass fa-lg"></i>PolyChess</h3>
-                            </th>
-                            <th>
-                                <div class="alert alert-warning" role="alert">Un pion promu devient automatiquement une dame</div>
-                            </th>
-                        </tr>
-                    </table>
-                </div>
                 <table>
                     <tr>
                         <th>
