@@ -212,7 +212,6 @@ class Main():
         else:
             configuration.deplacement_piece(pos_depart, pos_arrivee, False)
 
-
         for piece in configuration.pieces_joueurB:
             if piece.get_piece_position()[0] == 2 and piece.nom == 'P' and piece.promotion:
                 configuration.promotion(piece)
